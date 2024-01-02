@@ -63,3 +63,12 @@ for i in {0..6}; do
 
     echo "Etapa $((i+1)) finalizada com sucesso!"
 done
+
+
+trap : 0
+
+echo >&2 '
+*************
+***  FIM  ***
+*************
+'
