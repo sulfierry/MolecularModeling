@@ -1,6 +1,5 @@
 #!/bin/sh
-# No Santos Dummont
-source /scratch/dockvs/softwares/amber22/app/amber.sh
+# source /scratch/dockvs/softwares/amber22/app/amber.sh
 
 # Configurações gerais
 do_cuda="pmemd.cuda"
@@ -41,7 +40,7 @@ for i in {0..6}; do
     crd=${trajectories[$i]}
     output=${outputs[$i]}
 
-    echo "Iniciando etapa $((i+1))..."
+    echo "Iniciando etapa $((i))..."
 
     if [ $i -eq 0 ]; then
         # Minimização
@@ -61,7 +60,7 @@ for i in {0..6}; do
         $do_cuda -O -i $input -p $prmtop -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
     fi
 
-    echo "Etapa $((i+1)) finalizada com sucesso!"
+    echo "Etapa $((i)) finalizada com sucesso!"
 done
 
 
