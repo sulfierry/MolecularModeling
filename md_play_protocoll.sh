@@ -33,3 +33,33 @@ set -e
 
 echo "Iniciando protocolo..."
 
+# Loop para executar as etapas
+for i in {0..6}; do
+    input=${inputs[$i]}
+    ref_rst=${rst_in[$i]}
+    out_rst=${rst_out[$i]}
+    crd=${trajectories[$i]}
+    output=${outputs[$i]}
+
+    echo "Iniciando etapa $((i+1))..."
+
+    if [ $i -eq 0 ]; then
+        # Minimização
+        echo "Executando Minimização..."
+        $do_cuda -O -i $input -p $prmtop -c $ref_rst -r $out_rst -x $crd -o $output
+    elif [ $i -ge 1 ] && [ $i -le 4 ]; then
+        # Relaxamento partes 1-4
+        echo "Executando Relaxamento Parte $((i))"
+        $do_cuda -O -i $input -p $prmtop -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
+    elif [ $i -eq 5 ]; then
+        # Pré-produção
+        echo "Executando Pré-produção..."
+        $do_cuda -O -i $input -p $prmtop -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
+    else
+        # Produção
+        echo "Executando Produção..."
+        $do_cuda -O -i $input -p $prmtop -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
+    fi
+
+    echo "Etapa $((i+1)) finalizada com sucesso!"
+done
