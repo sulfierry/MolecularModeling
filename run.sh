@@ -10,18 +10,5 @@
 # salloc -p sequana_dockvs -J job_name --exclusive
 # ssh node_returned
 # sbatch run.sh
-
-# exibe os nos alocados para o Job
-echo $SLURM_JOB_NODELIST
-nodeset -e $SLURM_JOB_NODELIST
-
-cd $SLURM_SUBMIT_DIR  # the directory from which sbatch was invoked
-
-source /scratch/dockvs/softwares/amber22/app/amber.sh
-
-# executa o script
-for i in {1..10}; do
-    cd /scratch/dockvs/leon.costa/md_thil_10replicates_100ns/$i/
-    ./md_play.sh
-done
+# 10 replicatas de 100ns cada
 
