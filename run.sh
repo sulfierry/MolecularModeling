@@ -12,3 +12,10 @@
 # sbatch run.sh
 # 10 replicatas de 100ns cada
 
+# exibe os nos alocados para o Job
+echo $SLURM_JOB_NODELIST
+nodeset -e $SLURM_JOB_NODELIST
+
+cd $SLURM_SUBMIT_DIR  # the directory from which sbatch was invoked
+
+# source /scratch/dockvs/softwares/amber22/app/amber.sh
