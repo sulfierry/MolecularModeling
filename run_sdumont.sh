@@ -18,4 +18,11 @@ nodeset -e $SLURM_JOB_NODELIST
 
 cd $SLURM_SUBMIT_DIR  # the directory from which sbatch was invoked
 
- source /scratch/dockvs/softwares/amber22/app/amber.sh
+source /scratch/dockvs/softwares/amber22/app/amber.sh
+
+
+# Configurações gerais
+do_cuda="pmemd.cuda"
+do_parallel="mpirun -np 48 sander.MPI"
+prmtop="5cc8.prmtop"
+
