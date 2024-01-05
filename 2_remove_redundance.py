@@ -63,3 +63,27 @@ def save_positive_negative_files(salt_free_data, output_directory):
     # Salva os compostos com Ki, Kd, IC50 > 10000 em 'negative.tsv'
     salt_free_data[salt_free_data['standard_value'] > 10000].to_csv(f'{output_directory}/negative.tsv', sep='\t', index=False)
 
+
+def main():
+    input_file_path = './kinase_all_compounds_updated.tsv'
+    output_file_path = './nr_kinase_all_compounds_updated.tsv'
+    salt_free_output_path = './nr_kinase_all_compounds_salt_free.tsv'
+    output_directory = '.'  # Diretório para os arquivos 'positive.tsv' e 'negative.tsv'
+
+    # Processa os dados e remove redundâncias
+    processed_data = redundance_remov(input_file_path)
+    processed_data.to_csv(output_file_path, sep='\t', index=False, na_rep='')
+
+    # Cria o output salt-free
+    salt_free_data = create_salt_free_output(processed_data)
+    salt_free_data.to_csv(salt_free_output_path, sep='\t', index=False, na_rep='')
+
+    # Salva os arquivos 'positive.tsv' e 'negative.tsv' usando o salt-free data
+    save_positive_negative_files(salt_free_data, output_directory)
+
+    print(f"Arquivo processado salvo em: {output_file_path}")
+    print(f"Arquivo salt-free processado salvo em: {salt_free_output_path}")
+    print("Arquivos 'positive.tsv' e 'negative.tsv' foram criados.")
+
+if __name__ == "__main__":
+    main()
