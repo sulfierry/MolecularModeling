@@ -45,3 +45,15 @@ def redundance_remov(file_path):
 
     return final_data
     
+
+
+def create_salt_free_output(processed_data):
+    # Faz uma cópia do DataFrame processado
+    salt_free_data = processed_data.copy()
+
+    # Aplica a função para remover sais dos SMILES em todo o DataFrame
+    salt_free_data['canonical_smiles'] = salt_free_data['canonical_smiles'].apply(lambda x: remove_salts_and_identify(x)[0])
+
+    return salt_free_data
+
+
