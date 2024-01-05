@@ -56,4 +56,10 @@ def create_salt_free_output(processed_data):
 
     return salt_free_data
 
+def save_positive_negative_files(salt_free_data, output_directory):
+    # Salva os compostos com Ki, Kd, IC50 <= 10000 em 'positive.tsv'
+    salt_free_data[salt_free_data['standard_value'] <= 10000].to_csv(f'{output_directory}/positive.tsv', sep='\t', index=False)
+
+    # Salva os compostos com Ki, Kd, IC50 > 10000 em 'negative.tsv'
+    salt_free_data[salt_free_data['standard_value'] > 10000].to_csv(f'{output_directory}/negative.tsv', sep='\t', index=False)
 
