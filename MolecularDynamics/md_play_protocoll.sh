@@ -44,10 +44,13 @@ for i in {0..6}; do
 
     if [ $i -eq 0 ]; then
         # Minimização
-        echo "Executando Minimização..."
+        echo "Iniciando minimização..."
+        # 1000 passos de minimizacao energetica"
         $do_cuda -O -i $input -p $prmtop -c $ref_rst -r $out_rst -x $crd -o $output
     elif [ $i -ge 1 ] && [ $i -le 4 ]; then
         # Relaxamento partes 1-4
+        # 1: 300ps de pré-relaxamento NPT com restrição para proteína e ligante
+        # 2: 
         echo "Executando Relaxamento Parte $((i))"
         $do_cuda -O -i $input -p $prmtop -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
     elif [ $i -eq 5 ]; then
