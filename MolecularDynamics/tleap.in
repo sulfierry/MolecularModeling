@@ -1,4 +1,5 @@
 #tleap.in
+# source leaprc.gaff
 source leaprc.protein.ff19SB
 source leaprc.water.opc
 thil=loadpdb 5cc8.pdb
