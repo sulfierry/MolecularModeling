@@ -47,20 +47,26 @@ for i in {0..6}; do
         echo "Iniciando minimização..."
         # 1000 passos de minimizacao energetica"
         $do_cuda -O -i $input -p $prmtop -c $ref_rst -r $out_rst -x $crd -o $output
+        
     elif [ $i -ge 1 ] && [ $i -le 4 ]; then
-        # Relaxamento partes 1-4
+        # Relaxamento partes 1-4 (1 ns)
         # 1: 300ps de pré-relaxamento NPT com restrição para proteína e ligante
-        # 2: 
+        # 2: 300ps de relaxamento NPT com restrição para proteína
+        # 3: 200ps de relaxamento NPT sem restrição para as cadeias laterais dos resíduos em até 5 Angstrons ao redor do ligante
+        # 4: 200ps de relaxamento NPT sem restrição para os resíduos em até 5 Angstrons ao redor do ligante
         echo "Executando Relaxamento Parte $((i))"
         $do_cuda -O -i $input -p $prmtop -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
+        
     elif [ $i -eq 5 ]; then
-        # Pré-produção
+        # Pré-produção (5 ns)
         echo "Executando Pré-produção..."
         $do_cuda -O -i $input -p $prmtop -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
+        
     else
-        # Produção
+        # Produção (100 ns)
         echo "Executando Produção..."
         $do_cuda -O -i $input -p $prmtop -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
+        
     fi
 
     echo "Etapa $((i)) finalizada com sucesso!"
