@@ -1,4 +1,4 @@
-# tleap.in
+# tleap -f tleap.in
 # pdb4amber target.pdb > amber.pdb
 # source leaprc.gaff
 source leaprc.protein.ff19SB
