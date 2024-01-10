@@ -10,6 +10,7 @@ parmchk2 -i output.mol2 -f mol2 -o ligand.frcmod
 # tleap -f tleap.in
 # source leaprc.gaff
 # loadamberparams ligand.frcmod
+# loadoff lig.lib 
 # lig = loadmol2 output.mol2
 # saveamberparm lig lig.prmtop lig.inpcrd
 # savepdb lig output.pdb
