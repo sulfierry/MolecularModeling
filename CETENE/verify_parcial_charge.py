@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 def soma_cargas_mol2(arquivo_mol2):
     carga_total = 0.0
     with open(arquivo_mol2, 'r') as file:
