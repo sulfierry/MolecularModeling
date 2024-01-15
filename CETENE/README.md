@@ -17,17 +17,19 @@ This section outlines the process employed for the parametrization of ligands us
    - Purpose: Employ the AM1-BCC method to refine the atomic charges based on a semi-empirical approach.
 
 4. **Adjustment of Charges to Integer Values**: 
-   - Command: `antechamber -i ligand_bcc.ac -fi ac -o final_ligand.mol2 -fo mol2 -nc <desired_charge>`
+   - Command: `antechamber -i ligand_bcc.ac -fi ac -o ligand_charges_values.mol2 -fo mol2 -nc <desired_charge>`
    - Purpose: Adjust the total charge of the ligand to an integer value, ensuring charge neutrality or a specific ionic state.
 
 5. **Generation of Additional Force Field Parameters (.frcmod File)**: 
-   - Command: `parmchk2 -i final_ligand.mol2 -f mol2 -o ligand.frcmod`
+   - Command: `parmchk2 -i ligand_charges_values.mol2 -f mol2 -o ligand.frcmod`
    - Purpose: Generate a .frcmod file containing additional force field parameters that might not be present in the standard GAFF (General Amber Force Field).
+   
+   **Note**: After this step, the `verify_partial_charge.py` script is used to empirically distribute charges among hydrogen atoms, ensuring that the final total charge of the ligand is an integer, ideally neutral (summing up to zero). This script adjusts the partial charges of hydrogen atoms to compensate for any discrepancies in the molecule's total charge.
 
 6. **Preparation of Ligand Library and Complex for Simulation**: 
    - Commands: 
      - `source leaprc.gaff`
-     - `LIG = loadmol2 final_ligand.mol2`
+     - `LIG = loadmol2 ligand_charges_values.mol2`
      - `saveoff LIG ligand.lib`
      - `saveamberparm LIG ligand.prmtop ligand.rst7`
    - Purpose: Prepare the ligand library and parameter files necessary for the simulation, using the tleap tool of AMBER.
