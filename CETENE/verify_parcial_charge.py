@@ -97,3 +97,56 @@ def calcular_diferencas_estatisticas(dados_iniciais, dados_corrigidos):
         diferença = carga_cor - carga_ini
         diferenças.append((atomo_ini, diferença))
     return diferenças
+
+
+def main():
+    input_name = 'ligand.mol2'
+    output_name = 'ligand_adjusted.mol2'
+
+    # Lendo e ajustando as cargas
+    cargas_antes = ler_cargas_mol2(input_name)
+    diferenca = sum(cargas_antes)
+    cargas_ajustadas = ajustar_cargas_hidrogenios(cargas_antes.copy(), diferenca)
+
+    # Calculando a diferença percentual
+    soma_antes = sum(cargas_antes)
+    soma_ajustadas = sum(cargas_ajustadas)
+    diferenca_percentual = abs((soma_ajustadas - soma_antes) / soma_antes) * 100 if soma_antes != 0 else 0
+
+    # Salvando o arquivo ajustado
+    salvar_mol2_com_cargas_ajustadas(input_name, output_name, cargas_ajustadas)
+
+    # Calculando e imprimindo as diferenças estatísticas
+    dados_iniciais = armazenar_dados_cargas(input_name)
+    dados_corrigidos = armazenar_dados_cargas(output_name)
+    diferencas = calcular_diferencas_estatisticas(dados_iniciais, dados_corrigidos)
+
+    for atomo, diferenca in diferencas:
+        print(f"Atomo: {atomo}, Diferença: {diferenca:.6f}")
+
+    # Plotando histogramas
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    plt.hist(cargas_antes, bins=20, color='lightblue', alpha=0.6)
+    plt.title("Antes do Ajuste")
+    plt.xlabel("Carga Parcial")
+    plt.ylabel("Frequência")
+
+    plt.subplot(1, 2, 2)
+    plt.hist(cargas_ajustadas, bins=20, color='salmon', alpha=0.6)
+    plt.title("Após o Ajuste")
+    plt.xlabel("Carga Parcial")
+    plt.ylabel("Frequência")
+
+    plt.suptitle("Histograma de Cargas Parciais")
+    plt.figtext(0.5, 0.01, f'Diferença percentual: {diferenca_percentual:.2f}%', ha='center')
+    plt.show()
+    
+    print(f"Diferença antes do ajuste: {soma_antes:.6f}")
+    print(f"Diferença após o ajuste: {soma_ajustadas:.6f}")
+
+
+# Execute a função main
+if __name__ == "__main__":
+    main()
