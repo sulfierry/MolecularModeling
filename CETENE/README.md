@@ -49,3 +49,36 @@ This section outlines the process employed for the parametrization of ligands us
 ## Summary
 
 This workflow is essential for accurate ligand representation in molecular dynamics simulations, particularly when employing the AMBER suite of tools. The semi-empirical methods used here strike a balance between computational efficiency and the accuracy required for reliable simulations.
+
+# Description of `verify_partial_charge.py`
+
+The `verify_partial_charge.py` script is designed for adjusting the partial charges in a molecular system, specifically focusing on hydrogen atoms. It ensures the total charge of the molecule rounds to the nearest integer, crucial for molecular dynamics simulations. Here's a detailed explanation of the script's functionality:
+
+## Initialization
+- The script initializes with the `ChargeAdjust` class, taking the name of the input `.mol2` file.
+
+## Reading Charges
+- `ler_cargas_mol2`: Reads the partial charges from the input `.mol2` file, extracting charge information for each atom and storing it in a list.
+
+## Adjusting Hydrogen Charges
+- `ajustar_cargas_hidrogenios`: Adjusts the charges of hydrogen atoms. The total charge difference from the integer value is calculated and then evenly distributed among all hydrogen atoms, minimizing the impact on the molecule's overall charge distribution.
+
+## Saving Adjusted Charges
+- `salvar_mol2_com_cargas_ajustadas`: Saves the new charges into a `.mol2` file after adjusting, ensuring that the file format remains consistent with the original.
+
+## Calculating Statistical Differences
+- `armazenar_dados_cargas` and `calcular_diferencas_estatisticas`: Store initial and adjusted charge data for each atom, then calculate the difference in charges before and after adjustment, focusing particularly on hydrogen atoms.
+
+## Plotting Histograms
+- `plotar_histogramas`: Plots histograms to visualize charge distribution before and after adjustment, aiding in understanding the impact of charge adjustment on the molecule.
+
+## Main Execution
+- In the `main` method, the script:
+  - Reads initial charges.
+  - Adjusts charges to ensure the total charge is an integer.
+  - Saves adjusted charges in a new `.mol2` file.
+  - Calculates and prints statistical differences for each atom.
+  - Plots histograms to compare charge distributions before and after adjustment.
+
+The script is executed by creating an instance of `ChargeAdjust` with the input `.mol2` file and calling the `main` method. This approach provides an organized method for adjusting molecular charges, ensuring compatibility with molecular dynamics simulations requiring specific total charges.
+
