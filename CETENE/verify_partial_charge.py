@@ -117,3 +117,7 @@ class ChargeAdjust:
             print(f"Atomo: {atomo}, Diferença: {diferenca:.6f}")
 
         self.plotar_histogramas(cargas_antes, cargas_ajustadas)
+
+if __name__ == "__main__":
+    charge_adjuster = ChargeAdjust('ligand.mol2')
+    charge_adjuster.main()
