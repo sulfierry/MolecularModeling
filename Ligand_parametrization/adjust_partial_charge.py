@@ -50,7 +50,8 @@ class ChargeAdjust:
             charges[i] += adjustment_per_hydrogen
             charges[i] = round(charges[i], 6)
 
-        # returns the updated list charges, which contains the adjusted partial charges for all atoms in the molecule, ensuring that the total charge of the molecule is now an integer.
+        # returns the updated list charges, which contains the adjusted partial charges for all atoms in the molecule 
+        # ensuring that the total charge of the molecule is now an integer
         return charges
 
     def format_atom_line(self, line, charge):
