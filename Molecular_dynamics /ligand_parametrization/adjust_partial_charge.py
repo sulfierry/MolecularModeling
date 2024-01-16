@@ -4,7 +4,7 @@
     The script reads the  original MOL2 file, calculates the sum of charges, and then distributes the necessary adjustments among the hydrogen 
     atoms to achieve the desired total charge. The adjustments are made with precision to minimize any impact on the molecular structure and charge 
     distribution, maintaining six decimal places accuracy. After the adjustments, the script saves the new MOL2 file with updated charges. It also 
-    plots the percentage difference in charges of hydrogens before and after the adjustment for a visual representation of the changes.
+    plots the percentage difference in charges of hydrogens before and after the adjustment for a visual representation of the changes. 
 """
 
 import matplotlib.pyplot as plt
