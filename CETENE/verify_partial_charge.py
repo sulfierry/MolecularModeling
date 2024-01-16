@@ -97,3 +97,23 @@ class ChargeAdjust:
         plt.suptitle("Histograma de Cargas Parciais: Antes e Depois do Ajuste")
         plt.show()
 
+
+    def main(self):
+        cargas_antes = self.ler_cargas_mol2()
+        soma_cargas_antes = sum(cargas_antes)
+        print(f"Carga total antes do ajuste: {soma_cargas_antes:.6f}")
+
+        cargas_ajustadas = self.ajustar_cargas_hidrogenios(cargas_antes)
+        soma_cargas_ajustadas = sum(cargas_ajustadas)
+        print(f"Carga total após o ajuste: {soma_cargas_ajustadas:.6f}")
+
+        self.salvar_mol2_com_cargas_ajustadas(cargas_ajustadas)
+
+        dados_iniciais = self.armazenar_dados_cargas(self.input_name)
+        dados_corrigidos = self.armazenar_dados_cargas(self.output_name)
+        diferencas = self.calcular_diferencas_estatisticas(dados_iniciais, dados_corrigidos)
+
+        for atomo, diferenca in diferencas:
+            print(f"Atomo: {atomo}, Diferença: {diferenca:.6f}")
+
+        self.plotar_histogramas(cargas_antes, cargas_ajustadas)
