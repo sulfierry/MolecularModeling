@@ -50,6 +50,7 @@ This section outlines the process employed for the parametrization of ligands us
 
 This workflow is essential for accurate ligand representation in molecular dynamics simulations, particularly when employing the AMBER suite of tools. The semi-empirical methods used here strike a balance between computational efficiency and the accuracy required for reliable simulations.
 
+
 # Description of `verify_partial_charge.py`
 
 The `verify_partial_charge.py` script is designed for adjusting the partial charges in a molecular system, specifically focusing on hydrogen atoms. It ensures the total charge of the molecule rounds to the nearest integer, crucial for molecular dynamics simulations. Here's a detailed explanation of the script's functionality:
