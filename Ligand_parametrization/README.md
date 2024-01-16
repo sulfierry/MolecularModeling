@@ -53,14 +53,5 @@ This section outlines the process employed for the parametrization of ligands us
      - `saveamberparm complex complex.prmtop complex.rst7`
    - Purpose: Construct the full protein-ligand simulation system, including solvation and ion placement, and
 
-## Calculation of Mulliken Charges
-This step provides an initial charge distribution based on the electronic density obtained from quantum calculations. Mulliken charges may not be the most suitable for molecular dynamics simulations due to their dependence on the orbital basis used and other limitations.
-
-## Application of the AM1-BCC Method
-The AM1-BCC (Austin Model 1 - Bond Charge Correction) method is an improvement over Mulliken charges. It adjusts charges using a semi-empirical model to make them more appropriate for use in force fields like GAFF (General Amber Force Field). This method is known for providing more realistic charges for a wide range of organic molecules.
-
-## Empirical Adjustment
-The adjustment made in this step, though based on an empirical procedure, occurs after more rigorous calculations of the charges. The aim of this adjustment is to ensure that the total charge of the ligand is an integer (usually neutral or a specific ionic charge value). This adjustment is carried out in a way that minimizes the impact on the charges calculated by AM1-BCC.
-
 ## Summary
 This workflow is essential for accurate ligand representation in molecular dynamics simulations, particularly when employing the AMBER suite of tools. The semi-empirical methods used here strike a balance between computational efficiency and the accuracy required for reliable simulations.
