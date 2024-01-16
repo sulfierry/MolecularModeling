@@ -1,3 +1,12 @@
+"""
+    This script, is designed for adjusting the partial charges of hydrogen atoms in a molecular structure file (MOL2 format). 
+    It ensures that the total charge of the molecule, particularly the ligand, is an integer (ideally neutral or a specific ionic charge). 
+    The script reads the  original MOL2 file, calculates the sum of charges, and then distributes the necessary adjustments among the hydrogen 
+    atoms to achieve the desired total charge. The adjustments are made with precision to minimize any impact on the molecular structure and charge 
+    distribution, maintaining six decimal places accuracy. After the adjustments, the script saves the new MOL2 file with updated charges. It also 
+    plots the percentage difference in charges of hydrogens before and after the adjustment for a visual representation of the changes.
+"""
+
 import matplotlib.pyplot as plt
 
 class ChargeAdjust:
