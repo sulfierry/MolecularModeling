@@ -32,15 +32,25 @@ class ChargeAdjust:
         return charges
 
     def adjust_hydrogen_charges(self, charges):
-        difference = sum(charges)
-        hydrogens = [i for i, charge in enumerate(charges) if charge > 0]
+        difference = sum(charges) # calculate the sum of all charges in the molecule
+        
+        # creates a list, hydrogens`, containing the indices of all hydrogen atoms in the molecule 
+        # it assumes that the hydrogen atoms are those with positive charges
+        hydrogens = [i for i, charge in enumerate(charges) if charge > 0] 
+
+        # calculates the total amount of charge that needs to be adjusted to make the molecule's total charge an integer
+        # it rounds the total charge to the nearest integer and subtracts the original total charge to get the difference that needs to be distributed among the hydrogens
         total_adjustment = round(difference) - difference
+
+        # divides the total adjustment evenly among all hydrogen atoms 
+        # this ensures that each hydrogen atom's charge is adjusted by an equal amount
         adjustment_per_hydrogen = total_adjustment / len(hydrogens)
         
         for i in hydrogens:
             charges[i] += adjustment_per_hydrogen
             charges[i] = round(charges[i], 6)
 
+        # returns the updated list charges, which contains the adjusted partial charges for all atoms in the molecule, ensuring that the total charge of the molecule is now an integer.
         return charges
 
     def format_atom_line(self, line, charge):
