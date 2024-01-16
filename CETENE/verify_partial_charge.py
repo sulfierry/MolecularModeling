@@ -22,6 +22,19 @@ class ChargeAdjust:
                         carga = float(partes[8])
                         cargas.append(carga)
         return cargas
+
+    def ajustar_cargas_hidrogenios(self, cargas):
+        diferenca = sum(cargas)
+        hidrogenios = [i for i, carga in enumerate(cargas) if carga > 0]
+        ajuste_total = round(diferenca) - diferenca
+        ajuste_por_hidrogenio = ajuste_total / len(hidrogenios)
+        
+        for i in hidrogenios:
+            cargas[i] += ajuste_por_hidrogenio
+            cargas[i] = round(cargas[i], 6)
+
+        return cargas
+
     def formatar_linha_atom(self, linha, carga):
         partes = linha.split()
         carga_formatada = f"{carga:.6f}" if carga != -0.000000 else "0.000000"
@@ -68,36 +81,25 @@ class ChargeAdjust:
         return dados_cargas
 
 
-    def calcular_diferencas_estatisticas(self, dados_iniciais, dados_corrigidos):
-        diferenças = []
+    def calcular_diferencas_percentuais(self, dados_iniciais, dados_corrigidos):
+        diferenças_percentuais = []
         for (atomo_ini, carga_ini), (atomo_cor, carga_cor) in zip(dados_iniciais, dados_corrigidos):
-            diferença = carga_cor - carga_ini
-            diferenças.append((atomo_ini, diferença))
-        return diferenças
+            if 'H' in atomo_ini:  # Considerando apenas hidrogênios
+                diferença_percentual = ((carga_cor - carga_ini) / carga_ini) * 100 if carga_ini != 0 else 0
+                diferenças_percentuais.append((atomo_ini, diferença_percentual))
+        return diferenças_percentuais
 
-    def plotar_histogramas(self, cargas_antes, cargas_ajustadas):
+    def plotar_diferencas_percentuais(self, diferencas_percentuais):
+        atomos, diferencas = zip(*diferencas_percentuais)
         plt.figure(figsize=(12, 6))
-
-        # Histograma antes do ajuste
-        plt.subplot(1, 2, 1)
-        plt.hist(cargas_antes, bins=20, color='lightblue', alpha=0.7)
-        #plt.axvline(x=sum(cargas_antes)/len(cargas_antes), color='darkblue', linestyle='dashed', linewidth=1)
-        plt.title("Antes do Ajuste")
-        plt.xlabel("Carga Parcial")
-        plt.ylabel("Frequência")
-
-        # Histograma após o ajuste
-        plt.subplot(1, 2, 2)
-        plt.hist(cargas_ajustadas, bins=20, color='salmon', alpha=0.7)
-        #plt.axvline(x=sum(cargas_ajustadas)/len(cargas_ajustadas), color='darkred', linestyle='dashed', linewidth=1)
-        plt.title("Após o Ajuste")
-        plt.xlabel("Carga Parcial")
-        plt.ylabel("Frequência")
-
-        plt.suptitle("Histograma de Cargas Parciais: Antes e Depois do Ajuste")
+        plt.bar(atomos, diferencas, color='purple')
+        plt.xlabel("Átomos de Hidrogênio")
+        plt.ylabel("Diferença Percentual (%)")
+        plt.title("Diferença Percentual nas Cargas Parciais dos Hidrogênios")
+        plt.xticks(rotation=45)
         plt.show()
 
-
+    
     def main(self):
         cargas_antes = self.ler_cargas_mol2()
         soma_cargas_antes = sum(cargas_antes)
@@ -111,12 +113,9 @@ class ChargeAdjust:
 
         dados_iniciais = self.armazenar_dados_cargas(self.input_name)
         dados_corrigidos = self.armazenar_dados_cargas(self.output_name)
-        diferencas = self.calcular_diferencas_estatisticas(dados_iniciais, dados_corrigidos)
+        diferencas_percentuais = self.calcular_diferencas_percentuais(dados_iniciais, dados_corrigidos)
+        self.plotar_diferencas_percentuais(diferencas_percentuais)
 
-        for atomo, diferenca in diferencas:
-            print(f"Atomo: {atomo}, Diferença: {diferenca:.6f}")
-
-        self.plotar_histogramas(cargas_antes, cargas_ajustadas)
 
 if __name__ == "__main__":
     charge_adjuster = ChargeAdjust('ligand.mol2')
