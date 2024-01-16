@@ -66,3 +66,34 @@ class ChargeAdjust:
                         carga = float(partes[8])
                         dados_cargas.append((atomo, carga))
         return dados_cargas
+
+
+    def calcular_diferencas_estatisticas(self, dados_iniciais, dados_corrigidos):
+        diferenças = []
+        for (atomo_ini, carga_ini), (atomo_cor, carga_cor) in zip(dados_iniciais, dados_corrigidos):
+            diferença = carga_cor - carga_ini
+            diferenças.append((atomo_ini, diferença))
+        return diferenças
+
+    def plotar_histogramas(self, cargas_antes, cargas_ajustadas):
+        plt.figure(figsize=(12, 6))
+
+        # Histograma antes do ajuste
+        plt.subplot(1, 2, 1)
+        plt.hist(cargas_antes, bins=20, color='lightblue', alpha=0.7)
+        #plt.axvline(x=sum(cargas_antes)/len(cargas_antes), color='darkblue', linestyle='dashed', linewidth=1)
+        plt.title("Antes do Ajuste")
+        plt.xlabel("Carga Parcial")
+        plt.ylabel("Frequência")
+
+        # Histograma após o ajuste
+        plt.subplot(1, 2, 2)
+        plt.hist(cargas_ajustadas, bins=20, color='salmon', alpha=0.7)
+        #plt.axvline(x=sum(cargas_ajustadas)/len(cargas_ajustadas), color='darkred', linestyle='dashed', linewidth=1)
+        plt.title("Após o Ajuste")
+        plt.xlabel("Carga Parcial")
+        plt.ylabel("Frequência")
+
+        plt.suptitle("Histograma de Cargas Parciais: Antes e Depois do Ajuste")
+        plt.show()
+
