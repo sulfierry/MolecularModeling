@@ -56,3 +56,6 @@ The AM1-BCC (Austin Model 1 - Bond Charge Correction) method is an improvement o
 
 ## Empirical Adjustment
 The adjustment made in this step, though based on an empirical procedure, occurs after more rigorous calculations of the charges. The aim of this adjustment is to ensure that the total charge of the ligand is an integer (usually neutral or a specific ionic charge value). This adjustment is carried out in a way that minimizes the impact on the charges calculated by AM1-BCC.
+
+## Summary
+This workflow is essential for accurate ligand representation in molecular dynamics simulations, particularly when employing the AMBER suite of tools. The semi-empirical methods used here strike a balance between computational efficiency and the accuracy required for reliable simulations.
