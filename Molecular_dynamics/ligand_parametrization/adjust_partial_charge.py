@@ -57,8 +57,6 @@ class ChargeAdjust:
 
         return charges
 
-
-
     def format_atom_line(self, line, charge):
         parts = line.split()
         formatted_charge = f"{charge:.6f}" if charge != -0.000000 else "0.000000"
