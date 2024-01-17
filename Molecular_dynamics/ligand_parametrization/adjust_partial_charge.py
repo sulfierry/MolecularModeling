@@ -32,27 +32,32 @@ class ChargeAdjust:
         return charges
 
     def adjust_hydrogen_charges(self, charges):
-        difference = sum(charges) # calculate the sum of all charges in the molecule
-        
-        # creates a list, hydrogens`, containing the indices of all hydrogen atoms in the molecule 
-        # it assumes that the hydrogen atoms are those with positive charges
-        hydrogens = [i for i, charge in enumerate(charges) if charge > 0] 
+        original_charges = charges.copy()
+        total_charge = sum(charges)
+        adjustment_needed = -total_charge
 
-        # calculates the total amount of charge that needs to be adjusted to make the molecule's total charge an integer
-        # it rounds the total charge to the nearest integer and subtracts the original total charge to get the difference that needs to be distributed among the hydrogens
-        total_adjustment = round(difference) - difference
+        hydrogens = [i for i, charge in enumerate(charges) if charge > 0]
+        if not hydrogens:
+            print("Nenhum átomo de hidrogênio encontrado para ajuste.")
+            return charges
 
-        # divides the total adjustment evenly among all hydrogen atoms 
-        # this ensures that each hydrogen atom's charge is adjusted by an equal amount
-        adjustment_per_hydrogen = total_adjustment / len(hydrogens)
-        
+        # Distribui o ajuste inicial
+        adjustment_per_hydrogen = adjustment_needed / len(hydrogens)
         for i in hydrogens:
             charges[i] += adjustment_per_hydrogen
             charges[i] = round(charges[i], 6)
 
-        # returns the updated list charges, which contains the adjusted partial charges for all atoms in the molecule 
-        # ensuring that the total charge of the molecule is now an integer
+        # Ajuste final para correção de pequenas discrepâncias
+        final_total_charge = sum(charges)
+        if abs(final_total_charge) >= 0.000001:
+            # Escolhe o hidrogênio com a menor variação absoluta após o ajuste
+            min_variation_index = min(hydrogens, key=lambda i: abs((original_charges[i] + adjustment_per_hydrogen) - charges[i]))
+            charges[min_variation_index] -= final_total_charge
+            charges[min_variation_index] = round(charges[min_variation_index], 6)
+
         return charges
+
+
 
     def format_atom_line(self, line, charge):
         parts = line.split()
