@@ -106,7 +106,7 @@ Key functionalities include:
 - Saving the computed descriptors to a TSV file.
 - Generating histograms to visualize the distribution of these descriptors.
 
-![Alt text da image]([https://github.com/gmmsb-lncc/CoV-2/blob/main/workflow.png](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/nr_chembl_pkidb_descriptors.png)
+![Alt text da image](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/nr_chembl_pkidb_descriptors.png)
 
 
 This script is an essential tool in the pre-processing of molecular data for cheminformatics analyses.
