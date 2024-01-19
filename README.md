@@ -14,6 +14,7 @@ This repository is a diverse collection of tools and scripts aimed at facilitati
 3. **Molecular Dynamics**: Offers input files and protocols for molecular dynamics simulations, encompassing steps from energy minimization to long-term production runs.
     - Input parameters for different stages of molecular dynamics simulations.
     - Protocols detailing steps like pre-relaxation, relaxation, and production phases.
+    - `md_play_protocol.sh`: A shell script that automates the entire molecular dynamics process, from energy minimization to the production run.
 
 ## Overview
 
