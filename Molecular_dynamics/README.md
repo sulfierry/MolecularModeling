@@ -14,7 +14,6 @@ This directory is dedicated to the setup and execution of molecular dynamics sim
    - Houses input files such as initial coordinates and configurations required for running molecular dynamics simulations. These inputs are foundational for initiating and accurately running simulations.
 
 
-
 ## Shell Script
 
 - **`md_play_protocoll.sh`**:
@@ -24,10 +23,6 @@ This directory is dedicated to the setup and execution of molecular dynamics sim
    - Each stage of the simulation is defined with specific input parameters and configurations, ensuring a comprehensive exploration of the molecular system's dynamics.
    - The script supports both GPU-accelerated (`pmemd.cuda`) and parallel CPU (`mpirun -np 48 sander.MPI`) executions, making it adaptable to various computational resources.
    - Output files from each stage are systematically saved, providing a detailed trajectory of the simulation process.
-
-   - ### Molecular Dynamics Play Protocol (`md_play_protocol.sh`)
-
-This shell script automates the execution of various stages in molecular dynamics simulations using AMBER software. It orchestrates the transition from energy minimization to production runs, handling each step with appropriate input parameters and file management.
 
 #### Overview
 
