@@ -20,3 +20,19 @@ ncyc=1000 # Etapas de descida mais íngreme antes do gradiente conjugado
 ntpr=100
 ntwx=0
 cut=10.0
+
+
+> `maxcyc`: Máximo de ciclos de minimização. `maxcyc=2000` para minimizador `xmin` com método TNCG.
+
+### LMOD Procedure
+
+- Utiliza autovetores de modos vibracionais de baixa frequência.
+- Inicia com modelo molecular minimizado energeticamente.
+- Usa ARPACK para modos vibracionais.
+- `Hv` calculado via diferenças finitas: `Hv = [∇(xmin+h)−∇(xmin)]/h`.
+- Reutilização de autovetores para eficiência em LMOD.
+
+### XMIN
+float xmin( float func(), int natm, float x[], float g[], float ene, float grms_out, struct xmod_opt xo);
+
+
