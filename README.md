@@ -17,9 +17,7 @@ This directory contains detailed protocols and input files for molecular dynamic
 - **Simulation Protocols**: 
   - Detailed step-by-step procedures for various stages of molecular dynamics simulations, including energy minimization, equilibration, and production runs.
   - Specific focus on ensuring system stability and realistic molecular behavior through various stages such as pre-relaxation, relaxation with different restraint levels, and long-term production phases in different ensembles.
-
-- **Input Files**:
-  - Contains essential input files for simulations, tailored according to the outlined protocols. These files are crucial for initiating and running simulations in molecular dynamics software.
+  - Contains essential input informations for simulations, tailored according to the outlined protocols. These files are crucial for initiating and running simulations in molecular dynamics software.
 
 ## Repository Usage:
 
