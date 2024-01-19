@@ -9,6 +9,8 @@ Key features:
 - Highlights the substructure within the full molecular structure and saves the image.
 - Displays both the complete molecule and the substructure for visual validation.
 
+![Alt text da image](https://github.com/sulfierry/MolecularModelingTools/blob/main/Scaffold_finder/highlighted_substructure.png)
+
 This script is particularly useful for confirming the presence of key functional groups or motifs in larger molecules.
 
 
@@ -22,5 +24,7 @@ Primary functionalities:
 - Processes a list of molecules in parallel to efficiently handle large datasets.
 - Adds scaffold information and similarity scores to the existing dataset.
 - Filters and saves the dataset based on similarity thresholds.
+
+
 
 This script aids in the identification of common scaffolds and the assessment of molecular similarity, which is crucial in cheminformatics and drug discovery processes.
