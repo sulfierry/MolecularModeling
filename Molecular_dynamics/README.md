@@ -74,8 +74,9 @@ restraintmask="X"
 - `nmropt`: Controle de parâmetros NMR e variações. `nmropt=1` para restrições e alterações.
 
 - `ig`: Semente para gerador de números pseudo-aleatórios. `-1` para semente baseada em data/hora.
-- `iwrap`: Empacotamento de coordenadas em caixa primária. `iwrap=1` para empacotamento.
-- `ntr`: Restrição de átomos no espaço cartesiano. `ntr=1` com `restraintmask` definido.
+- `iwrap`: Empacotamento de coordenadas em caixa primária. `iwrap=1` para empacotamento. Isso significa que, para cada molécula, sua imagem periódica mais próxima do meio da "caixa primária" (com coordenadas x entre 0 e a, coordenadas y entre 0 e b e coordenadas z entre 0 e c) será aquela escrita para o arquivo de saída. Isso geralmente faz com que as estruturas resultantes pareçam visualmente melhores, mas não tem efeito sobre a energia ou as forças. Executar tal empacotamento, no entanto, pode atrapalhar a difusão e outros cálculos.
+- Para execuções muito longas, pode ser necessário definir `iwrap = 1` para evitar que a saída de coordenadas transborde a trajetória e reinicie os formatos de arquivo, especialmente se as trajetórias forem escritas no formato `ASCII` em vez de `NetCDF` (consulte também a opção `ioutfm`).
+- `ntr`: Restrição de átomos no espaço cartesiano utilizando potencial harmônico. `ntr=1` com `restraintmask` definido.
 
 ---
 
