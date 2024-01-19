@@ -7,11 +7,13 @@ This directory is dedicated to the setup and execution of molecular dynamics sim
 1. **`ligand_parametrization`**:
    - Contains scripts and input files related to the parametrization of ligands. This process is essential for preparing ligands for accurate simulation within the molecular dynamics framework.
 
-2. **`molecular_dynamics_input`**:
+2. **`parametrization (protein)`**:
+   - This folder includes scripts and tools for the parametrization of the entire molecular system, including proteins, ligands, and solvent models. It typically involves setting up force fields, system solvation, and ion placements.
+    
+3. **`molecular_dynamics_input`**:
    - Houses input files such as initial coordinates and configurations required for running molecular dynamics simulations. These inputs are foundational for initiating and accurately running simulations.
 
-3. **`parametrization`**:
-   - This folder includes scripts and tools for the parametrization of the entire molecular system, including proteins, ligands, and solvent models. It typically involves setting up force fields, system solvation, and ion placements.
+
 
 ## Shell Script
 
