@@ -68,8 +68,11 @@ restraintmask="X"
 - `ntwx` e `ntwr`: Frequência de gravação de coordenadas e arquivo de reinício.
 - `ntb`: Controle de limites periódicos. Padrão para pressão constante: `ntb=2`.
 - `ntp`: Dinâmica de pressão constante. `ntp=1` para escala de posição isotrópica.
-- `ntt`: Escalonamento de temperatura. `ntt=2` para conjunto canônico.
+- `ntt`: Escalonamento de temperatura. `ntt=2` para conjunto canônico.  Observe que a configuração `ntt=0` corresponde ao ensemble microcanônico `(NVE)` (que deve se aproximar do canônico para grandes números de graus de liberdade). Alguns aspectos do "conjunto de acoplamento fraco" `(ntt=1)` foram examinados e aproximadamente interpolados entre os conjuntos microcanônico e canônico. As opções `ntt=2` e `3` correspondem ao conjunto canônico (T constante).
+- `ntt=2` pois definimos o esquema de acoplamento de temperatura do tipo `Andersen`, no qual "colisões" imaginárias randomizam as velocidades para uma distribuição correspondente a `temp0` a cada `vrand` passos. Observe que entre essas "colisões massivas", a dinâmica é newtoniana. Portanto, as funções de correlação de tempo (etc.) podem ser calculadas nessas seções e os resultados calculados em uma distribuição canônica inicial. Observe também que uma taxa de colisão muito alta (um valor muito pequeno de `vrand`) diminuirá a velocidade com que as moléculas exploram o espaço de configuração, enquanto uma taxa muito baixa significa que a distribuição canônica de energias será amostrada lentamente. Uma discussão sobre essa taxa é fornecida por `Andersen`. Observe que esta opção não é equivalente ao termostato original descrito por `Andersen`.
+
 - `nmropt`: Controle de parâmetros NMR e variações. `nmropt=1` para restrições e alterações.
+
 - `ig`: Semente para gerador de números pseudo-aleatórios. `-1` para semente baseada em data/hora.
 - `iwrap`: Empacotamento de coordenadas em caixa primária. `iwrap=1` para empacotamento.
 - `ntr`: Restrição de átomos no espaço cartesiano. `ntr=1` com `restraintmask` definido.
