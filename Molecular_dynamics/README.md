@@ -84,32 +84,44 @@ restraintmask="X"
 This format provides a clear and concise structure, making it easier to understand the parameters and their functions in molecular dynamics simulations.
 
 
-# Molecular Dynamics Simulation Protocol
+# Molecular Dynamics Play Protocol (`md_play_protocol.sh`)
 
-This document outlines a detailed protocol used in molecular dynamics simulations focusing on various stages ranging from energy minimization to production runs. 
+This shell script automates the execution of various stages in molecular dynamics simulations using AMBER software. It orchestrates the transition from energy minimization to production runs, handling each step with appropriate input parameters and file management.
 
-## Steps in the Protocol:
+## Overview
 
-1. **1000 Steps of Energy Minimization**: 
-   - Purpose: To minimize potential energy conflicts in the system, ensuring a stable starting point for dynamic simulations.
+The script is designed to sequentially process multiple stages of molecular dynamics:
 
-2. **300ps Pre-relaxation NPT with Restraints on Protein and Ligand**: 
-   - Aim: To equilibrate the system under constant pressure and temperature while maintaining the structural integrity of protein and ligand.
+1. **Energy Minimization**: Reduces the energy of the system to a local minimum.
+2. **Relaxation**: Involves several phases to gradually relax the system, each with specific constraints and timeframes.
+3. **Pre-Production**: Equilibrates the system under defined conditions before the main production run.
+4. **Production**: The final stage where the actual molecular dynamics simulation is carried out.
 
-3. **200ps Relaxation NPT with Restraints on Protein**: 
-   - Objective: Further equilibration of the system with a focus on allowing the protein to adjust without altering the ligand's position.
+## How it Works
 
-4. **200ps Relaxation NPT with No Restraints on Side Chains within 5 Å of the Ligand**: 
-   - Goal: To relax side chains close to the ligand, enabling more natural interactions while keeping the core protein structure stable.
+- The script defines arrays for input files, restart files, trajectories, and outputs corresponding to each stage.
+- It uses `pmemd.cuda` for GPU-accelerated processing and `sander.MPI` for parallel execution.
+- The script iterates through each stage, executing the AMBER tools with the specified parameters.
+- Conditional logic is applied to handle different requirements at each simulation stage.
 
-5. **200ps Relaxation NPT with No Restraints on Residues within 5 Å of the Ligand**: 
-   - Purpose: To allow residues near the ligand to move freely, facilitating realistic ligand-protein interactions.
+### Key Stages and Parameters
 
-6. **5 ns Pre-production NVE**: 
-   - Intention: To stabilize the system in a microcanonical ensemble (constant energy), preparing it for the production phase.
+- **Minimization (1000 steps)**: Uses the `0_minimization.in` input file.
+- **Relaxation Phases (total 1 ns)**:
+  - **Phase 1**: 300 ps pre-relaxation NPT with constraints on protein and ligand.
+  - **Phase 2**: 300 ps relaxation NPT with protein constraints.
+  - **Phase 3**: 200 ps relaxation NPT, no constraints on side chains within 5 Å of the ligand.
+  - **Phase 4**: 200 ps relaxation NPT, no constraints on residues within 5 Å of the ligand.
+- **Pre-Production (5 ns)**: Prepares the system for the production run.
+- **Production (100 ns)**: The main simulation phase, capturing the dynamics of the molecular system.
 
-7. **100 ns Production NVE**: 
-   - Objective: Extended simulation to capture the dynamic behavior of the protein-ligand complex under constant energy conditions, which is crucial for understanding molecular interactions and kinetics.
+## Usage
+
+Run the script in a shell environment with access to AMBER tools. Ensure the input files and `prmtop` file are correctly set up.
+
+```bash
+./md_play_protocol.sh
+```
 
 ---
 
