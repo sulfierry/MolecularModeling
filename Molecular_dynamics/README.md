@@ -108,7 +108,7 @@ This document outlines a detailed protocol used in molecular dynamics simulation
 6. **5 ns Pre-production NVE**: 
    - Intention: To stabilize the system in a microcanonical ensemble (constant energy), preparing it for the production phase.
 
-7. **50 ns Production NVE**: 
+7. **100 ns Production NVE**: 
    - Objective: Extended simulation to capture the dynamic behavior of the protein-ligand complex under constant energy conditions, which is crucial for understanding molecular interactions and kinetics.
 
 ---
