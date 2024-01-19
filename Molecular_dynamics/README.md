@@ -12,6 +12,7 @@ Este documento descreve os parâmetros comuns utilizados em simulações de din�
 - `cut`: Define corte não ligado em Angstroms. Valor comum: `8.0` para PME.
 
 ## Minimização
+```
 imin=1
 ntx=1
 irest=0
@@ -20,7 +21,7 @@ ncyc=1000 # Etapas de descida mais íngreme antes do gradiente conjugado
 ntpr=100
 ntwx=0
 cut=10.0
-
+```
 
 > `maxcyc`: Máximo de ciclos de minimização. `maxcyc=2000` para minimizador `xmin` com método TNCG.
 
@@ -39,7 +40,7 @@ float xmin( float func(), int natm, float x[], float g[], float ene, float grms_
 - `xmin()`: Retorna energia minimizada e atualiza coordenadas para a conformação de energia mínima.
 
 ## Configurações para Relaxamento, Pré-produção e Produção
-
+```
 imin=0
 dt=0.002
 ntf=2
@@ -57,7 +58,7 @@ ig=-1
 iwrap=1
 ntr=1
 restraintmask="X"
-
+```
 
 ### Parâmetros Explicados
 
