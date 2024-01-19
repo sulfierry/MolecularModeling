@@ -62,7 +62,6 @@ ntr=1
 restraintmask="X"
 ```
 
-
 ### Explained parameters
 
 - `dt`: Time step. Maximum recommended: `0.002` with SHAKE.
@@ -83,8 +82,3 @@ restraintmask="X"
 ---
 
 This format provides a clear and concise structure, making it easier to understand the parameters and their functions in molecular dynamics simulations.
-
-
----
-
-Esse formato proporciona uma estrutura clara e concisa, facilitando a compreensão dos parâmetros e suas funções nas simulações de dinâmica molecular.
