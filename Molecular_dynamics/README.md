@@ -1,8 +1,8 @@
-# Molecular Dynamics Input Parameters
+# Molecular dynamics input parameters
 
 This document outlines common parameters used in molecular dynamics simulations, covering stages of minimization, relaxation, and production.
 
-## Common Parameters in All Stages
+## Common parameters in all stages
 
 - `imin`: Indicates minimization execution. `imin=1` for energy minimization.
 - `ntx`: Reads coordinates from the "inpcrd" file. Supported options: `1` (standard format without initial velocity) and `2`.
@@ -26,7 +26,7 @@ cut=10.0
 
 > `maxcyc`: Maximum cycles of minimization. `maxcyc=2000` for `xmin` minimizer with TNCG method.
 
-### LMOD Procedure
+### LMOD procedure
 
 - Uses eigenvectors of low-frequency vibrational modes.
 - Starts with energetically minimized molecular model.
@@ -40,7 +40,7 @@ float xmin( float func(), int natm, float x[], float g[], float ene, float grms_
 
 - `xmin()`: Returns minimized energy and updates coordinates to the minimum energy conformation.
 
-## Settings for Relaxation, Pre-Production, and Production
+## General settings for relaxation, pre-Production, and production
 
 ```
 imin=0
@@ -63,7 +63,7 @@ restraintmask="X"
 ```
 
 
-### Explained Parameters
+### Explained parameters
 
 - `dt`: Time step. Maximum recommended: `0.002` with SHAKE.
 - `ntf` and `ntc`: Force evaluation and bond length constraints with SHAKE.
