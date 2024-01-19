@@ -1,3 +1,35 @@
+# Molecular Dynamics Folder Overview
+
+This directory is dedicated to the setup and execution of molecular dynamics simulations. It contains organized subfolders and scripts that streamline the parametrization and simulation processes. Below is an overview of each component within this folder:
+
+## Subfolders
+
+1. **`ligand_parametrization`**:
+   - Contains scripts and input files related to the parametrization of ligands. This process is essential for preparing ligands for accurate simulation within the molecular dynamics framework.
+
+2. **`molecular_dynamics_input`**:
+   - Houses input files such as initial coordinates and configurations required for running molecular dynamics simulations. These inputs are foundational for initiating and accurately running simulations.
+
+3. **`parametrization`**:
+   - This folder includes scripts and tools for the parametrization of the entire molecular system, including proteins, ligands, and solvent models. It typically involves setting up force fields, system solvation, and ion placements.
+
+## Shell Script
+
+- **`md_play_protocoll.sh`**:
+   - A shell script designed to automate the process of running a series of molecular dynamics simulations. The script organizes the workflow into distinct stages, such as minimization, relaxation, pre-production, and production phases. It ensures that each step is executed sequentially and efficiently, utilizing the input files and parameters defined in the above folders.
+
+### Script Functions
+   - Each stage of the simulation is defined with specific input parameters and configurations, ensuring a comprehensive exploration of the molecular system's dynamics.
+   - The script supports both GPU-accelerated (`pmemd.cuda`) and parallel CPU (`mpirun -np 48 sander.MPI`) executions, making it adaptable to various computational resources.
+   - Output files from each stage are systematically saved, providing a detailed trajectory of the simulation process.
+
+## Usage
+
+- To run the molecular dynamics protocol, navigate to this directory and execute the `md_play_protocoll.sh` script. Ensure that all prerequisite files and parameters are correctly set up in the respective subfolders.
+
+This organized structure within the "Molecular Dynamics" folder facilitates a streamlined and efficient approach to conducting molecular dynamics simulations, catering to both novice and experienced users in the field of computational chemistry and molecular modeling.
+
+
 # Molecular Dynamics Play Protocol (`md_play_protocol.sh`)
 
 This shell script automates the execution of various stages in molecular dynamics simulations using AMBER software. It orchestrates the transition from energy minimization to production runs, handling each step with appropriate input parameters and file management.
