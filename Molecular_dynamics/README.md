@@ -36,3 +36,43 @@ cut=10.0
 float xmin( float func(), int natm, float x[], float g[], float ene, float grms_out, struct xmod_opt xo);
 
 
+- `xmin()`: Retorna energia minimizada e atualiza coordenadas para a conformação de energia mínima.
+
+## Configurações para Relaxamento, Pré-produção e Produção
+
+imin=0
+dt=0.002
+ntf=2
+ntc=2
+temp0=300.0
+ntpr=100
+ntwx=2000
+ntwr=2000
+cut=10.0
+ntb=2
+ntp=1
+ntt=2
+nmropt=1
+ig=-1
+iwrap=1
+ntr=1
+restraintmask="X"
+
+
+### Parâmetros Explicados
+
+- `dt`: Passo de tempo. Máximo recomendado: `0.002` com SHAKE.
+- `ntf` e `ntc`: Avaliação de força e restrições de comprimento de ligação com SHAKE.
+- `temp0`: Temperatura de referência. Padrão: `300K`.
+- `ntwx` e `ntwr`: Frequência de gravação de coordenadas e arquivo de reinício.
+- `ntb`: Controle de limites periódicos. Padrão para pressão constante: `ntb=2`.
+- `ntp`: Dinâmica de pressão constante. `ntp=1` para escala de posição isotrópica.
+- `ntt`: Escalonamento de temperatura. `ntt=2` para conjunto canônico.
+- `nmropt`: Controle de parâmetros NMR e variações. `nmropt=1` para restrições e alterações.
+- `ig`: Semente para gerador de números pseudo-aleatórios. `-1` para semente baseada em data/hora.
+- `iwrap`: Empacotamento de coordenadas em caixa primária. `iwrap=1` para empacotamento.
+- `ntr`: Restrição de átomos no espaço cartesiano. `ntr=1` com `restraintmask` definido.
+
+---
+
+Esse formato proporciona uma estrutura clara e concisa, facilitando a compreensão dos parâmetros e suas funções nas simulações de dinâmica molecular.
