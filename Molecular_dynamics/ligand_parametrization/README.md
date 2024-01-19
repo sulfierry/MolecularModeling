@@ -4,36 +4,24 @@ This section outlines the process employed for the parametrization of ligands us
 
 ## Steps Involved in the Parametrization Process
 
-1. **Conversion of PDB to MOL2 Format**: 
+1. **Conversion of PDB to MOL2 format**: 
    - Command: `antechamber -i ligand.pdb -fi pdb -o ligand.mol2 -fo mol2 -c bcc`
    - Purpose: Convert the ligand file from PDB format to MOL2 format, suitable for further parametrization.
 
-2. **Generation of Mulliken Charges using Antechamber**: 
-   - Command: `antechamber -i ligand.mol2 -fi mol2 -fo ac -o ligand.ac -c mul`
-   - Purpose: Calculate Mulliken charges for the ligand, providing an initial charge distribution.
-   - This step provides an initial charge distribution based on the electronic density obtained from quantum calculations. Mulliken charges may not be the most suitable for molecular dynamics simulations due to their dependence on the orbital basis used and other limitations.
-
-
-3. **Application of AM1-BCC Method**: 
-   - Command: `am1bcc -i ligand.ac -f ac -o ligand_bcc.ac -j 5`
-   - Purpose: Employ the AM1-BCC method to refine the atomic charges based on a semi-empirical approach.
-   - The AM1-BCC (Austin Model 1 - Bond Charge Correction) method is an improvement over Mulliken charges. It adjusts charges using a semi-empirical model to make them more appropriate for use in force fields like GAFF (General Amber Force Field). This method is known for providing more realistic charges for a wide range of organic molecules.
-
-
-4. **Adjustment of Charges to Integer Values**: 
+4. **Adjustment of Charges values**: 
    - Command: `antechamber -i ligand_bcc.ac -fi ac -o ligand_charges_values.mol2 -fo mol2 -nc <desired_charge>`
    - Purpose: Adjust the total charge of the ligand to an integer value, ensuring charge neutrality or a specific ionic state.
 
-5. **Empirical Charge Distribution Among Hydrogen Atoms**: 
+5. **Empirical charge distribution among hydrogen atoms**: 
    - Script: `adjust_partial_charge.py`
    - Purpose: Empirically distribute charges among hydrogen atoms to ensure the final total charge of the ligand is an integer. This script fine-tunes the partial charges of hydrogen atoms to align with the molecule's total charge.
    - The adjustment made in this step, though based on an empirical procedure, occurs after more rigorous calculations of the charges. The aim of this adjustment is to ensure that the total charge of the ligand is an integer (usually neutral or a specific ionic charge value). This adjustment is carried out in a way that minimizes the impact on the charges calculated by AM1-BCC.
 
-6. **Generation of Additional Force Field Parameters (.frcmod File)**: 
+6. **Generation of additional force field parameters (.frcmod File)**: 
    - Command: `parmchk2 -i ligand_charges_values.mol2 -f mol2 -o ligand.frcmod`
    - Purpose: Generate a .frcmod file containing additional force field parameters that might not be present in the standard GAFF (General Amber Force Field).
 
-7. **Preparation of Ligand Library and Complex for Simulation**: 
+7. **Preparation of ligand library and complex for simulation**: 
    - Commands: 
      - `source leaprc.gaff`
      - `LIG = loadmol2 ligand_charges_values.mol2`
@@ -41,7 +29,7 @@ This section outlines the process employed for the parametrization of ligands us
      - `saveamberparm LIG ligand.prmtop ligand.rst7`
    - Purpose: Prepare the ligand library and parameter files necessary for the simulation, using the tleap tool of AMBER.
 
-8. **Assembly of the Protein-Ligand Complex**: 
+8. **Assembly of the protein-ligand complex**: 
    - Commands: 
      - `source leaprc.protein.ff19SB`
      - `source leaprc.water.opc`
