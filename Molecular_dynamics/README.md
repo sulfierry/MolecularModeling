@@ -1,23 +1,24 @@
 # Molecular Dynamics Input Parameters
 
-Este documento descreve os parâmetros comuns utilizados em simulações de dinâmica molecular, abrangendo as etapas de minimização, relaxamento e produção.
+This document outlines common parameters used in molecular dynamics simulations, covering stages of minimization, relaxation, and production.
 
-## Parâmetros Comuns em Todas as Etapas
+## Common Parameters in All Stages
 
-- `imin`: Indica execução de minimização. `imin=1` para minimização de energia.
-- `ntx`: Lê coordenadas do arquivo “inpcrd”. Opções suportadas: `1` (formato padrão sem velocidade inicial) e `2`.
-- `irest`: Reinicia simulação. `irest=0` (padrão) não reinicia.
-- `ntpr`: Imprime progresso a cada `ntpr` passos.
-- `ntwx`: Grava coordenadas no arquivo `mdcrd` a cada `ntwx` passos. `ntwx=0` não grava.
-- `cut`: Define corte não ligado em Angstroms. Valor comum: `8.0` para PME.
+- `imin`: Indicates minimization execution. `imin=1` for energy minimization.
+- `ntx`: Reads coordinates from the "inpcrd" file. Supported options: `1` (standard format without initial velocity) and `2`.
+- `irest`: Restarts simulation. `irest=0` (default) does not restart.
+- `ntpr`: Prints progress every `ntpr` steps.
+- `ntwx`: Writes coordinates to the `mdcrd` file every `ntwx` steps. `ntwx=0` does not record.
+- `cut`: Sets non-bonded cutoff in Angstroms. Common value: `8.0` for PME.
 
-## Minimização
+## Minimization
+
 ```
 imin=1
 ntx=1
 irest=0
-maxcyc=2000 # Máximo de ciclos de minimização
-ncyc=1000 # Etapas de descida mais íngreme antes do gradiente conjugado
+maxcyc=2000 # Maximum cycles of minimization
+ncyc=1000 # Stages of steepest descent before conjugate gradient
 ntpr=100
 ntwx=0
 cut=10.0
