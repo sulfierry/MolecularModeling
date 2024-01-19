@@ -2,7 +2,7 @@
 
 This documentation describes two scripts utilized for querying the ChEMBL database using SQL and post-processing the obtained data.
 
-## 1. SQL Script for ChEMBL Database Query
+## 1. SQL Script for ChEMBL Database Query - kinase_compounds.sql
 This script performs SQL queries in the ChEMBL database to retrieve kinase-related compounds with validated activity measurements.
 
 ### Script Overview:
@@ -46,7 +46,7 @@ WHERE
 \COPY public.smile_kinase_all_compounds TO '/home/leon/Desktop/ChEMBL_DATABSE/1_chembl_manually_validated/1_database/kinase_all_compounds.tsv' WITH (FORMAT csv, HEADER, DELIMITER E'\t');
 ```
 
-## 2. Python Post-Processing Script:
+## 2. Python Post-Processing Script - remove_redundance.py:
 
 The `verify_partial_charge.py` Python script is employed for post-processing kinase-related compound data, focusing on removing redundancies and identifying salt-free compounds.
 
@@ -94,3 +94,45 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+
+# Molecular Descriptors Calculation
+
+This script, `descriptors.py`, is designed to calculate various molecular descriptors from SMILES strings. These descriptors include molecular weight (MW), LogP, Hydrogen Bond Donors (HBD), Hydrogen Bond Acceptors (HBA), Topological Polar Surface Area (TPSA), and Number of Rotatable Bonds (NRB). The script reads the SMILES strings from a given file, computes these descriptors using RDKit, and saves the results.
+
+Key functionalities include:
+- Reading SMILES strings from a TSV file.
+- Calculating molecular descriptors for each molecule.
+- Saving the computed descriptors to a TSV file.
+- Generating histograms to visualize the distribution of these descriptors.
+
+![Alt text da image]([https://github.com/gmmsb-lncc/CoV-2/blob/main/workflow.png](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/nr_chembl_pkidb_descriptors.png)
+
+
+This script is an essential tool in the pre-processing of molecular data for cheminformatics analyses.
+
+
+# Molecular Clustering Based on Similarity
+
+`cluster_by_similarity.py` focuses on grouping molecules based on structural similarities. It uses the SMILES representation of molecules, converting these structures into molecular fingerprints. The script then performs clustering based on a predefined similarity threshold.
+
+Highlights of this script include:
+- Conversion of SMILES to molecular fingerprints using RDKit.
+- All-against-all comparison of fingerprints for similarity calculation.
+- Clustering of molecules based on Tanimoto similarity threshold.
+- Visualization of clusters in 2D space using t-SNE.
+
+This script offers an insightful approach to understand molecular diversity and similarity in large datasets.
+
+# Histograms for Molecular Similarity and Distance
+
+The `histogram.py` script compares molecular fingerprints in an all-against-all approach, computing similarity and distance measures for every pair of molecules in the dataset. It processes fingerprints in batches to efficiently manage memory and computational resources.
+
+Key features of the script:
+- Loading molecular fingerprints from SMILES strings.
+- Computing similarity using Tanimoto, Dice, and Cosine metrics.
+- Computing distance using Hamming and Manhattan metrics.
+- Generating histograms to display the distributions of these similarity and distance measures.
+
+This script is particularly useful for assessing the overall structural diversity and similarity within a molecular dataset.
+
