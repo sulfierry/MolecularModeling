@@ -25,18 +25,11 @@ This directory is dedicated to the setup and execution of molecular dynamics sim
    - The script supports both GPU-accelerated (`pmemd.cuda`) and parallel CPU (`mpirun -np 48 sander.MPI`) executions, making it adaptable to various computational resources.
    - Output files from each stage are systematically saved, providing a detailed trajectory of the simulation process.
 
-## Usage
-
-- To run the molecular dynamics protocol, navigate to this directory and execute the `md_play_protocoll.sh` script. Ensure that all prerequisite files and parameters are correctly set up in the respective subfolders.
-
-This organized structure within the "Molecular Dynamics" folder facilitates a streamlined and efficient approach to conducting molecular dynamics simulations, catering to both novice and experienced users in the field of computational chemistry and molecular modeling.
-
-
-## Molecular Dynamics Play Protocol (`md_play_protocol.sh`)
+   - ### Molecular Dynamics Play Protocol (`md_play_protocol.sh`)
 
 This shell script automates the execution of various stages in molecular dynamics simulations using AMBER software. It orchestrates the transition from energy minimization to production runs, handling each step with appropriate input parameters and file management.
 
-### Overview
+#### Overview
 
 The script is designed to sequentially process multiple stages of molecular dynamics:
 
@@ -45,14 +38,14 @@ The script is designed to sequentially process multiple stages of molecular dyna
 3. **Pre-Production**: Equilibrates the system under defined conditions before the main production run.
 4. **Production**: The final stage where the actual molecular dynamics simulation is carried out.
 
-### How it Works
+#### How it Works
 
 - The script defines arrays for input files, restart files, trajectories, and outputs corresponding to each stage.
 - It uses `pmemd.cuda` for GPU-accelerated processing and `sander.MPI` for parallel execution.
 - The script iterates through each stage, executing the AMBER tools with the specified parameters.
 - Conditional logic is applied to handle different requirements at each simulation stage.
 
-#### Key Stages and Parameters
+##### Key Stages and Parameters
 
 - **Minimization (1000 steps)**: Uses the `0_minimization.in` input file.
 - **Relaxation Phases (total 1 ns)**:
@@ -63,16 +56,19 @@ The script is designed to sequentially process multiple stages of molecular dyna
 - **Pre-Production (5 ns)**: Prepares the system for the production run.
 - **Production (100 ns)**: The main simulation phase, capturing the dynamics of the molecular system.
 
-### Usage
+## Usage
+
+- To run the molecular dynamics protocol, navigate to this directory and execute the `md_play_protocoll.sh` script. Ensure that all prerequisite files and parameters are correctly set up in the respective subfolders.
 
 Run the script in a shell environment with access to AMBER tools. Ensure the input files and `prmtop` file are correctly set up.
 
 ```bash
 ./md_play_protocol.sh
 ```
-
+- This comprehensive simulation protocol ensures that the system is adequately prepared and equilibrated at each stage before proceeding to the long-term dynamic analysis in the production phase.
 ---
 
-This comprehensive simulation protocol ensures that the system is adequately prepared and equilibrated at each stage before proceeding to the long-term dynamic analysis in the production phase.
+This organized structure within the "Molecular Dynamics" folder facilitates a streamlined and efficient approach to conducting molecular dynamics simulations, catering to both novice and experienced users in the field of computational chemistry and molecular modeling.
+
 
 
