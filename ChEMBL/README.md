@@ -68,7 +68,7 @@ The `verify_partial_charge.py` Python script is employed for post-processing kin
 4. **`save_positive_negative_files(salt_free_data, output_directory)`**: 
    - Saves two separate TSV files: one for compounds with positive activity and another for negative, based on the activity value.
 
-#### Script Execution:
+#### Script Execution
 
 ```python
 def main():
