@@ -82,3 +82,37 @@ restraintmask="X"
 ---
 
 This format provides a clear and concise structure, making it easier to understand the parameters and their functions in molecular dynamics simulations.
+
+
+# Molecular Dynamics Simulation Protocol
+
+This document outlines a detailed protocol used in molecular dynamics simulations focusing on various stages ranging from energy minimization to production runs. 
+
+## Steps in the Protocol:
+
+1. **1000 Steps of Energy Minimization**: 
+   - Purpose: To minimize potential energy conflicts in the system, ensuring a stable starting point for dynamic simulations.
+
+2. **300ps Pre-relaxation NPT with Restraints on Protein and Ligand**: 
+   - Aim: To equilibrate the system under constant pressure and temperature while maintaining the structural integrity of protein and ligand.
+
+3. **200ps Relaxation NPT with Restraints on Protein**: 
+   - Objective: Further equilibration of the system with a focus on allowing the protein to adjust without altering the ligand's position.
+
+4. **200ps Relaxation NPT with No Restraints on Side Chains within 5 Å of the Ligand**: 
+   - Goal: To relax side chains close to the ligand, enabling more natural interactions while keeping the core protein structure stable.
+
+5. **200ps Relaxation NPT with No Restraints on Residues within 5 Å of the Ligand**: 
+   - Purpose: To allow residues near the ligand to move freely, facilitating realistic ligand-protein interactions.
+
+6. **5 ns Pre-production NVE**: 
+   - Intention: To stabilize the system in a microcanonical ensemble (constant energy), preparing it for the production phase.
+
+7. **50 ns Production NVE**: 
+   - Objective: Extended simulation to capture the dynamic behavior of the protein-ligand complex under constant energy conditions, which is crucial for understanding molecular interactions and kinetics.
+
+---
+
+This comprehensive simulation protocol ensures that the system is adequately prepared and equilibrated at each stage before proceeding to the long-term dynamic analysis in the production phase.
+
+
