@@ -1,5 +1,5 @@
 1. **Molecular Dynamics Input (`molecular_dynamics_input`)**: 
-   - `run.sh`: An example script (similar to `md_play_protocol.sh` demonstrating how to initiate a molecular dynamics simulation. It serves as a template for users to customize their simulations.
+   - `run.sh`: An example script (similar to `md_play_protocol.sh`) demonstrating how to initiate a molecular dynamics simulation. It serves as a template for users to customize their simulations.
    - This sub-folder offers a guideline for setting up simulation inputs and parameters.
     
 2. **System Replicate (`system_replicate`)**:
