@@ -64,6 +64,7 @@ restraintmask="X"
 
 - `dt`: Passo de tempo. Máximo recomendado: `0.002` com SHAKE.
 - `ntf` e `ntc`: Avaliação de força e restrições de comprimento de ligação com SHAKE.
+- `tempi`: Temperatura inicial.
 - `temp0`: Temperatura de referência. Padrão: `300K`.
 - `ntwx` e `ntwr`: Frequência de gravação de coordenadas e arquivo de reinício.
 - `ntb`: Controle de limites periódicos. Padrão para pressão constante: `ntb=2`.
