@@ -122,7 +122,7 @@ Highlights of this script include:
 - Clustering of molecules based on Tanimoto similarity threshold.
 - Visualization of clusters in 2D space using t-SNE.
 
-![Alt text da image](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/tsne_similarity.png)
+![Alt text da image](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/tsne_similarity_5.png)
 
 This script offers an insightful approach to understand molecular diversity and similarity in large datasets.
 
