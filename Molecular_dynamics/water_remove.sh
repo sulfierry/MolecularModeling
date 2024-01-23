@@ -2,7 +2,7 @@
 
 # Verifica se o número correto de argumentos foi fornecido
 if [ "$#" -ne 3 ]; then
-    echo "Uso: $0 input.prmtop input.crd nome_output"
+    echo "Uso: $0 input_name.prmtop input_name.crd output_name"
     exit 1
 fi
 
@@ -11,13 +11,13 @@ input_prmtop=$1
 input_crd=$2
 output_base_name=$3
 
-total=7 # Número total de iterações
+total=10 # Número total de iterações
 echo "Iniciando o processo de remoção de água e íons..."
 
 # Criar a pasta "water_remov" se ela não existir
 mkdir -p water_remov
 
-for i in {4..10}
+for i in {1..10}
 do
     echo -n "[$i/$total] Processando pasta $i..."
 
