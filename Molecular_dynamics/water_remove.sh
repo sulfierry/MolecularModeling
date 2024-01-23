@@ -1,13 +1,25 @@
 #!/bin/bash
 
-total=10
-echo "Iniciando o processo de remoção de água e íons..."
+# Uso: ./script.sh xxx.prmtop nome-da-trajetoria.mdcrd nome-para-os-outputs
 
-for i in {1..10}
-do
-    echo -n "[$i/$total] Processando pasta $i..."
-    python script-remove-water-and-ions.py $i/5cc8.prmtop $i/production.crd ./water_remov/$i/5cc8_${i}_wr
-    echo " Concluído."
-done
+parameters=$1
+trajetoria=$2
+output=$3
 
-echo "Processo concluído para todas as pastas."
+# Criando e escrevendo no arquivo de configuração do cpptraj
+echo "parm $parameters" > cpptraj.in
+echo "parm $parameters [top1]" >> cpptraj.in
+echo "trajin $trajetoria" >> cpptraj.in
+echo "autoimage" >> cpptraj.in
+echo "parmstrip :WAT,Cl-,Na+ parmindex 1" >> cpptraj.in
+echo "parmwrite out $output.prmtop parmindex 1" >> cpptraj.in
+echo "strip :WAT,Cl-,Na+" >> cpptraj.in
+echo "outtraj $output.pdb onlyframes 1" >> cpptraj.in
+echo "trajout $output.dcd" >> cpptraj.in
+echo "run" >> cpptraj.in
+
+# Executando cpptraj com o arquivo de configuração
+cpptraj < cpptraj.in
+
+# Removendo o arquivo de configuração
+rm cpptraj.in
