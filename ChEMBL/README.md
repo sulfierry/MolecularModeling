@@ -122,7 +122,7 @@ Highlights of this script include:
 - Clustering of molecules based on Tanimoto similarity threshold.
 - Visualization of clusters in 2D space using t-SNE.
 
-![Alt text da image](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/tsne_similarity_5.png)
+![Alt text da image](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/tsne_similarity_4.png)
 
 This script offers an insightful approach to understand molecular diversity and similarity in large datasets.
 
@@ -136,7 +136,7 @@ Key features of the script:
 - Computing distance using Hamming and Manhattan metrics.
 - Generating histograms to display the distributions of these similarity and distance measures.
 
-![Alt text da image](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/histogram_similarity_distance.png)
+![Alt text da image](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/histogram_similarity_distance_4.png)
 
 This script is particularly useful for assessing the overall structural diversity and similarity within a molecular dataset.
 
