@@ -1,4 +1,4 @@
-# Molecular Dynamics Folder Overview
+# Molecular dynamics folder overview
 
 This directory is dedicated to the setup and execution of molecular dynamics simulations. It contains organized subfolders and scripts that streamline the parametrization and simulation processes. Below is an overview of each component within this folder:
 
