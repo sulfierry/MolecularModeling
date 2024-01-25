@@ -14,7 +14,7 @@ This directory is dedicated to the setup and execution of molecular dynamics sim
    - Houses input files such as initial coordinates and configurations required for running molecular dynamics simulations. These inputs are foundational for initiating and accurately running simulations.
 
 
-## Shell Script
+## Shell script
 
 - **`md_play_protocoll.sh`**:
    - A shell script designed to automate the process of running a series of molecular dynamics simulations. The script organizes the workflow into distinct stages, such as minimization, relaxation, pre-production, and production phases. It ensures that each step is executed sequentially and efficiently, utilizing the input files and parameters defined in the above folders.
