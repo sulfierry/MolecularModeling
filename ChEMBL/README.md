@@ -2,7 +2,7 @@
 
 This documentation describes two scripts utilized for querying the ChEMBL database using SQL and post-processing the obtained data.
 
-## 1. SQL Script for ChEMBL Database Query - kinase_compounds.sql
+## 1. SQL script for ChEMBL database query - kinase_compounds.sql
 This script performs SQL queries in the ChEMBL database to retrieve kinase-related compounds with validated activity measurements.
 
 ### Script Overview:
