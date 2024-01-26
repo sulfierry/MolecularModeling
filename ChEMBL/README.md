@@ -1,4 +1,4 @@
-# ChEMBL Database SQL Search and Post-Processing Scripts
+# ChEMBL database SQL search and post-processing scripts
 
 This documentation describes two scripts utilized for querying the ChEMBL database using SQL and post-processing the obtained data.
 
