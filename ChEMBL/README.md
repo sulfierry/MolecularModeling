@@ -12,7 +12,7 @@ This script performs SQL queries in the ChEMBL database to retrieve kinase-relat
   - `smile_kinase_all_compounds`: Includes all kinase-related compounds with activity measurements.
 - Exports the results to TSV files.
 
-#### Script Execution
+#### Script execution
 ```sql
 CREATE TABLE public.smile_kinase_all_compounds AS
 SELECT DISTINCT
