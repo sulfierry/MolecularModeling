@@ -4,6 +4,13 @@
 #SBATCH -J molecular_dynamics      # Nome do job
 #SBATCH --exclusive                # Utilização exclusiva dos nós
 
+# squeue -a -u $USER   - Ver jobs do usuario
+# squeue -a -p sequana_dockvs  - Ver jobs da fila
+# scancel jobid
+# salloc -p sequana_dockvs -J job_name --exclusive
+# ssh node_returned
+# sbatch run.sh
+# 10 replicatas de 100ns cada
 
 # Carregar o ambiente necessário
 source /scratch/dockvs/softwares/amber22/app/amber.sh
@@ -13,7 +20,6 @@ export DO_CUDA="pmemd.cuda"
 export DO_PARALLEL="mpirun -np 48 sander.MPI"
 export PRMTOP="5cc8.prmtop"
 export RST7="5cc8.rst7"
-
 
 # Função para executar uma réplica
 run_replica() {
@@ -62,14 +68,17 @@ run_replica() {
     echo "Réplica $REPLICA finalizada."
 }
 
+# Número total de réplicas
+total_replicas=10
+# Número de GPUs disponíveis
+num_gpus=4
 
-# Loop para executar as réplicas em paralelo
-for replica in {1..10}; do
-    run_replica $replica &
+# Loop para executar as réplicas em grupos de 4
+for (( i=1; i<=total_replicas; i+=num_gpus )); do
+    for (( j=i; j<i+num_gpus && j<=total_replicas; j++ )); do
+        run_replica $j &
+    done
+    wait
 done
 
-# Esperar a conclusão de todos os jobs em background
-wait
-
 echo 'Processamento das réplicas finalizado.'
-
