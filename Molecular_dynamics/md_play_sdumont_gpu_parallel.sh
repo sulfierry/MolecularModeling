@@ -61,3 +61,15 @@ run_replica() {
 
     echo "Réplica $REPLICA finalizada."
 }
+
+
+# Loop para executar as réplicas em paralelo
+for replica in {1..10}; do
+    run_replica $replica &
+done
+
+# Esperar a conclusão de todos os jobs em background
+wait
+
+echo 'Processamento das réplicas finalizado.'
+
