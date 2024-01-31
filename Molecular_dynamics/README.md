@@ -75,13 +75,31 @@ Para gerenciar qual GPU é usada por cada tarefa, o script define a variável de
 export CUDA_VISIBLE_DEVICES=$(( (REPLICA - 1) % 4 ))
 
 # Esta expressão calcula um índice de 0 a 3, correspondente a cada uma das 4 GPUs,
-# baseando-se no número sequencial da réplica. Dessa forma, cada réplica é alocada
-a uma GPU específica, permitindo a distribuição equitativa das tarefas pelas GPUs disponíveis.
+# baseando-se no número sequencial da réplica. Dessa forma, cada réplica é alocada a uma
+# GPU específica, permitindo a distribuição equitativa das tarefas pelas GPUs disponíveis.
 
 ```
 
 ### Execução Paralela
 O script emprega um loop que submete conjuntos de até 4 réplicas em paralelo, cada uma utilizando uma GPU diferente. Após a submissão de um conjunto de réplicas, o script aguarda a conclusão dessas tarefas antes de proceder com o próximo conjunto. Isso assegura que cada tarefa seja executada na sua respectiva GPU sem sobreposição ou conflito de recursos.
+
+```bash
+# Número total de réplicas
+total_replicas=10
+# Número de GPUs disponíveis
+num_gpus=4
+
+...
+
+# Loop para executar as réplicas em grupos de 4
+for (( i=1; i<=total_replicas; i+=num_gpus )); do
+    for (( j=i; j<i+num_gpus && j<=total_replicas; j++ )); do
+        run_replica $j &
+    done
+    wait
+done
+```
+
 
 ### Vantagens
 A execução paralela de tarefas utilizando o script run.sh oferece várias vantagens:
