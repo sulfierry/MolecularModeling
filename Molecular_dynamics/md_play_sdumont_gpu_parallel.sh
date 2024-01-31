@@ -15,17 +15,24 @@
 # Carregar o ambiente necessário
 source /scratch/dockvs/softwares/amber22/app/amber.sh
 
-# Configurações gerais
-export DO_CUDA="pmemd.cuda"
-export DO_PARALLEL="mpirun -np 48 sander.MPI"
-export PRMTOP="5cc8.prmtop"
-export RST7="5cc8.rst7"
+###########################################################################################################################################################################
+# INPUTS:
 
-# Função para executar uma réplica
+# Configurações gerais
+export DO_CUDA="pmemd.cuda"                          # GPU
+export DO_PARALLEL="mpirun -np 48 sander.MPI"        # CPU
+export PRMTOP="5cc8.prmtop"                          # TOPOLOGY
+export RST7="5cc8.rst7"                              # COORDINATE + VELOCITY
+
+total_replicas=10                                    # Número total de réplicas
+num_gpus=4                                           # Número de GPUs disponíveis
+
+###########################################################################################################################################################################
+
 run_replica() {
     local REPLICA=$1
 
-    # Define a GPU a ser utilizada
+    # Define a GPU a ser utilizada (0 a 3)
     export CUDA_VISIBLE_DEVICES=$(( (REPLICA - 1) % 4 ))
 
     # cd /scratch/dockvs/leon.costa/md_thil_10replicates_100ns/$REPLICA/
@@ -67,18 +74,3 @@ run_replica() {
 
     echo "Réplica $REPLICA finalizada."
 }
-
-# Número total de réplicas
-total_replicas=10
-# Número de GPUs disponíveis
-num_gpus=4
-
-# Loop para executar as réplicas em grupos de 4
-for (( i=1; i<=total_replicas; i+=num_gpus )); do
-    for (( j=i; j<i+num_gpus && j<=total_replicas; j++ )); do
-        run_replica $j &
-    done
-    wait
-done
-
-echo 'Processamento das réplicas finalizado.'
