@@ -61,6 +61,35 @@ Run the script in a shell environment with access to AMBER tools. Ensure the inp
 ./md_play_protocol.sh
 ```
 - This comprehensive simulation protocol ensures that the system is adequately prepared and equilibrated at each stage before proceeding to the long-term dynamic analysis in the production phase.
+
+
+## Utilização Paralela das GPUs com o Script `md_play_sdumont_gpu_parallel.sh`
+
+O script `md_play_sdumont_gpu_parallel.sh` foi desenvolvido para otimizar a utilização dos recursos computacionais no SDumont, permitindo a execução paralela de tarefas em 4 GPUs disponíveis num nó. Isso é particularmente útil para simulações de dinâmica molecular que podem se beneficiar significativamente do paralelismo de GPU.
+
+### Alocação de GPUs
+
+Para gerenciar qual GPU é usada por cada tarefa, o script define a variável de ambiente `CUDA_VISIBLE_DEVICES` usando a seguinte lógica:
+
+```bash
+export CUDA_VISIBLE_DEVICES=$(( (REPLICA - 1) % 4 ))
+
+# Esta expressão calcula um índice de 0 a 3, correspondente a cada uma das 4 GPUs,
+# baseando-se no número sequencial da réplica. Dessa forma, cada réplica é alocada
+a uma GPU específica, permitindo a distribuição equitativa das tarefas pelas GPUs disponíveis.
+
+```
+
+### Execução Paralela
+O script emprega um loop que submete conjuntos de até 4 réplicas em paralelo, cada uma utilizando uma GPU diferente. Após a submissão de um conjunto de réplicas, o script aguarda a conclusão dessas tarefas antes de proceder com o próximo conjunto. Isso assegura que cada tarefa seja executada na sua respectiva GPU sem sobreposição ou conflito de recursos.
+
+### Vantagens
+A execução paralela de tarefas utilizando o script run.sh oferece várias vantagens:
+
+- **Eficiência**: Maximiza a utilização dos recursos de GPU, reduzindo o tempo total de processamento.
+- **Escalabilidade**: Facilmente ajustável para diferentes quantidades de réplicas ou configurações de sistema.
+- **Simplicidade**: Permite aos usuários submeterem múltiplas réplicas sem necessidade de gerenciamento manual dos recursos de GPU.
+
 ---
 
 This organized structure within the "Molecular Dynamics" folder facilitates a streamlined and efficient approach to conducting molecular dynamics simulations, catering to both novice and experienced users in the field of computational chemistry and molecular modeling.
