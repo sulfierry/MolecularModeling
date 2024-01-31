@@ -65,7 +65,7 @@ Run the script in a shell environment with access to AMBER tools. Ensure the inp
 
 ## Utilização Paralela das GPUs
 
-O script `md_play_sdumont_gpu_parallel.sh` foi desenvolvido para otimizar a utilização dos recursos computacionais no SDumont, permitindo a execução paralela de tarefas em 4 GPUs disponíveis num nó. Isso é particularmente útil para simulações de dinâmica molecular que podem se beneficiar significativamente do paralelismo de GPU.
+O script `md_play_sdumont_gpu_parallel.sh` foi desenvolvido para otimizar a utilização dos recursos computacionais no SDumont, permitindo a execução paralela dos jobs em todas as GPUs disponíveis no atual nó do cluster. Isso é particularmente útil para simulações de dinâmica molecular que podem se beneficiar significativamente do paralelismo em GPU.
 
 ### Alocação de GPUs
 
