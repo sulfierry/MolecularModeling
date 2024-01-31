@@ -4,13 +4,13 @@
 #SBATCH -J molecular_dynamics      # Nome do job
 #SBATCH --exclusive                # Utilização exclusiva dos nós
 
-# squeue -a -u $USER   - Ver jobs do usuario
-# squeue -a -p sequana_dockvs  - Ver jobs da fila
+# squeue -a -u $USER   - View user jobs
+# squeue -a -p sequana_dockvs  - View queued jobs
 # scancel jobid
 # salloc -p sequana_dockvs -J job_name --exclusive
 # ssh node_returned
 # sbatch run.sh
-# 10 replicatas de 100ns cada
+# 10 replicates of 100ns each
 
 # Carregar o ambiente necessário
 source /scratch/dockvs/softwares/amber22/app/amber.sh
