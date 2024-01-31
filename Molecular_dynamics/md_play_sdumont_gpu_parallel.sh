@@ -12,7 +12,7 @@
 # sbatch run.sh
 # 10 replicas of 100ns each
 
-# Carregar o ambiente necessário
+# Load the required environment
 source /scratch/dockvs/softwares/amber22/app/amber.sh
 
 ###########################################################################################################################################################################
@@ -56,16 +56,16 @@ run_replica() {
         echo "Réplica $REPLICA, Etapa $((i)): $input"
 
         if [ $i -eq 0 ]; then
-            # Minimização
+            # Minimization
             $DO_CUDA -O -i $input -p $PRMTOP -c $ref_rst -r $out_rst -x $crd -o $output
         elif [ $i -ge 1 ] && [ $i -le 4 ]; then
-            # Relaxamento partes 1-4
+            # Relaxation parts 1-4
             $DO_CUDA -O -i $input -p $PRMTOP -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
         elif [ $i -eq 5 ]; then
-            # Pré-produção
+            # Pre-production
             $DO_CUDA -O -i $input -p $PRMTOP -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
         else
-            # Produção
+            # Production
             $DO_CUDA -O -i $input -p $PRMTOP -c $ref_rst -ref $ref_rst -r $out_rst -x $crd -o $output
         fi
 
@@ -86,4 +86,4 @@ for (( i=1; i<=total_replicas; i+=num_gpus )); do
     wait
 done
 
-echo 'Processamento das réplicas finalizado.'
+echo 'Processing of replicas completed.'
