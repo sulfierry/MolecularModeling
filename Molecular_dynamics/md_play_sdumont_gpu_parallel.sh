@@ -74,3 +74,15 @@ run_replica() {
 
     echo "Réplica $REPLICA finalizada."
 }
+
+
+
+# Loop para executar as réplicas em grupos de 4
+for (( i=1; i<=total_replicas; i+=num_gpus )); do
+    for (( j=i; j<i+num_gpus && j<=total_replicas; j++ )); do
+        run_replica $j &
+    done
+    wait
+done
+
+echo 'Processamento das réplicas finalizado.'
