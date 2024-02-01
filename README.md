@@ -1,4 +1,4 @@
-# Comprehensive Cheminformatics Toolkit
+# Comprehensive cheminformatics Toolkit
 
 This repository is a diverse collection of tools and scripts aimed at facilitating various cheminformatics tasks. The directories are organized as follows:
 
