@@ -20,7 +20,7 @@ This repository is a diverse collection of tools and scripts aimed at facilitati
 
 Each script and input file in this repository is crafted to address specific needs in cheminformatics and molecular dynamics simulations. From data extraction and processing in ChEMBL to detailed molecular dynamics protocols and scaffold analysis, this toolkit serves as a comprehensive resource for researchers in the field.
 
-### How to Use
+### How to use
 
 Navigate to the desired directory and follow the instructions provided in each script or input file. Ensure you have the required dependencies installed, particularly for Python scripts.
 
