@@ -46,7 +46,7 @@ WHERE
 \COPY public.smile_kinase_all_compounds TO '/home/leon/Desktop/ChEMBL_DATABSE/1_chembl_manually_validated/1_database/kinase_all_compounds.tsv' WITH (FORMAT csv, HEADER, DELIMITER E'\t');
 ```
 
-## 2. Python Post-Processing Script - remove_redundance.py:
+## 2. Python post-processing script - remove_redundance.py:
 
 The `verify_partial_charge.py` Python script is employed for post-processing kinase-related compound data, focusing on removing redundancies and identifying salt-free compounds.
 
