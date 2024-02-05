@@ -68,7 +68,7 @@ The `verify_partial_charge.py` Python script is employed for post-processing kin
 4. **`save_positive_negative_files(salt_free_data, output_directory)`**: 
    - Saves two separate TSV files: one for compounds with positive activity and another for negative, based on the activity value.
 
-#### Script Execution
+#### Script execution
 
 ```python
 def main():
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     main()
 ```
 
-# Molecular Descriptors Calculation
+# Molecular descriptors calculation
 
 This script, `descriptors.py`, is designed to calculate various molecular descriptors from SMILES strings. These descriptors include molecular weight (MW), LogP, Hydrogen Bond Donors (HBD), Hydrogen Bond Acceptors (HBA), Topological Polar Surface Area (TPSA), and Number of Rotatable Bonds (NRB). The script reads the SMILES strings from a given file, computes these descriptors using RDKit, and saves the results.
 
