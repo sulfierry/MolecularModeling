@@ -50,7 +50,7 @@ WHERE
 
 The `verify_partial_charge.py` Python script is employed for post-processing kinase-related compound data, focusing on removing redundancies and identifying salt-free compounds.
 
-#### Key Functions of the Script:
+#### Key functions of the script:
 
 1. **`remove_salts_and_identify(smiles)`**: 
    - Removes salts from the SMILES of molecules and identifies if the original molecule contained salts.
