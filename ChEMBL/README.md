@@ -112,7 +112,7 @@ Key functionalities include:
 This script is an essential tool in the pre-processing of molecular data for cheminformatics analyses.
 
 
-# Molecular Clustering Based on Similarity
+# Molecular clustering based on similarity
 
 `cluster_by_similarity.py` focuses on grouping molecules based on structural similarities. It uses the SMILES representation of molecules, converting these structures into molecular fingerprints. The script then performs clustering based on a predefined similarity threshold.
 
@@ -126,7 +126,7 @@ Highlights of this script include:
 
 This script offers an insightful approach to understand molecular diversity and similarity in large datasets.
 
-# Histograms for Molecular Similarity and Distance
+# Histograms for molecular similarity and distance
 
 The `histogram.py` script compares molecular fingerprints in an all-against-all approach, computing similarity and distance measures for every pair of molecules in the dataset. It processes fingerprints in batches to efficiently manage memory and computational resources.
 
