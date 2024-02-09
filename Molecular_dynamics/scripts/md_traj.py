@@ -5,11 +5,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 import warnings
+from sklearn.decomposition import PCA
+import numpy as np
+import prody as pdy
+
 
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="MDAnalysis.coordinates.DCD")
 warnings.filterwarnings('ignore', category=UserWarning, module='MDAnalysis')
 warnings.filterwarnings('ignore', category=UserWarning, module='scipy')
-
 
 class MDTraj:
     def __init__(self, topology_path, trajectory_path):
@@ -91,6 +94,7 @@ class MDTraj:
         plt.savefig('rmsd_with_points.png')
         plt.show()
 
+
     def plot_rmsd_distribution(self):
         plt.figure(figsize=(10, 6))
         sns.histplot(self.rmsd_results['RMSD'], kde=True, bins=30, color='blue', label='Distribuição de RMSD')
@@ -109,6 +113,37 @@ class MDTraj:
         plt.savefig('rmsd_distribution_with_points.png')
         plt.show()
 
+    def calculate_pca(self):
+        # Selecionando os átomos para PCA (usando todos os átomos ou apenas o backbone, por exemplo)
+        atoms_to_analyze = self.u.select_atoms("backbone")
+        
+        # Inicializando a matriz para armazenar as coordenadas
+        n_frames = len(self.u.trajectory)
+        n_atoms = len(atoms_to_analyze)
+        coordinates = np.zeros((n_frames, n_atoms * 3))
+        
+        # Preenchendo a matriz com as coordenadas dos átomos em cada frame
+        for i, ts in enumerate(self.u.trajectory):
+            coordinates[i, :] = atoms_to_analyze.positions.flatten()
+        
+        # Realizando PCA com 3 componentes
+        self.pca = PCA(n_components=3)
+        self.pca_result = self.pca.fit_transform(coordinates)
+
+    def plot_pca_projections(self):
+        # Plotando a projeção dos frames nos três primeiros componentes principais
+        plt.figure(figsize=(10, 6))
+        plt.plot(self.pca_result[:, 0], label='PC1', color='red')
+        plt.plot(self.pca_result[:, 1], label='PC2', color='green')
+        plt.plot(self.pca_result[:, 2], label='PC3', color='blue')
+        plt.title('Projeção dos Frames nas Três Principais Componentes da PCA')
+        plt.xlabel('Frame')
+        plt.ylabel('Projeção nos Componentes Principais')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig('pca_projections.png')
+        plt.show()
+        
 
 
 
@@ -135,6 +170,12 @@ def main():
     
     # Plotando a distribuição dos valores de RMSD
     md_traj.plot_rmsd_distribution()
+
+    # Calculando PCA
+    md_traj.calculate_pca()
+    
+    # Plotando resultados da PCA
+    md_traj.plot_pca_projections()
 
 if __name__ == "__main__":
     main()
