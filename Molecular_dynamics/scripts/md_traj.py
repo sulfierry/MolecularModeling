@@ -109,3 +109,32 @@ class MDTraj:
         plt.savefig('rmsd_distribution_with_points.png')
         plt.show()
 
+
+
+
+# Demonstrando o uso da classe MDTraj
+def main():
+    # Inicializando a classe com o caminho da topologia e da trajetória
+    md_traj = MDTraj("/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/1/5cc8_wr_1.prmtop",
+                     "/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/1/5cc8_wr_1.dcd")
+    
+    # Calculando RMSD
+    md_traj.calculate_rmsd()
+    
+    # Analisando a distribuição do RMSD
+    estatisticas_descritivas = md_traj.analyze_rmsd_distribution()
+    
+    # Selecionando frames representativos
+    md_traj.select_representative_frames(estatisticas_descritivas)
+    
+    # Salvando PDBs representativos
+    md_traj.save_representative_pdbs()
+    
+    # Plotando RMSD ao longo da trajetória
+    md_traj.plot_rmsd()
+    
+    # Plotando a distribuição dos valores de RMSD
+    md_traj.plot_rmsd_distribution()
+
+if __name__ == "__main__":
+    main()
