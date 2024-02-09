@@ -91,4 +91,21 @@ class MDTraj:
         plt.savefig('rmsd_with_points.png')
         plt.show()
 
+    def plot_rmsd_distribution(self):
+        plt.figure(figsize=(10, 6))
+        sns.histplot(self.rmsd_results['RMSD'], kde=True, bins=30, color='blue', label='Distribuição de RMSD')
+        
+        for _, row in self.selected_frames.iterrows():
+            rmsd_value = row['rmsd']
+            plt.axvline(x=rmsd_value, color='red', linestyle='--', linewidth=2)
+            plt.text(rmsd_value, plt.ylim()[1]*0.95, f'{row["descricao"]}', rotation=45, color='red', ha='right')
+
+        plt.title('Distribuição dos Valores de RMSD com PDBs Representativos')
+        plt.xlabel('RMSD (Å)')
+        plt.ylabel('Frequência')
+        plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig('rmsd_distribution_with_points.png')
+        plt.show()
 
