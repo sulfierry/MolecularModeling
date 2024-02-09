@@ -59,3 +59,36 @@ class MDTraj:
             })
         self.selected_frames = pd.DataFrame(frames_selecionados)
 
+    def save_representative_pdbs(self):
+        output_directory = "pdb_md_representative"
+        os.makedirs(output_directory, exist_ok=True)
+        for index, row in self.selected_frames.iterrows():
+            descricao = row['descricao']
+            frame_index = int(row['frame'])
+            self.u.trajectory[frame_index]
+            pdb_filename = os.path.join(output_directory, f"{descricao}_frame_{frame_index}.pdb")
+            self.u.atoms.write(pdb_filename)
+        print("Arquivos PDB dos frames selecionados foram salvos com as descrições ajustadas.")
+
+    def plot_rmsd(self):
+        plt.figure(figsize=(10, 6))
+        plt.plot(self.rmsd_results['Frame'], self.rmsd_results['RMSD'], label='RMSD', color='blue')
+        
+        # Adicionando linhas verticais tracejadas e texto para os frames selecionados
+        for _, row in self.selected_frames.iterrows():
+            frame = row['frame']
+            descricao = row['descricao'].replace('%', '')  # Remove o símbolo '%' da descrição
+            plt.axvline(x=frame, color='red', linestyle='--', linewidth=2)
+            # Adicionando descrição acima das linhas verticais
+            plt.text(frame, plt.ylim()[1]*0.95, f'{descricao}', rotation=45, color='red', ha='right', va='top')
+
+        plt.title('RMSD ao Longo da Trajetória com Pontos dos PDBs')
+        plt.xlabel('Frame')
+        plt.ylabel('RMSD (Å)')
+        plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig('rmsd_with_points.png')
+        plt.show()
+
+
