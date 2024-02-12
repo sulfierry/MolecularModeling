@@ -63,7 +63,7 @@ Run the script in a shell environment with access to AMBER tools. Ensure the inp
 - This comprehensive simulation protocol ensures that the system is adequately prepared and equilibrated at each stage before proceeding to the long-term dynamic analysis in the production phase.
 
 
-## Utilização Paralela das GPUs
+## Utilização paralela das GPUs
 
 O script `md_play_sdumont_gpu_parallel.sh` foi desenvolvido para otimizar a utilização dos recursos computacionais no SDumont, permitindo a execução paralela dos jobs em todas as GPUs disponíveis no atual nó de trabalho. Isso é particularmente útil para simulações de dinâmica molecular que podem se beneficiar significativamente do paralelismo em GPU.
 
