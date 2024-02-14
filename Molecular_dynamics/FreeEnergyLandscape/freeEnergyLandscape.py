@@ -64,3 +64,12 @@ class FreeEnergyLandscape:
         plt.title('Paisagem Energética Gerada')
         plt.show()
 
+
+
+
+    def main(self):
+        self.load_data()
+        self.boltzmann_inversion_original(self.proj1_data_original, 'CV1 (Ângulo)')
+        self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distância)')
+        self.plot_energy_landscape()
+
