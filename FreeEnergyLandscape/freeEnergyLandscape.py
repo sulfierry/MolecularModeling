@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 from matplotlib.colors import LinearSegmentedColormap
+#from mpl_toolkits.mplot3d import Axes3D  # Import necessário para projeção 3D
+
 
 class FreeEnergyLandscape:
     
@@ -63,11 +65,33 @@ class FreeEnergyLandscape:
         plt.title('Paisagem Energética Gerada')
         plt.show()
 
+    def plot_3D_energy_landscape(self):
+        values_original = np.vstack([self.proj1_data_original, self.proj2_data_original])
+        kernel_original = gaussian_kde(values_original)
+        X_original, Y_original = np.mgrid[self.proj1_data_original.min():self.proj1_data_original.max():100j, 
+                                          self.proj2_data_original.min():self.proj2_data_original.max():100j]
+        positions_original = np.vstack([X_original.ravel(), Y_original.ravel()])
+        Z_original = np.reshape(kernel_original(positions_original).T, X_original.shape)
+        G_original = -self.kB * self.temperature * np.log(Z_original)
+        G_original = np.clip(G_original - np.min(G_original), 0, 25)
+        
+        fig = plt.figure(figsize=(10, 7))
+        ax = fig.add_subplot(111, projection='3d')
+        surf = ax.plot_surface(X_original, Y_original, G_original, cmap=self.custom_cmap, edgecolor='none')
+        ax.set_xlabel('CV1 (Ângulo)')
+        ax.set_ylabel('CV2 (Distância)')
+        ax.set_zlabel('Energia Livre (kJ/mol)')
+        ax.set_title('Paisagem Energética em 3D')
+        fig.colorbar(surf, shrink=0.5, aspect=5, label='Energia Livre (kJ/mol)')
+        plt.show()
+
+
     def main(self):
         self.load_data()
         self.boltzmann_inversion_original(self.proj1_data_original, 'CV1 (Ângulo)')
         self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distância)')
         self.plot_energy_landscape()
+        self.plot_3D_energy_landscape()
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
