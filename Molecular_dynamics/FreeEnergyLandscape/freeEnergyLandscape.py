@@ -26,3 +26,8 @@ class FreeEnergyLandscape:
         self.custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
         self.proj1_data_original = None
         self.proj2_data_original = None
+
+
+    def load_data(self):
+        self.proj1_data_original = np.loadtxt(self.cv1_path, usecols=[1])
+        self.proj2_data_original = np.loadtxt(self.cv2_path, usecols=[1])
