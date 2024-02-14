@@ -27,11 +27,9 @@ class FreeEnergyLandscape:
         self.proj1_data_original = None
         self.proj2_data_original = None
 
-
     def load_data(self):
         self.proj1_data_original = np.loadtxt(self.cv1_path, usecols=[1])
         self.proj2_data_original = np.loadtxt(self.cv2_path, usecols=[1])
-
 
     def boltzmann_inversion_original(self, data, title):
         hist, bin_edges = np.histogram(data, bins=100, density=True)
@@ -48,3 +46,21 @@ class FreeEnergyLandscape:
         plt.grid(True)
         plt.legend()
         plt.show()
+
+    def plot_energy_landscape(self):
+        values_original = np.vstack([self.proj1_data_original, self.proj2_data_original])
+        kernel_original = gaussian_kde(values_original)
+        X_original, Y_original = np.mgrid[self.proj1_data_original.min():self.proj1_data_original.max():100j, 
+                                          self.proj2_data_original.min():self.proj2_data_original.max():100j]
+        positions_original = np.vstack([X_original.ravel(), Y_original.ravel()])
+        Z_original = np.reshape(kernel_original(positions_original).T, X_original.shape)
+        G_original = -self.kB * self.temperature * np.log(Z_original)
+        G_original = np.clip(G_original - np.min(G_original), 0, 25)
+        plt.figure(figsize=(8, 6))
+        plt.contourf(X_original, Y_original, G_original, levels=np.linspace(0, 25, 100), cmap=self.custom_cmap)
+        plt.colorbar(label='Energia Livre (kJ/mol)', ticks=range(0, 26, 3))
+        plt.xlabel('CV1 (Ângulo)')
+        plt.ylabel('CV2 (Distância)')
+        plt.title('Paisagem Energética Gerada')
+        plt.show()
+
