@@ -1,27 +1,57 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import gaussian_kde
+from scipy.spatial.distance import cdist
 from matplotlib.colors import LinearSegmentedColormap
 
-# criar uma funcao para substituir "gaussian_kde"
+class GaussianKDE:
+    def __init__(self, dataset, bandwidth='scott'):
+        self.dataset = np.atleast_2d(dataset)
+        self.n, self.d = self.dataset.shape
+        if bandwidth == 'scott':
+            self.bandwidth = np.power(self.n, -1./(self.d+4))  # Scott's Rule
+        else:
+            self.bandwidth = bandwidth
+        self.factor = np.sqrt(2 * np.pi) * self.bandwidth ** self.d
+
+    def _kernel_function(self, dist_squared):
+        return np.exp(-dist_squared / (2 * self.bandwidth ** 2))
+
+    def evaluate(self, points):
+        points = np.atleast_2d(points)
+        n_points, d_points = points.shape
+        if d_points != self.d:
+            raise ValueError("Os pontos devem ter a mesma dimensão dos dados do dataset.")
+        
+        # Calcula as distâncias de forma mais eficiente
+        dist_squared = cdist(points, self.dataset, 'sqeuclidean')
+
+        # Calcula os valores do kernel para cada par ponto-dado
+        kernel_values = self._kernel_function(dist_squared)
+
+        # Soma as contribuições dos kernels e normaliza
+        density = np.sum(kernel_values, axis=1) / (self.n * self.factor)
+        return density
+    
+    def __call__(self, points):
+        return self.evaluate(points)
+
 
 class FreeEnergyLandscape:
-    
     def __init__(self, cv1_path, cv2_path, temperature, boltzmann_constant):
         self.cv1_path = cv1_path
         self.cv2_path = cv2_path
         self.temperature = temperature
         self.kB = boltzmann_constant
         self.colors = [
-            (0, "darkblue"),    # 0 a 3
-            (3/25, "blue"),     # 3 a 6
-            (6/25, "lightblue"),# 6 a 9
-            (9/25, "#ADD8E6"),  # 9 a 12 azul claríssimo
-            (12/25, "#FFA07A"), # 12 a 15 vermelho claro (quase salmão)
-            (15/25, "#FF4500"), # 15 a 18 mais escuro (quase laranja)
-            (18/25, "#FF6347"), # 18 a 21 laranja/vermelho
-            (21/25, "darkred"), # 21 a 24 vermelho escuro
-            (1, "darkred")      # Garante que o máximo seja vermelho escuro
+            (0, "darkblue"),
+            (3/25, "blue"),
+            (6/25, "lightblue"),
+            (9/25, "#ADD8E6"),
+            (12/25, "#FFA07A"),
+            (15/25, "#FF4500"),
+            (18/25, "#FF6347"),
+            (21/25, "darkred"),
+            (1, "darkred")
         ]
         self.custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
         self.proj1_data_original = None
@@ -49,11 +79,15 @@ class FreeEnergyLandscape:
 
     def plot_energy_landscape(self):
         values_original = np.vstack([self.proj1_data_original, self.proj2_data_original])
-        kernel_original = gaussian_kde(values_original)
+        kernel_original = GaussianKDE(values_original.T)  # Usando a classe GaussianKDE personalizada
         X_original, Y_original = np.mgrid[self.proj1_data_original.min():self.proj1_data_original.max():100j, 
-                                          self.proj2_data_original.min():self.proj2_data_original.max():100j]
+                                        self.proj2_data_original.min():self.proj2_data_original.max():100j]
         positions_original = np.vstack([X_original.ravel(), Y_original.ravel()])
-        Z_original = np.reshape(kernel_original(positions_original).T, X_original.shape)
+        Z_original = np.reshape(kernel_original(positions_original.T), X_original.shape)  # Ajuste para compatibilidade
+        
+        # Adiciona um pequeno valor a Z_original para evitar o erro de divisão por zero
+        Z_original = np.clip(Z_original, a_min=1e-10, a_max=None)
+        
         G_original = -self.kB * self.temperature * np.log(Z_original)
         G_original = np.clip(G_original - np.min(G_original), 0, 25)
         plt.figure(figsize=(8, 6))
@@ -63,6 +97,7 @@ class FreeEnergyLandscape:
         plt.ylabel('CV2 (Distância)')
         plt.title('Paisagem Energética Gerada')
         plt.show()
+
 
     def main(self):
         self.load_data()
