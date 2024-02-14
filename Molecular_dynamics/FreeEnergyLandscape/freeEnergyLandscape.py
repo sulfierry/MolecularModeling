@@ -4,7 +4,6 @@ from scipy.stats import gaussian_kde
 from matplotlib.colors import LinearSegmentedColormap
 
 
-
 class FreeEnergyLandscape:
     
     def __init__(self, cv1_path, cv2_path, temperature=300, boltzmann_constant=8.314e-3):
@@ -64,12 +63,14 @@ class FreeEnergyLandscape:
         plt.title('Paisagem Energética Gerada')
         plt.show()
 
-
-
-
     def main(self):
         self.load_data()
         self.boltzmann_inversion_original(self.proj1_data_original, 'CV1 (Ângulo)')
         self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distância)')
         self.plot_energy_landscape()
 
+if __name__ == "__main__":
+    cv1_path = './proj1Out.txt'
+    cv2_path = './proj2Out.txt'
+    fel = FreeEnergyLandscape(cv1_path, cv2_path)
+    fel.main()
