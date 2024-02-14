@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial.distance import cdist
@@ -36,6 +37,7 @@ class GaussianKDE:
         return self.evaluate(points)
 
 
+# Classe FreeEnergyLandscape atualizada
 class FreeEnergyLandscape:
     def __init__(self, cv1_path, cv2_path, temperature, boltzmann_constant):
         self.cv1_path = cv1_path
@@ -105,12 +107,26 @@ class FreeEnergyLandscape:
         self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distância)')
         self.plot_energy_landscape()
 
+
 if __name__ == "__main__":
-    t = 300         # Temperature in K
-    kB = 8.314e-3   # Boltzmann constant in kJ/(mol·K)
+    if len(sys.argv) != 3:
+        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt")
+        print("Example: python freeEnergyLandscape.py cv1_angle.txt cv2_distance.txt")
+        sys.exit(1)
 
-    cv1_path = './proj1Out.txt'
-    cv2_path = './proj2Out.txt'
+    cv1_path = sys.argv[1]
+    cv2_path = sys.argv[2]
 
-    fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB)
-    fel.main()
+    try:
+        t = 300         # Temperature in K
+        kB = 8.314e-3   # Boltzmann constant in kJ/(mol·K)
+
+        fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB)
+        fel.main()
+    except FileNotFoundError as e:
+        print(f"Error: File not found. {e}")
+        print("Please ensure the file paths are correct and try again.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        sys.exit(1)
