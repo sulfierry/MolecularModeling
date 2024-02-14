@@ -23,13 +23,12 @@ This repository is a diverse collection of tools and scripts aimed at facilitati
 
 ---
 
-Continuing our commitment to providing valuable resources for cheminformatics and molecular dynamics research, the repository is regularly updated with innovative tools and methodologies. The `FreeEnergyLandscape` directory is a testament to our ongoing efforts to enhance the analysis capabilities available to researchers in these fields.
-
-The `FreeEnergyLandscape` directory introduces a set of tools essential for the analysis of energetic landscapes in molecular dynamics studies. By leveraging collective variables, these scripts offer insights into the thermodynamic stability and transition mechanisms of molecular systems, which are critical for understanding biological processes and material properties at the molecular level.
-
 ## Overview
 
 Each script and input file in this repository is crafted to address specific needs in cheminformatics and molecular dynamics simulations. From data extraction and processing in ChEMBL to detailed molecular dynamics protocols and scaffold analysis, this toolkit serves as a comprehensive resource for researchers in the field.
+
+The `FreeEnergyLandscape` directory introduces a set of tools essential for the analysis of energetic landscapes in molecular dynamics studies. By leveraging collective variables, these scripts offer insights into the thermodynamic stability and transition mechanisms of molecular systems, which are critical for understanding biological processes and material properties at the molecular level.
+
 
 ### How to use
 
