@@ -31,3 +31,20 @@ class FreeEnergyLandscape:
     def load_data(self):
         self.proj1_data_original = np.loadtxt(self.cv1_path, usecols=[1])
         self.proj2_data_original = np.loadtxt(self.cv2_path, usecols=[1])
+
+
+    def boltzmann_inversion_original(self, data, title):
+        hist, bin_edges = np.histogram(data, bins=100, density=True)
+        bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+        hist = np.clip(hist, a_min=1e-10, a_max=None)
+        G = -self.kB * self.temperature * np.log(hist)
+        G = np.clip(G - np.min(G), 0, 25)
+        plt.figure(figsize=(10, 6))
+        plt.plot(bin_centers, G, label='Energia Livre', color='red')
+        plt.title(f'Paisagem Energética Livre de {title}')
+        plt.xlabel('Valor')
+        plt.ylabel('Energia Livre (kJ/mol)')
+        plt.ylim(0, 25)
+        plt.grid(True)
+        plt.legend()
+        plt.show()
