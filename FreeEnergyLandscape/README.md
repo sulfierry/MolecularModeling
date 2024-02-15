@@ -18,6 +18,39 @@ The Boltzmann inversion method is used to calculate the free energy landscape fr
 
 where \( k_B \) is the Boltzmann constant (\( 8.314 \times 10^{-3} \, \text{KJ/mol.K} \)), \( T \) is the temperature, and \( P \) is the probability density of the CVs. This relationship allows us to convert a histogram of CV values into a free energy surface.
 
+## Utilizing Gaussian Kernel Density Estimation (KDE) in Free Energy Landscape Analysis
+
+Within our script, the `gaussian_kde` function from the SciPy library is instrumental in constructing a detailed representation of the free energy landscape. This statistical method is crucial for estimating the probability density function (PDF) of a dataset without assuming any predefined distribution shape. In the context of molecular dynamics and simulations, it allows us to visualize and analyze the distribution of free energy across different states or configurations defined by collective variables (CVs).
+
+### Technical Implementation
+
+The `gaussian_kde` leverages a Gaussian (normal) distribution, placing it at each point in the dataset and summing these distributions to approximate the overall data's PDF. This technique is adept at capturing the underlying structure of the data, providing a smooth, continuous representation of the free energy landscape. The smoothness of the KDE is controlled by the bandwidth parameter, which determines the width of the Gaussian kernels used.
+
+Mathematically, the density estimation at a point `x` is calculated as follows:
+
+\[ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right) \]
+
+where:
+- `n` is the number of data points,
+- `h` is the bandwidth,
+- `x_i` are the data points,
+- `K` represents the Gaussian kernel function, defined by:
+
+\[ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} \]
+
+### Application in the Script
+
+The `FreeEnergyLandscape` class employs `gaussian_kde` in several key areas:
+
+1. **Free Energy Distribution Estimation:** By applying `gaussian_kde` to the CVs collected from molecular simulations, we obtain a continuous estimate of the free energy landscape. This estimated landscape is crucial for identifying stable configurations (minima) and understanding the transition pathways (energy barriers) between different molecular states.
+
+2. **Visualization:** The KDE result is used to generate visual representations of the free energy landscape, including both static 3D plots and animated GIFs. These visualizations allow for an intuitive exploration of the energy landscape, facilitating the identification of significant energy features that influence molecular behavior.
+
+### Importance in Molecular Studies
+
+The Gaussian KDE method provides a sophisticated approach to model the complex free energy landscapes encountered in molecular dynamics studies. It enables researchers to visualize the distribution of energy states without the constraints of parametric models, offering insights into molecular stability, transitions, and the energetics of molecular interactions. By incorporating `gaussian_kde` into our analysis, we enhance our ability to decipher the intricate energy landscapes that govern molecular systems, contributing significantly to the fields of computational chemistry and biophysics.
+
+
 ## Implementation Details
 
 ### Class `FreeEnergyLandscape`
