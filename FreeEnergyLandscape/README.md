@@ -93,12 +93,12 @@ This figure provides a three-dimensional visualization of the free energy landsc
 - **Y-Axis**: CV2, representing a distance, with the same labeling as in Figure 2.
 - **Z-Axis**: Shows the free energy in kJ/mol, calculated from the probability distribution of CV1 and CV2 using the Boltzmann equation.
 
-Visualization: A 3D surface plot illustrates the variations in free energy across the space defined by CV1 and CV2. The color gradient enhances the visualization of energy barriers and minima, aiding in the identification of stable conformations and transition states.
+**Visualization**: A 3D surface plot illustrates the variations in free energy across the space defined by CV1 and CV2. The color gradient enhances the visualization of energy barriers and minima, aiding in the identification of stable conformations and transition states.
 
-Animated 3D Free Energy Landscape
+**Animated 3D Free Energy Landscape**
 The animated GIF provides a rotating view of the 3D free energy landscape, offering an immersive exploration of the energy barriers and minima across the collective variable space. The animation helps in visualizing the landscape's depth and complexity from multiple angles, enhancing the understanding of the molecular system's energetics.
 
-#### Animation: The GIF loops through a series of rotations around the Z-axis, presenting a 360-degree view of the free energy landscape. This continuous motion provides a comprehensive perspective on the distribution of energy states.
+**Animation**: The GIF loops through a series of rotations around the Z-axis, presenting a 360-degree view of the free energy landscape. This continuous motion provides a comprehensive perspective on the distribution of energy states.
 
 ![Alt Text](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/energy_landscape_3D.gif)
 
