@@ -30,6 +30,26 @@ where \( k_B \) is the Boltzmann constant (\( 8.314 \times 10^{-3} \, \text{KJ/m
 
 - **Energy Landscape Visualization**: Combines the CV data to construct a 2D free energy landscape. This involves estimating the joint probability density function using a Gaussian kernel density estimate, converting this density into free energy, and plotting the landscape with contour lines representing different energy levels.
 
+## Required Libraries
+
+This project relies on several key Python libraries for numerical computations, image processing, and plotting capabilities. Ensure you have the following libraries installed along with their specified versions to guarantee compatibility and proper functionality of the scripts:
+
+- **NumPy** (1.23.5): A fundamental package for scientific computing with Python, providing support for large, multi-dimensional arrays and matrices, along with a collection of mathematical functions to operate on these arrays.
+- **ImageIO** (2.34.0): A library for reading and writing a wide range of image, video, scientific, and volumetric data formats. It is used in this project for creating and manipulating images and GIFs.
+- **Matplotlib** (3.7.4): A comprehensive library for creating static, animated, and interactive visualizations in Python. It is used for plotting the free energy landscapes.
+- **SciPy** (1.10.1): An open-source Python library used for scientific computing and technical computing. It contains modules for optimization, linear algebra, integration, interpolation, special functions, FFT, signal and image processing, and more.
+
+To install these libraries, you can use the following command:
+
+```bash
+pip install numpy==1.23.5 imageio==2.34.0 matplotlib==3.7.4 scipy==1.10.1
+```
+These dependencies also are listed in the requirements.txt file. To install them, run the following command in your terminal:
+
+```bash
+pip install -r requirements.txt
+```
+
 ### Usage
 
 To use this class, instantiate it with paths to the CV1 and CV2 data files, then call the `main` method. This will load the data, perform the Boltzmann inversion for each CV, and plot the 2D free energy landscape.
@@ -39,6 +59,7 @@ To use this class, instantiate it with paths to the CV1 and CV2 data files, then
 ```bash
 python freeEnergyLandscape.py proj1Out.txt proj2Out.txt 
 ```
+
 ## Visualizations Generated
 
 The `FreeEnergyLandscape` class generates three key visualizations to aid in the analysis of the molecular system's free energy landscape. Each figure provides unique insights into the system's thermodynamic and kinetic behavior.
