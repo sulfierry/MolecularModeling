@@ -14,7 +14,7 @@ Collective Variables (CVs) are a set of coordinates that describe the macroscopi
 
 The Boltzmann inversion method is used to calculate the free energy landscape from the probability distribution of CVs. The free energy, $\( G \)$, of a state is related to its probability, $\( P \)$, by the Boltzmann equation:
 
-$\ G = -k_B T \ln(P) \$
+$$\ G = -k_B T \ln(P) \$$
 
 where $k_B$ is the Boltzmann constant $$\( 8.314 \times 10^{-3} \, \text{KJ/mol.K} \)$$. Where $T$ is the temperature, and $P$ is the probability density of the CVs. This relationship allows us to convert a histogram of CV values into a free energy surface.
 
@@ -28,7 +28,7 @@ The `gaussian_kde` leverages a Gaussian (normal) distribution, placing it at eac
 
 Mathematically, the density estimation at a point `x` is calculated as follows:
 
-$\ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right) \$
+$$\ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right) \$$
 
 where:
 - $`n`$ is the number of data points,
@@ -36,7 +36,7 @@ where:
 - $`x_i`$ are the data points,
 - $`K`$ represents the Gaussian kernel function, defined by:
 
-$\ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} \$
+$$\ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} \$$
 
 ### Application in the Script
 
