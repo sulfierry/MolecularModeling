@@ -6,8 +6,8 @@ import numpy as np
 import imageio.v2 as imageio
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
-# from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.colors import LinearSegmentedColormap
+
 
 class FreeEnergyLandscape:
     
