@@ -32,10 +32,10 @@ Mathematically, the density estimation at a point `x` is calculated as follows:
 $\ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right) \$
 
 where:
-- `$n$` is the number of data points,
-- `$h$` is the bandwidth,
-- `$x_i$` are the data points,
-- `$K$` represents the Gaussian kernel function, defined by:
+- $`n`$ is the number of data points,
+- $`h`$ is the bandwidth,
+- $`x_i`$ are the data points,
+- $`K`$ represents the Gaussian kernel function, defined by:
 
 $\ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} \$
 
