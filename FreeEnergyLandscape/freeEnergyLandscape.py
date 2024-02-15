@@ -1,10 +1,13 @@
+import os
 import sys
+import shutil
+import tempfile
 import numpy as np
+import imageio.v2 as imageio
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
+# from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.colors import LinearSegmentedColormap
-#from mpl_toolkits.mplot3d import Axes3D  # Import necessário para projeção 3D
-
 
 class FreeEnergyLandscape:
     
@@ -85,6 +88,43 @@ class FreeEnergyLandscape:
         fig.colorbar(surf, shrink=0.5, aspect=5, label='Energia Livre (kJ/mol)')
         plt.show()
 
+    def create_3D_gif(self, gif_filename='energy_landscape_3D.gif', n_angles=36, elevation=30):
+        temp_dir = tempfile.mkdtemp()  # Cria um diretório temporário
+        filenames = []
+
+        values_original = np.vstack([self.proj1_data_original, self.proj2_data_original])
+        kernel_original = gaussian_kde(values_original)
+        X_original, Y_original = np.mgrid[self.proj1_data_original.min():self.proj1_data_original.max():100j, 
+                                          self.proj2_data_original.min():self.proj2_data_original.max():100j]
+        positions_original = np.vstack([X_original.ravel(), Y_original.ravel()])
+        Z_original = np.reshape(kernel_original(positions_original).T, X_original.shape)
+        G_original = -self.kB * self.temperature * np.log(Z_original)
+        G_original = np.clip(G_original - np.min(G_original), 0, 25)
+
+        for angle in range(0, 360, int(360 / n_angles)):
+            fig = plt.figure(figsize=(10, 7))
+            ax = fig.add_subplot(111, projection='3d')
+            ax.plot_surface(X_original, Y_original, G_original, cmap=self.custom_cmap, edgecolor='none')
+            ax.view_init(elev=elevation, azim=angle)
+            ax.set_xlabel('CV1 (Ângulo)')
+            ax.set_ylabel('CV2 (Distância)')
+            ax.set_zlabel('Energia Livre (kJ/mol)')
+
+            # Salva a figura diretamente em um arquivo
+            frame_filename = os.path.join(temp_dir, f"frame_{angle:03d}.png")
+            plt.savefig(frame_filename)
+            filenames.append(frame_filename)
+            plt.close()
+
+        # Cria o GIF a partir dos arquivos salvos
+        with imageio.get_writer(gif_filename, mode='I', duration=0.1) as writer:
+            for filename in filenames:
+                image = imageio.imread(filename)
+                writer.append_data(image)
+
+        # Limpa os arquivos temporários
+        shutil.rmtree(temp_dir)
+
 
     def main(self):
         self.load_data()
@@ -92,6 +132,7 @@ class FreeEnergyLandscape:
         self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distância)')
         self.plot_energy_landscape()
         self.plot_3D_energy_landscape()
+        self.create_3D_gif()
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
