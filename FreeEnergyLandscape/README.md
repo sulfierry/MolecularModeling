@@ -18,11 +18,9 @@ $$\ G = -k_B T \ln(P) \$$
 
 where $k_B$ is the Boltzmann constant $$\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$$ where $T$ is the temperature, and $P$ is the probability density of the CVs. This relationship allows us to convert a histogram of CV values into a free energy surface.
 
-### Gaussian Kernel Density Estimation (KDE) in Free Energy Landscape Analysis
+### Gaussian Kernel Density Estimation (KDE)
 
-Within our script, the `gaussian_kde` function from the SciPy library is instrumental in constructing a detailed representation of the free energy landscape. This statistical method is crucial for estimating the probability density function (PDF) of a dataset without assuming any predefined distribution shape. In the context of molecular dynamics and simulations, it allows us to visualize and analyze the distribution of free energy across different states or configurations defined by collective variables (CVs).
-
-### Technical Implementation
+This statistical method is crucial for estimating the probability density function (PDF) of a dataset without assuming any predefined distribution shape. In the context of molecular dynamics and simulations, it allows us to visualize and analyze the distribution of free energy across different states or configurations defined by collective variables (CVs).
 
 The `gaussian_kde` leverages a Gaussian (normal) distribution, placing it at each point in the dataset and summing these distributions to approximate the overall data's PDF. This technique is adept at capturing the underlying structure of the data, providing a smooth, continuous representation of the free energy landscape. The smoothness of the KDE is controlled by the bandwidth parameter, which determines the width of the Gaussian kernels used.
 
