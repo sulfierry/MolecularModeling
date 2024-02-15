@@ -42,10 +42,9 @@ class FreeEnergyLandscape:
         G = -self.kB * self.temperature * np.log(hist)
         G = np.clip(G - np.min(G), 0, 25)
         plt.figure(figsize=(10, 6))
-        plt.plot(bin_centers, G, label='Energia Livre', color='red')
-        plt.title(f'Paisagem Energética Livre de {title}')
-        plt.xlabel('Valor')
-        plt.ylabel('Energia Livre (kJ/mol)')
+        plt.plot(bin_centers, G, label='Free energy', color='red')
+        plt.xlabel(f'{title}')
+        plt.ylabel('Free energy (kJ/mol)')
         plt.ylim(0, 25)
         plt.grid(True)
         plt.legend()
@@ -62,10 +61,10 @@ class FreeEnergyLandscape:
         G_original = np.clip(G_original - np.min(G_original), 0, 25)
         plt.figure(figsize=(8, 6))
         plt.contourf(X_original, Y_original, G_original, levels=np.linspace(0, 25, 100), cmap=self.custom_cmap)
-        plt.colorbar(label='Energia Livre (kJ/mol)', ticks=range(0, 26, 3))
-        plt.xlabel('CV1 (Ângulo)')
-        plt.ylabel('CV2 (Distância)')
-        plt.title('Paisagem Energética Gerada')
+        plt.colorbar(label='Free energy(kJ/mol)', ticks=range(0, 26, 3))
+        plt.xlabel('CV1 (Angle)')
+        plt.ylabel('CV2 (Distance)')
+        plt.title('Free energy landscape')
         plt.show()
 
     def plot_3D_energy_landscape(self):
@@ -81,15 +80,15 @@ class FreeEnergyLandscape:
         fig = plt.figure(figsize=(10, 7))
         ax = fig.add_subplot(111, projection='3d')
         surf = ax.plot_surface(X_original, Y_original, G_original, cmap=self.custom_cmap, edgecolor='none')
-        ax.set_xlabel('CV1 (Ângulo)')
-        ax.set_ylabel('CV2 (Distância)')
-        ax.set_zlabel('Energia Livre (kJ/mol)')
-        ax.set_title('Paisagem Energética em 3D')
-        fig.colorbar(surf, shrink=0.5, aspect=5, label='Energia Livre (kJ/mol)')
+        ax.set_xlabel('CV1 (Angle)')
+        ax.set_ylabel('CV2 (Distance)')
+        # ax.set_zlabel('Free energy (kJ/mol)')
+        ax.set_title('3D Free energy landscape')
+        fig.colorbar(surf, shrink=0.5, aspect=5, label='Free energy (kJ/mol)')
         plt.show()
 
-    def create_3D_gif(self, gif_filename='energy_landscape_3D.gif', n_angles=36, elevation=30):
-        temp_dir = tempfile.mkdtemp()  # Cria um diretório temporário
+    def create_3D_gif(self, gif_filename='energy_landscape_3D.gif', n_angles=300, elevation=15, duration_per_frame=0.01):
+        temp_dir = tempfile.mkdtemp()  # Cria um diretório temporário para armazenar os frames
         filenames = []
 
         values_original = np.vstack([self.proj1_data_original, self.proj2_data_original])
@@ -101,37 +100,42 @@ class FreeEnergyLandscape:
         G_original = -self.kB * self.temperature * np.log(Z_original)
         G_original = np.clip(G_original - np.min(G_original), 0, 25)
 
-        for angle in range(0, 360, int(360 / n_angles)):
+        # Gera uma lista de ângulos para um movimento contínuo e suave
+        angles = list(range(0, 360, int(360 / n_angles)))
+
+        for i, angle in enumerate(angles):
             fig = plt.figure(figsize=(10, 7))
             ax = fig.add_subplot(111, projection='3d')
-            ax.plot_surface(X_original, Y_original, G_original, cmap=self.custom_cmap, edgecolor='none')
+            surf = ax.plot_surface(X_original, Y_original, G_original, cmap=self.custom_cmap, edgecolor='none', vmin=np.min(G_original), vmax=np.max(G_original))
             ax.view_init(elev=elevation, azim=angle)
-            ax.set_xlabel('CV1 (Ângulo)')
-            ax.set_ylabel('CV2 (Distância)')
-            ax.set_zlabel('Energia Livre (kJ/mol)')
+            ax.set_xlabel('CV1 (Angle)')
+            ax.set_ylabel('CV2 (Distance)')
+            ax.set_zlabel('Free energy (kJ/mol)')
+            ax.set_title('3D Free energy landscape')
 
-            # Salva a figura diretamente em um arquivo
+            # Adiciona a barra de cores no primeiro e último frame
+            if i == 0 or i == len(angles) - 1:
+                fig.colorbar(surf, shrink=0.5, aspect=5, label='Fre energy (kJ/mol)')
+
             frame_filename = os.path.join(temp_dir, f"frame_{angle:03d}.png")
             plt.savefig(frame_filename)
             filenames.append(frame_filename)
             plt.close()
 
-        # Cria o GIF a partir dos arquivos salvos
-        with imageio.get_writer(gif_filename, mode='I', duration=0.1) as writer:
+        with imageio.get_writer(gif_filename, mode='I', duration=duration_per_frame) as writer:
             for filename in filenames:
                 image = imageio.imread(filename)
                 writer.append_data(image)
 
-        # Limpa os arquivos temporários
-        shutil.rmtree(temp_dir)
+        shutil.rmtree(temp_dir)  # Limpa os arquivos temporários
 
 
     def main(self):
         self.load_data()
-        self.boltzmann_inversion_original(self.proj1_data_original, 'CV1 (Ângulo)')
-        self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distância)')
-        self.plot_energy_landscape()
-        self.plot_3D_energy_landscape()
+        self.boltzmann_inversion_original(self.proj1_data_original, 'CV1 (Angle)')
+        self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distance)')
+        # self.plot_energy_landscape()
+        # self.plot_3D_energy_landscape()
         self.create_3D_gif()
 
 if __name__ == "__main__":
