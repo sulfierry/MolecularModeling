@@ -36,16 +36,8 @@ To use this class, instantiate it with paths to the CV1 and CV2 data files, then
 
 ## Example
 
-```python
-if __name__ == "__main__":
-    t = 300         # Temperature in K
-    kB = 8.314e-3   # Boltzmann constant in kJ/(mol·K)
-
-    cv1_path = './proj1Out.txt'
-    cv2_path = './proj2Out.txt'
-
-    fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB)
-    fel.main()
+```bash
+python freeEnergyLandscape.py proj1Out.txt proj2Out.txt 
 ```
 ## Visualizations Generated
 
