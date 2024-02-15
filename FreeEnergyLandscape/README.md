@@ -24,7 +24,7 @@ This statistical method is crucial for estimating the probability density functi
 
 The `gaussian_kde` leverages a Gaussian (normal) distribution, placing it at each point in the dataset and summing these distributions to approximate the overall data's PDF. This technique is adept at capturing the underlying structure of the data, providing a smooth, continuous representation of the free energy landscape. The smoothness of the KDE is controlled by the bandwidth parameter, which determines the width of the Gaussian kernels used.
 
-Mathematically, the density estimation at a point `x` is calculated as follows:
+Mathematically, the density estimation at a point $`x`$ is calculated as follows:
 
 $$\ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right) \$$
 
