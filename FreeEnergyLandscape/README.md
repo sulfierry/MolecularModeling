@@ -81,6 +81,32 @@ The third figure combines both CV1 and CV2 to produce a two-dimensional free ene
 - **Y-Axis**: CV2, representing a distance, with the same labeling as in Figure 2.
 - **Visualization**: A contour plot or a heatmap showing the free energy levels across the CV1 and CV2 space. The color gradient represents different energy levels, with cooler colors indicating low-energy regions (minima) and warmer colors highlighting high-energy barriers. This visualization is crucial for identifying transition states, stable conformations, and understanding the molecular system's behavior under various conditions.
 
+
+### Figure 4: 3D Free Energy Landscape
+
+This figure provides a three-dimensional visualization of the free energy landscape, combining both collective variables, CV1 and CV2, along with the calculated free energy values to offer a dynamic perspective on the system's energetics.
+
+![Alt text da image](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/fel3D.png)
+
+
+- **X-Axis**: CV1, representing an angle, with the same labeling as in Figure 1.
+- **Y-Axis**: CV2, representing a distance, with the same labeling as in Figure 2.
+- **Z-Axis**: Shows the free energy in kJ/mol, calculated from the probability distribution of CV1 and CV2 using the Boltzmann equation.
+
+Visualization: A 3D surface plot illustrates the variations in free energy across the space defined by CV1 and CV2. The color gradient enhances the visualization of energy barriers and minima, aiding in the identification of stable conformations and transition states.
+
+Animated 3D Free Energy Landscape
+The animated GIF provides a rotating view of the 3D free energy landscape, offering an immersive exploration of the energy barriers and minima across the collective variable space. The animation helps in visualizing the landscape's depth and complexity from multiple angles, enhancing the understanding of the molecular system's energetics.
+
+#### Animation: The GIF loops through a series of rotations around the Z-axis, presenting a 360-degree view of the free energy landscape. This continuous motion provides a comprehensive perspective on the distribution of energy states.
+
+![Alt Text](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/energy_landscape_3D.gif)
+
+**Purpose**: The animated visualization aids in grasping the multidimensional nature of the free energy landscape, which is crucial for understanding the thermodynamics and kinetics of molecular systems.
+Interpretation
+
+The 3D and animated visualizations of the free energy landscape extend the analysis beyond two dimensions, offering a richer and more nuanced understanding of the system's energetics. By exploring the landscape in three dimensions, researchers can better identify and analyze the regions of interest, such as low-energy conformations and high-energy transition states, which are vital for deciphering the molecular mechanisms underlying biological processes and material behaviors.
+
 ## Interpretation
 
 Together, these figures provide a multi-faceted view of the molecular system's free energy landscape. Analyzing these visualizations helps in understanding how variations in critical structural parameters (angles and distances) influence the stability and dynamics of the system, which is vital for predicting reaction pathways, designing drugs, and engineering materials with desired properties.
