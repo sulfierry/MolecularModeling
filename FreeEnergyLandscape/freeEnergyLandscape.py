@@ -103,7 +103,7 @@ class FreeEnergyLandscape:
         return {'X_original': X_original, 'Y_original': Y_original, 'G_original': G_original}
 
 
-    def plot_energy_landscape(self, threshold=10):
+    def plot_energy_landscape(self, threshold):
         # Combina os dados das variáveis coletivas
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
@@ -147,7 +147,7 @@ class FreeEnergyLandscape:
         np.savetxt('landscape_cv1_cv2_minimuns.tsv', np.column_stack((low_energy_x.ravel(), low_energy_y.ravel(), low_energy_g.ravel())), fmt='%f', header='CV1\tCV2\tEnergy', comments='')
 
 
-    def save_low_energy_points_to_tsv(self, threshold=10):
+    def save_low_energy_points_to_tsv(self, threshold=5):
         # Calcula a paisagem de energia
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
@@ -253,7 +253,7 @@ class FreeEnergyLandscape:
         self.load_data()
         self.boltzmann_inversion_original(self.proj1_data_original, 'CV1 (Angle)')
         self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distance)')
-        self.plot_energy_landscape()
+        self.plot_energy_landscape(threshold=5)
         self.save_low_energy_points_to_tsv(threshold=5)
         # self.plot_3D_energy_landscape()
         # self.create_3D_gif()
@@ -278,3 +278,5 @@ if __name__ == "__main__":
         print(f"An unexpected error occurred: {e}")
         sys.exit(1)
 
+
+# adiionar a opcao para indicar o trseshold na linha de comando
