@@ -58,20 +58,7 @@ where:
 - $e^{-\frac{1}{2}u^2}$ decreases rapidly as $u$ increases, meaning that points further away from $x$ will have less influence on the density estimate at $x$.
 - $\frac{1}{\sqrt{2\pi}}$ is a normalization term that ensures the Gaussian kernel function integrates to $1$, keeping it as a valid probability distribution.
 
-In the context of kernel density estimation: 
-
-$$ u = \frac{x - x_i}{h} $$
-
-where:
-- $u$ is the normalized distance
-- $x$ is where the density is being estimated
-- $x_i$ are the data points
-- $h$ is the bandwidth
-  
-This variable $u$ is utilized within the Gaussian kernel function $K$, which is a probability density function.
-
-
-Thus, $u$ is crucial in determining how the distance between $x$ and the data points $x_i$ affects the density estimate at $x$, with the bandwidth $h$ controlling the sensitivity of this influence.
+In the context of kernel density estimation the variable $u$ is utilized within the Gaussian kernel function $K$, which is a probability density function. Thus, $u$ is crucial in determining how the distance between $x$ and the data points $x_i$ affects the density estimate at $x$, with the bandwidth $h$ controlling the sensitivity of this influence.
 
 ### Application in the Script
 
