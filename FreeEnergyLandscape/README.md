@@ -52,7 +52,7 @@ $$ u = \frac{x - x_i}{h} $$
 
 $$ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} $$
 
-where:
+note that:
 - $u^2$ is the square of this normalized distance, which serves to weight the contribution of each data point $x_i$ to the density estimate at $x$, based on how far $x_i$ is from $x$, adjusted by the bandwidth $h$.
 - $e^{-\frac{1}{2}u^2}$ decreases rapidly as $u$ increases, meaning that points further away from $x$ will have less influence on the density estimate at $x$.
 - $\frac{1}{\sqrt{2\pi}}$ is a normalization term that ensures the Gaussian kernel function integrates to $1$, keeping it as a valid probability distribution.
