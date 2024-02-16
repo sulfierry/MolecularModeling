@@ -18,9 +18,9 @@ $$\Delta G = -k_B T [\ln(P) - \ln(P_{\text{max}})] \$$
 
 where $k_B$ is the Boltzmann constant $\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$, $T$ is the temperature, $P$ is the probability density of the CVs and $P_{\text{max}}$ is the maximum probability density. This relationship allows us to convert a histogram of CV values into a free energy surface. This formulation adjusts the free energy values so that the minimum energy (associated with the highest probability \(P_{\text{max}}\)) is set to 0. Here's why:
 
-- \(P(V)\) is the probability distribution of the data, obtained from a histogram of molecular dynamics (MD) data.
-- \(P_{\text{max}}\) is the maximum value of this probability distribution, representing the most likely state or the minimum of free energy.
-- Subtracting \(\ln(P_{\text{max}})\) from \(\ln P(V)\) in the free energy equation, the value of \(\Delta G\) for the state with \(P_{\text{max}}\) will be 0 because \(\ln P_{\text{max}} - \ln P_{\text{max}} = 0\). This ensures that the minimum of free energy on the energy surface is 0.
+- $P(V)$ is the probability distribution of the data, obtained from a histogram of molecular dynamics (MD) data.
+- $P_{\text{max}}$ is the maximum value of this probability distribution, representing the most likely state or the minimum of free energy.
+- Subtracting $ln(P_{\text{max}})$ from $ln P(V)$ in the free energy equation, the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln P_{\text{max}} - \ln P_{\text{max}} = 0\$. This ensures that the minimum of free energy on the energy surface is 0.
 
 This approach is useful for highlighting the relative differences in free energy between different states or conformations in an MD simulation, facilitating the identification of free energy minima and the relative comparison between different states. By setting the minimum of free energy to 0, you create a clear reference point to evaluate the relative stability of other states compared to the most stable state.
 
