@@ -17,7 +17,7 @@ The Boltzmann inversion method is used to calculate the free energy landscape fr
 $$\Delta G = -k_B T [\ln(P) - \ln(P_{\text{max}})] \$$
 
 
-This relationship allows us to convert a histogram of CV values into a free energy surface. This formulation adjusts the free energy values so that the minimum energy (associated with the highest probability \(P_{\text{max}}\)) is set to 0. Here's why:
+This relationship allows us to convert a histogram of CV values into a free energy surface. This formulation adjusts the free energy values so that the minimum energy (associated with the highest probability $P_{\text{max}}$ is set to 0. Here's why:
 
 - $k_B$ is the Boltzmann constant $\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$
 - $T$ is the temperature
