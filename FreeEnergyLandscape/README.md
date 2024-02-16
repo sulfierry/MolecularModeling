@@ -40,10 +40,6 @@ Mathematically, the density estimation at a point $`x`$ is calculated as follows
 $$\ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K(u) \$$   
 
 where:
-- $n$ is the number of data points
-- $h$ is the bandwidth
-- $x$ is where the density is being estimated
-- $x_i$ are the data points
 - $K(u)$ represents the Gaussian kernel function
 
 $$ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} $$
@@ -52,6 +48,11 @@ $$ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} $$
 
 $$ u = \frac{x - x_i}{h} $$
 
+- $n$ is the number of data points
+- $h$ is the bandwidth
+- $x$ is where the density is being estimated
+- $x_i$ are the data points
+  
 note that:
 - $u^2$ is the square of this normalized distance, which serves to weight the contribution of each data point $x_i$ to the density estimate at $x$, based on how far $x_i$ is from $x$, adjusted by the bandwidth $h$.
 - $e^{-\frac{1}{2}u^2}$ decreases rapidly as $u$ increases, meaning that points further away from $x$ will have less influence on the density estimate at $x$.
