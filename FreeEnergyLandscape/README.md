@@ -20,8 +20,8 @@ where:
 
 - $k_B$ is the Boltzmann constant $\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$
 - $T$ is the temperature
-- $P$ is the probability distribution of the data, obtained from a histogram of molecular dynamics (MD) data.
-- $P_{\text{max}}$ is the maximum value of this probability distribution, representing the most likely state or the minimum of free energy.
+- $P$ is the probability distribution of the data, obtained from a histogram of molecular dynamics (MD) data
+- $P_{\text{max}}$ is the maximum value of this probability distribution, representing the most likely state or the minimum of free energy
 
 
 This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln P_{\text{max}} - \ln P_{\text{max}} = 0\$.
@@ -40,9 +40,9 @@ Mathematically, the density estimation at a point $`x`$ is calculated as follows
 $$\ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right) \$$
 
 where:
-- $`n`$ is the number of data points,
-- $`h`$ is the bandwidth,
-- $`x_i`$ are the data points,
+- $`n`$ is the number of data points
+- $`h`$ is the bandwidth
+- $`x_i`$ are the data points
 - $`K`$ represents the Gaussian kernel function, defined by:
 
 $$\ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} \$$
