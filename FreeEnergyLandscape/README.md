@@ -45,7 +45,9 @@ where:
 -$x$ is where the density is being estimated
 - $x_i$ are the data points
 - $u$ is the normalized distance
+
 $$ u = \frac{x - x_i}{h} $$
+
 - $K(u)$ represents the Gaussian kernel function
 
 
