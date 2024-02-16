@@ -20,7 +20,7 @@ where:
 
 - $k_B$ is the Boltzmann constant $\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$
 - $T$ is the temperature
-- $P(V)$ is the probability distribution of the data, obtained from a histogram of molecular dynamics (MD) data.
+- $P$ is the probability distribution of the data, obtained from a histogram of molecular dynamics (MD) data.
 - $P_{\text{max}}$ is the maximum value of this probability distribution, representing the most likely state or the minimum of free energy.
 
 
