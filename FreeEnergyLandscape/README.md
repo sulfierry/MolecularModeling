@@ -16,7 +16,7 @@ The Boltzmann inversion method is used to calculate the free energy landscape fr
 
 $$\Delta G = -k_B T [\ln(P) - \ln(P_{\text{max}})] \$$
 
-where $k_B$ is the Boltzmann constant $\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$, $T$ is the temperature, $P$ is the probability density of the CVs and $(P_{\text{max}}$ is the maximum probability density.. This relationship allows us to convert a histogram of CV values into a free energy surface.
+where $k_B$ is the Boltzmann constant $\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$, $T$ is the temperature, $P$ is the probability density of the CVs and $P_{\text{max}}$ is the maximum probability density. This relationship allows us to convert a histogram of CV values into a free energy surface.
 
 ### Gaussian Kernel Density Estimation (KDE)
 
