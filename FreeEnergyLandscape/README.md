@@ -42,7 +42,7 @@ $$\ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right) \$
 where:
 - $n$ is the number of data points
 - $h$ is the bandwidth
--$x$ is where the density is being estimated
+- $x$ is where the density is being estimated
 - $x_i$ are the data points
 - $u$ is the normalized distance
 
