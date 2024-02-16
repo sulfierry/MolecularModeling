@@ -59,8 +59,6 @@ note that:
 
 In the context of kernel density estimation the variable $u$ is utilized within the Gaussian kernel function $K$, which is a probability density function. Thus, $u$ is crucial in determining how the distance between $x$ and the data points $x_i$ affects the density estimate at $x$, with the bandwidth $h$ controlling the sensitivity of this influence.
 
-### Application in the Script
-
 The `FreeEnergyLandscape` class employs `gaussian_kde` in several key areas:
 
 1. **Free Energy Distribution Estimation:** By applying `gaussian_kde` to the CVs collected from molecular simulations, we obtain a continuous estimate of the free energy landscape. This estimated landscape is crucial for identifying stable configurations (minima) and understanding the transition pathways (energy barriers) between different molecular states.
@@ -98,7 +96,7 @@ To install these libraries, you can use the following command:
 ```bash
 pip install numpy==1.23.5 imageio==2.34.0 matplotlib==3.7.4 scipy==1.10.1
 ```
-These dependencies also are listed in the requirements.txt file. To install them, run the following command in your terminal:
+These dependencies also are listed in the `requirements.txt` file. To install them, run the following command in your terminal:
 
 ```bash
 pip install -r requirements.txt
