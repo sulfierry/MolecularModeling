@@ -46,14 +46,21 @@ where:
 - $`K(u)`$ represents the Gaussian kernel function
 
 
-In the context of kernel density estimation, $u$ represents the normalized distance between the point $x$ at which the density is being estimated and a data point $x_i$, divided by the bandwidth $h$. This variable $u$ is utilized within the Gaussian kernel function $K$, which is a probability density function.
+In the context of kernel density estimation: 
 
 $$ u = \frac{x - x_i}{h} $$
 
-In the Gaussian kernel formula:
+where:
+- $u$ is the normalized distance
+- $x$ is where the density is being estimated
+- $x_i$ are the data points
+- $h$ is the bandwidth
+  
+This variable $u$ is utilized within the Gaussian kernel function $K$, which is a probability density function.
 
 $$ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} $$
 
+where:
 - $u^2$ is the square of this normalized distance, which serves to weight the contribution of each data point $x_i$ to the density estimate at $x$, based on how far $x_i$ is from $x$, adjusted by the bandwidth $h$.
 - $e^{-\frac{1}{2}u^2}$ decreases rapidly as $u$ increases, meaning that points further away from $x$ will have less influence on the density estimate at $x$.
 - $frac{1}{\sqrt{2\pi}}$ is a normalization term that ensures the Gaussian kernel function integrates to $1$, keeping it as a valid probability distribution.
