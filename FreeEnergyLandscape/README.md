@@ -12,7 +12,7 @@ Collective Variables (CVs) are a set of coordinates that describe the macroscopi
 
 ### Boltzmann Inversion
 
-The Boltzmann inversion method is used to calculate the free energy landscape from the probability distribution of CVs. The free energy, $\( G \)$, of a state is related to its probability, $\( P \)$, by the Boltzmann equation:
+The Boltzmann inversion method is used to calculate the free energy landscape from the probability distribution of CVs. The free energy, $\( G \)$, of a state is related to its probability $\( P \)$, by the Boltzmann equation:
 
 $$\Delta G = -k_B T [\ln(P) - \ln(P_{\text{max}})] \$$
 
