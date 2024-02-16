@@ -24,7 +24,7 @@ where:
 - $P_{\text{max}}$ is the maximum value of this probability distribution, representing the most likely state or the minimum of free energy
 
 
-This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln P_{\text{max}} - \ln P_{\text{max}} = 0\$.
+This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln (P_{\text{max}}) - \ln (P_{\text{max}} = 0)\$.
 
 This approach is useful for highlighting the relative differences in free energy between different states or conformations in an MD simulation, facilitating the identification of free energy minima and the relative comparison between different states. By setting the minimum of free energy to 0, you create a clear reference point to evaluate the relative stability of other states compared to the most stable state.
 
@@ -49,7 +49,6 @@ where:
 $$ u = \frac{x - x_i}{h} $$
 
 - $K(u)$ represents the Gaussian kernel function
-
 
 $$ K(u) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2} $$
 
