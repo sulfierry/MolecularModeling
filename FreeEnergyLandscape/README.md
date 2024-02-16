@@ -29,7 +29,7 @@ This relationship allows us to convert a histogram of CV values into a free ener
 This approach is useful for highlighting the relative differences in free energy between different states or conformations in an MD simulation, facilitating the identification of free energy minima and the relative comparison between different states. By setting the minimum of free energy to 0, you create a clear reference point to evaluate the relative stability of other states compared to the most stable state.
 
 
-### Gaussian Kernel Density Estimation (KDE)
+### Kernel Density Estimation (KDE)
 
 This statistical method is crucial for estimating the probability density function (PDF) of a dataset without assuming any predefined distribution shape. In the context of molecular dynamics and simulations, it allows us to visualize and analyze the distribution of free energy across different states or configurations defined by collective variables (CVs).
 
