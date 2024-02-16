@@ -37,7 +37,7 @@ The `gaussian_kde` leverages a Gaussian (normal) distribution, placing it at eac
 
 Mathematically, the density estimation at a point $`x`$ is calculated as follows:
 
-$$\ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right) \$$
+$$\ f(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K(u) \$$   
 
 where:
 - $n$ is the number of data points
