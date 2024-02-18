@@ -88,7 +88,9 @@ note that:
 - $e^{-\frac{1}{2}u^2}$ decreases rapidly as $u$ increases, meaning that points further away from $x$ will have less influence on the density estimate at $x$.
 - $\frac{1}{\sqrt{2\pi}}$ is a normalization term that ensures the Gaussian kernel function integrates to $1$, keeping it as a valid probability distribution.
 
-In the context of kernel density estimation the variable $u$ is utilized within the Gaussian kernel function $K$, which is a probability density function. Thus, $u$ is crucial in determining how the distance between $x$ and the data points $x_i$ affects the density estimate at $x$, with the bandwidth $h$ controlling the sensitivity of this influence.
+In the context of KDE the variable $u$ is utilized within the Gaussian kernel function $K$, which is a probability density function. Thus, $u$ is crucial in determining how the distance between $x$ and the data points $x_i$ affects the density estimate at $x$, with the bandwidth $h$ controlling the sensitivity of this influence.
+
+The Gaussian KDE method provides a sophisticated approach to model the complex free energy landscapes encountered in molecular dynamics studies. It enables researchers to visualize the distribution of energy states without the constraints of parametric models, offering insights into molecular stability, transitions, and the energetics of molecular interactions.
 
 The `FreeEnergyLandscape` class employs `gaussian_kde` in several key areas:
 
@@ -149,36 +151,7 @@ Here, $\Delta G$ is expressed as a function of the difference in the logarithms 
 
 This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln (P_{\text{max}}) - \ln (P_{\text{max}}) = 0\$.
 
-#### Incorporating the Concept of the Partition Function into the `calculate_free_energy` method
-
-The `calculate_free_energy` function implements statistical thermodynamics principles, leveraging the Boltzmann distribution to analyze computational data.  The `calculate_free_energy` function approximates the partition function $P$ using Kernel Density Estimation (KDE) to estimate the probability density function from a dataset. This approach allows for the calculation of a free energy landscape based on the density of states within the dataset, without needing to directly compute $Z$ for each state:
-
-```python
-def calculate_free_energy(self, data):
-    """
-    Calculates free energy and prepares data for plotting.
-    :param data: Input data for which the free energy will be calculated.
-    :return: Dictionary containing 'X_original', 'Y_original', and 'G_original' for plotting.
-    """
-    values_original = np.vstack([data[:, 0], data[:, 1]]).T
-    kernel_original = gaussian_kde(values_original.T)
-    X_original, Y_original = np.mgrid[data[:, 0].min():data[:, 0].max():100j, 
-                                      data[:, 1].min():data[:, 1].max():100j]
-    positions_original = np.vstack([X_original.ravel(), Y_original.ravel()])
-    P_original = np.reshape(kernel_original(positions_original).T, X_original.shape)
-    G_original = -self.kB * self.temperature * np.log(P_original)
-    G_original = np.clip(G_original - np.min(G_original), 0, 25)
-    
-    return {'X_original': X_original, 'Y_original': Y_original, 'G_original': G_original}
-```
-
-
-This expression quantitatively links the probability distribution of states within a thermodynamic system to their respective free energy differences, providing a foundation for analyzing the system's behavior at the molecular level. This approach is useful for highlighting the relative differences in free energy between different states or conformations in an MD simulation, facilitating the identification of free energy minima and the relative comparison between different states. By setting the minimum of free energy to 0, you create a clear reference point to evaluate the relative stability of other states compared to the most stable state.
-
-
-### Importance in Molecular Studies
-
-The Gaussian KDE method provides a sophisticated approach to model the complex free energy landscapes encountered in molecular dynamics studies. It enables researchers to visualize the distribution of energy states without the constraints of parametric models, offering insights into molecular stability, transitions, and the energetics of molecular interactions. By incorporating `gaussian_kde` into our analysis, we enhance our ability to decipher the intricate energy landscapes that govern molecular systems, contributing significantly to the fields of computational chemistry and biophysics.
+This expression quantitatively links the probability distribution of states within a thermodynamic system to their respective free energy differences, providing a foundation for analyzing the system's behavior at the molecular level and this approach is useful for highlighting the relative differences in free energy between different states or conformations in an MD simulation, facilitating the identification of free energy minima and the relative comparison between different states. By setting the minimum of free energy to 0, you create a clear reference point to evaluate the relative stability of other states compared to the most stable state.
 
 
 ## Implementation Details
