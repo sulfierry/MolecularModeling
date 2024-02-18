@@ -10,12 +10,9 @@ The free energy landscape is a conceptual and computational tool used to underst
 
 Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the distance between two atoms, angles, dihedrals, and more complex descriptors.
 
+CVs in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
 
-### Mathematical Representation of Collective Variables (CVs)
-
-Collective Variables (CVs) in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
-
-1. **Distance Between Two Atoms**: The distance \(d\) between two atoms \(i\) and \(j\) with positions \(\vec{r}_i\) and \(\vec{r}_j\) is given by the Euclidean distance formula:
+1. **Distance Between Two Atoms**: The distance $d$ between two atoms $i$ and $j$ with positions $vec{r}_i$ and $vec{r}_j$ is given by the Euclidean distance formula:
    $$
    d = |\vec{r}_i - \vec{r}_j| = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + (z_i - z_j)^2}
    $$
