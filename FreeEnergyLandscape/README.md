@@ -112,6 +112,39 @@ where:
 - $k_B$ is the Boltzmann constant, a fundamental physical constant that relates energy scales to temperature,
 - $T$ is the absolute temperature of the system, measured in Kelvin.
 
+#### Incorporating the Concept of the Partition Function into the `calculate_free_energy` Function
+
+When translating the proportionality described by the Boltzmann distribution into a precise mathematical relationship for practical computational analysis, we introduce the concept of the partition function $Z$. This function acts as a normalization constant, ensuring that the sum of probabilities across all conceivable states of a system is equal to 1. This normalization is crucial for transforming the distribution into a form where probabilities are physically meaningful and can be directly related to observable thermodynamic quantities:
+
+$$P = \frac{e^{-\frac{\Delta G}{k_B T}}}{Z}$$
+
+The partition function $Z$ itself is determined by summing (or integrating, for continuous systems) over the exponential terms corresponding to the free energy of every possible state of the system:
+
+$$Z = \sum_i e^{-\frac{\Delta G_i}{k_B T}}$$
+
+#### Practical Application in `calculate_free_energy`
+
+The `calculate_free_energy` function employs a computational analogue of this concept through the use of Kernel Density Estimation (KDE) to estimate the probability density function from a given dataset. This estimation serves as a stand-in for direct calculation of $Z$, allowing for the determination of a free energy landscape based on the density of states within the dataset:
+
+```python
+def calculate_free_energy(self, data):
+    """
+    Calculates free energy and prepares data for plotting.
+    :param data: Input data for which the free energy will be calculated.
+    :return: Dictionary containing 'X_original', 'Y_original', and 'G_original' for plotting.
+    """
+    values_original = np.vstack([data[:, 0], data[:, 1]]).T
+    kernel_original = gaussian_kde(values_original.T)
+    X_original, Y_original = np.mgrid[data[:, 0].min():data[:, 0].max():100j, 
+                                      data[:, 1].min():data[:, 1].max():100j]
+    positions_original = np.vstack([X_original.ravel(), Y_original.ravel()])
+    Z_original = np.reshape(kernel_original(positions_original).T, X_original.shape)
+    G_original = -self.kB * self.temperature * np.log(Z_original)
+    G_original = np.clip(G_original - np.min(G_original), 0, 25)
+    
+    return {'X_original': X_original, 'Y_original': Y_original, 'G_original': G_original}
+
+
 ### Normalization of Probability
 
 For the concept of probability to be meaningful in the context of statistical mechanics, it's imperative that the probabilities of all conceivable states sum to unity. This requirement ensures that the predicted behavior encompasses all possible configurations of the system. Consider a state that represents the maximum free energy, denoted as $\Delta G_{\text{max}}$, its corresponding maximum probability, $P_{\text{max}}$, can be analogously expressed through the Boltzmann factor:
