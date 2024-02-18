@@ -151,7 +151,7 @@ The `calculate_free_energy` function implements statistical thermodynamics princ
 
 The partition function $Z$ serves as a normalization factor, ensuring that the total probability of all states in a system sums to one. This is essential for converting theoretical distributions into quantifiable measures that reflect the physical reality of the system:
 
-$$P = \frac{e^{-\frac{\Delta G}{k_B T}}}{Z}$$
+$$P = -k_B*T*log(Z)$$
 
 Here:
 - $P$ represents the probability of the system being in a state with a certain free energy difference \(\Delta G\),
