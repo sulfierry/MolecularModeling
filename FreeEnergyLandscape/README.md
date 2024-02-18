@@ -12,10 +12,8 @@ Collective Variables (CVs) are a set of coordinates that describe the macroscopi
 
 CVs in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
 
-1. **Distance Between Two Atoms**: The distance $d$ between two atoms $i$ and $j$ with positions $\vec{r}_i$ and $vec{r}_j$ is given by the Euclidean distance formula:
-   $$
-   d = |\vec{r}_i - \vec{r}_j| = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + (z_i - z_j)^2}
-   $$
+1. **Distance Between Two Atoms**: The distance $d$ between two atoms $i$ and $j$ with positions $\vec{r}_i$ and $\vec{r}_j$ is given by the Euclidean distance formula:
+   $$d = |\vec{r}_i - \vec{r}_j| = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + (z_i - z_j)^2}$$
    where \(x\), \(y\), and \(z\) denote the Cartesian coordinates of the atoms.
 
 2. **Angle Between Three Atoms**: The angle \(\theta\) formed by three atoms \(i\), \(j\), and \(k\), where \(j\) is the vertex, is calculated using the dot product:
