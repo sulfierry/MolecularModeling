@@ -98,7 +98,7 @@ The `FreeEnergyLandscape` class employs `gaussian_kde` in several key areas:
 
 ### Boltzmann Inversion
 
-To derive the provided equation, let's start with the fundamental relationship between Gibbs free energy $\Delta G$ of a specific state and the probability $P$ of that state, as described by the Boltzmann distribution. Gibbs free energy provides a measure of the amount of "useful work" that can be obtained from a thermodynamic system in a process at constant temperature and pressure. The Boltzmann distribution, in turn, relates the energy of a state to its probability in a canonical ensemble.
+Gibbs free energy provides a measure of the amount of "useful work" that can be obtained from a thermodynamic system in a process at constant temperature and pressure. The Boltzmann distribution, in turn, relates the energy of a state to its probability in a canonical ensemble.
 
 #### Starting from the Boltzmann Distribution
 
