@@ -12,7 +12,7 @@ Collective Variables (CVs) are a set of coordinates that describe the macroscopi
 
 CVs in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
 
-1. **Distance (Between Two Atoms)**: The distance $d$ between two atoms $i$ and $j$ with positions $\vec{r}_i$ and $\vec{r}_j$ can be calculated using the Euclidean distance formula:
+1. **Distance**: The distance $d$ between two atoms $i$ and $j$ with positions $\vec{r}_i$ and $\vec{r}_j$ can be calculated using the Euclidean distance formula:
 
    First, determine the position vectors of atoms $i$ and $j$:
    $$\vec{r}_i = (x_i, y_i, z_i)$$
@@ -25,7 +25,7 @@ CVs in biomolecular systems are mathematically represented as functions of the a
    - $(x_i, y_i, z_i)$ and $(x_j, y_j, z_j)$ denote the Cartesian coordinates of atoms $i$ and $j$.
    - $|\vec{r}_i - \vec{r}_j|$ represents the magnitude of the vector difference between $\vec{r}_i$ and $\vec{r}_j$, giving the direct distance between the two atoms.
 
-2. **Angle (Between Three Atoms)**: The angle $\theta$ formed by three atoms $i$, $j$, and $k$, where $j$ is the vertex, can be calculated using the dot product:
+2. **Angle**: The angle $\theta$ formed by three atoms $i$, $j$, and $k$, where $j$ is the vertex, can be calculated using the dot product:
 
    First, determine the vectors $\vec{r}_ji$ and $\vec{r}_jk$:
    $$\vec{r}_ji = \vec{r}_i - \vec{r}_j$$
@@ -41,7 +41,7 @@ CVs in biomolecular systems are mathematically represented as functions of the a
    - $\arccos$ is the inverse cosine function, used to find the angle $\theta$ from the cosine value.
 
 
-3. **Dihedral Angle (Between four atoms)**: The dihedral angle $\phi$ between planes formed by atoms $i$, $j$, $k$, and $l$ can be calculated in steps:
+3. **Dihedral**: The dihedral angle $\phi$ between planes formed by atoms $i$, $j$, $k$, and $l$ can be calculated in steps:
 
 First, compute the normal vectors to the planes formed by atoms $(i, j, k)$ and $(j, k, l)$:
    $$\vec{n}_1 = \vec{r}_ji \times \vec{r}_jk$$
