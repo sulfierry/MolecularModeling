@@ -22,22 +22,14 @@ CVs in biomolecular systems are mathematically represented as functions of the a
 
 3. **Dihedral Angle**: The dihedral angle $\phi$ between planes formed by atoms $i$, $j$, $k$, and $l$ can be calculated in steps:
 
-First, compute the normal vectors to the planes formed by atoms $(i, j, k)$ and $(j, k, l)$:
-   $$\vec{n}_1 = $\vec{r}_{ji}$ \times $\vec{r}_{jk}$ $$
-   $$\vec{n}_2 = \vec{r}_{jk} \times \vec{r}_{kl}$$
+   First, compute the normal vectors to the planes:
+   $$\vec{n}_1 = \vec{r}_{\text{ji}} \times \vec{r}_{\text{jk}}$$
+   $$\vec{n}_2 = \vec{r}_{\text{jk}} \times \vec{r}_{\text{kl}}$$
 
-Then, calculate the angle $\phi$ using the arctan2 function, which considers both the sine and cosine components of the angle:
-   $$\phi = \arctan2\left(\frac{\vec{n}_1 \cdot \vec{r}_kl}{|\vec{n}_1||\vec{r}_kl|}, \frac{\vec{n}_1 \cdot \vec{n}_2}{|\vec{n}_1||\vec{n}_2|}\right)$$
+   Then, calculate the angle $\phi$:
+   $$\phi = \arctan2\left(\frac{\vec{n}_1 \cdot \vec{r}_{\text{kl}}}{|\vec{n}_1||\vec{r}_{\text{kl}}|}, \frac{\vec{n}_1 \cdot \vec{n}_2}{|\vec{n}_1||\vec{n}_2|}\right)$$
 
-- $\vec{r}_{ji}$, $\vec{r}_jk$, and $\vec{r}_kl$ are the position vectors between atoms $i$ and $j$, $j$ and $k$, and $k$ and $l$, respectively.
-- $\times$ denotes the cross product which is used to find the normal vectors $\vec{n}_1$ and $\vec{n}_2$ to the planes of interest.
-- $\cdot$ denotes the dot product.
-- $|\vec{n}_1|$ and $|\vec{n}_2|$ represent the magnitudes of the normal vectors.
-- The first argument of $\arctan2$ is the sine component, given by the dot product of $\vec{n}_1$ and $\vec{r}_kl$, normalized by the product of their magnitudes. This effectively projects $\vec{r}_kl$ onto $\vec{n}_1$ to find the sine of the dihedral angle.
-- The second argument of $\arctan2$ is the cosine component, calculated as the dot product of the normal vectors $\vec{n}_1$ and $\vec{n}_2$, normalized by the product of their magnitudes, providing the cosine of the dihedral angle.
-
-This approach calculates the dihedral angle $\phi$ in a step-wise manner, ensuring clarity and improving the compatibility with Markdown rendering on GitHub.
-
+   Here, $\vec{r}_{\text{ji}}$, $\vec{r}_{\text{jk}}$, and $\vec{r}_{\text{kl}}$ are vectors between the respective atoms, and $\times$ denotes the cross product.
 
 These representations allow for a simplified description of the system's state, facilitating the study of its behavior and properties through the manipulation of a reduced set of variables rather than the full set of atomic coordinates.
 
