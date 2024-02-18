@@ -10,25 +10,6 @@ The free energy landscape is a conceptual and computational tool used to underst
 
 Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the distance between two atoms, angles, dihedrals, and more complex descriptors.
 
-### Boltzmann Inversion
-
-The Boltzmann inversion method is used to calculate the free energy landscape from the probability distribution of CVs. The free energy, $\( G \)$, of a state is related to its probability $\( P \)$, by the Boltzmann equation:
-
-$$\Delta G = -k_B T [\ln(P) - \ln(P_{\text{max}})] \$$
-
-where:
-
-- $k_B$ is the Boltzmann constant $\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$
-- $T$ is the temperature
-- $P$ is the probability distribution of the data, obtained from a histogram of molecular dynamics (MD) data
-- $P_{\text{max}}$ is the maximum value of this probability distribution, representing the most likely state or the minimum of free energy
-
-
-This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln (P_{\text{max}}) - \ln (P_{\text{max}}) = 0\$.
-
-This approach is useful for highlighting the relative differences in free energy between different states or conformations in an MD simulation, facilitating the identification of free energy minima and the relative comparison between different states. By setting the minimum of free energy to 0, you create a clear reference point to evaluate the relative stability of other states compared to the most stable state.
-
-
 ### Kernel Density Estimation (KDE)
 
 This statistical method is crucial for estimating the probability density function (PDF) of a dataset without assuming any predefined distribution shape. In the context of molecular dynamics and simulations, it allows us to visualize and analyze the distribution of free energy across different states or configurations defined by collective variables (CVs).
@@ -65,6 +46,25 @@ The `FreeEnergyLandscape` class employs `gaussian_kde` in several key areas:
 1. **Free Energy Distribution Estimation:** By applying `gaussian_kde` to the CVs collected from molecular simulations, we obtain a continuous estimate of the free energy landscape. This estimated landscape is crucial for identifying stable configurations (minima) and understanding the transition pathways (energy barriers) between different molecular states.
 
 2. **Visualization:** The KDE result is used to generate visual representations of the free energy landscape, including both static 3D plots and animated GIFs. These visualizations allow for an intuitive exploration of the energy landscape, facilitating the identification of significant energy features that influence molecular behavior.
+
+### Boltzmann Inversion
+
+The Boltzmann inversion method is used to calculate the free energy landscape from the probability distribution of CVs. The free energy, $\( G \)$, of a state is related to its probability $\( P \)$, by the Boltzmann equation:
+
+$$\Delta G = -k_B T [\ln(P) - \ln(P_{\text{max}})] \$$
+
+where:
+
+- $k_B$ is the Boltzmann constant $\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$
+- $T$ is the temperature
+- $P$ is the probability distribution of the data, obtained from a histogram of molecular dynamics (MD) data
+- $P_{\text{max}}$ is the maximum value of this probability distribution, representing the most likely state or the minimum of free energy
+
+
+This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln (P_{\text{max}}) - \ln (P_{\text{max}}) = 0\$.
+
+This approach is useful for highlighting the relative differences in free energy between different states or conformations in an MD simulation, facilitating the identification of free energy minima and the relative comparison between different states. By setting the minimum of free energy to 0, you create a clear reference point to evaluate the relative stability of other states compared to the most stable state.
+
 
 ### Importance in Molecular Studies
 
