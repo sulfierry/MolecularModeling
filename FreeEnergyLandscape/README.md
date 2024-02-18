@@ -150,10 +150,12 @@ $$\Delta G = -k_B T (\ln(P) - \ln(P_{\text{max}}))$$
 When translating the proportionality described by the Boltzmann distribution into a precise mathematical relationship for practical computational analysis, we introduce the concept of the partition function $Z$. This function acts as a normalization constant, ensuring that the sum of probabilities across all conceivable states of a system is equal to 1. This normalization is crucial for transforming the distribution into a form where probabilities are physically meaningful and can be directly related to observable thermodynamic quantities:
 
 $$P = \frac{e^{-\frac{\Delta G}{k_B T}}}{Z}$$
+$$P = \frac{e^{-\frac{\Delta G}{k_B T \log(Z)}}}$$
 
 The partition function $Z$ itself is determined by summing (or integrating, for continuous systems) over the exponential terms corresponding to the free energy of every possible state of the system:
 
 $$Z = \sum_i e^{-\frac{\Delta G_i}{k_B T * \log(Z)}}$$
+$$Z = \sum_i e^{-\frac{\Delta G_i}{k_B T}}$$
 
 #### Practical Application in `calculate_free_energy`
 
