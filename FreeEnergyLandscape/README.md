@@ -98,6 +98,58 @@ The `FreeEnergyLandscape` class employs `gaussian_kde` in several key areas:
 
 ### Boltzmann Inversion
 
+To derive the provided equation, let's start with the fundamental relationship between Gibbs free energy $\Delta G$ of a specific state and the probability $P$ of that state, as described by the Boltzmann distribution. Gibbs free energy provides a measure of the amount of "useful work" that can be obtained from a thermodynamic system in a process at constant temperature and pressure. The Boltzmann distribution, in turn, relates the energy of a state to its probability in a canonical ensemble.
+
+### #Starting from the Boltzmann Distribution
+
+The Boltzmann distribution describes the probability $P$ of a system being in a state with a certain free energy $\Delta G\$ at a temperature $T$, expressed as:
+
+$$P \propto e^{-\frac{\Delta G}{k_B T}}$$
+
+where:
+- $P$ is the probability of the state,
+- $\Delta G$ is the free energy difference of the state in question relative to a reference state,
+- $k_B$ is the Boltzmann constant,
+- \(T\) is the absolute temperature of the system.
+
+### Probability Normalization
+
+For probability to be a useful concept, it must be normalized so that the sum of the probabilities of all possible states of the system equals 1. Thus, if we have a state of maximum free energy (\(\Delta G_{\text{max}}\)), the maximum probability (\(P_{\text{max}}\)) associated with that state would be similarly expressed:
+
+\[ P_{\text{max}} \propto e^{-\frac{\Delta G_{\text{max}}}{k_B T}} \]
+
+### Expressing \(\Delta G\) in Terms of \(P\) and \(P_{\text{max}}\)
+
+To relate \(\Delta G\) with \(P\) and \(P_{\text{max}}\), first express \(P\) in terms of \(\Delta G\):
+
+\[ P = e^{-\frac{\Delta G}{k_B T}} \]
+
+and similarly for \(P_{\text{max}}\):
+
+\[ P_{\text{max}} = e^{-\frac{\Delta G_{\text{max}}}{k_B T}} \]
+
+Taking the natural logarithm of both sides of the previous equations, we get:
+
+\[ \ln(P) = -\frac{\Delta G}{k_B T} \]
+
+\[ \ln(P_{\text{max}}) = -\frac{\Delta G_{\text{max}}}{k_B T} \]
+
+Subtracting the second equation from the first eliminates the dependence on the reference state (\(\Delta G_{\text{max}}\)):
+
+\[ \ln(P) - \ln(P_{\text{max}}) = -\frac{\Delta G}{k_B T} + \frac{\Delta G_{\text{max}}}{k_B T} \]
+
+Since we're interested in the difference in free energy \(\Delta G\) relative to the state with \(P_{\text{max}}\), we can rearrange the equation to solve for \(\Delta G\):
+
+\[ \Delta G = k_B T (\ln(P) - \ln(P_{\text{max}})) \]
+
+Here, \(\Delta G\) is expressed as a function of the difference in the logarithms of the probabilities of finding the system in any state versus the state of highest probability (or lowest free energy), multiplied by the system's absolute temperature and the Boltzmann constant. This relationship shows how the free energy difference between two states can be calculated from their relative probabilities, providing a direct bridge between statistical thermodynamics and experimental observations or computational simulations.
+
+
+
+
+
+
+
 The Boltzmann inversion method is used to calculate the free energy landscape from the probability distribution of CVs. The free energy, $\( G \)$, of a state is related to its probability $\( P \)$, by the Boltzmann equation:
 
 $$\Delta G = -k_B T [\ln(P) - \ln(P_{\text{max}})] \$$
