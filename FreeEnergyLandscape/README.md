@@ -147,19 +147,21 @@ $$\Delta G = -k_B T (\ln(P) - \ln(P_{\text{max}}))$$
 
 #### Incorporating the Concept of the Partition Function into the `calculate_free_energy` Function
 
-When translating the proportionality described by the Boltzmann distribution into a precise mathematical relationship for practical computational analysis, we introduce the concept of the partition function $Z$. This function acts as a normalization constant, ensuring that the sum of probabilities across all conceivable states of a system is equal to 1. This normalization is crucial for transforming the distribution into a form where probabilities are physically meaningful and can be directly related to observable thermodynamic quantities:
+The `calculate_free_energy` function implements statistical thermodynamics principles, leveraging the Boltzmann distribution to analyze computational data. This function notably utilizes the concept of the partition function $Z$, which is fundamental in linking microstates to observable macroscopic quantities in thermodynamics.
+
+The partition function $Z$ serves as a normalization factor, ensuring that the total probability of all states in a system sums to one. This is essential for converting theoretical distributions into quantifiable measures that reflect the physical reality of the system:
 
 $$P = \frac{e^{-\frac{\Delta G}{k_B T}}}{Z}$$
-$$P = \frac{e^{-\frac{\Delta G}{k_B T \log(Z)}}}$$
 
-The partition function $Z$ itself is determined by summing (or integrating, for continuous systems) over the exponential terms corresponding to the free energy of every possible state of the system:
+Here:
+- $P$ represents the probability of the system being in a state with a certain free energy difference \(\Delta G\),
+- $k_B$ is the Boltzmann constant,
+- $T$ is the absolute temperature,
+- $Z$ is the partition function, summing over all possible states, making probabilities physically meaningful.
 
-$$Z = \sum_i e^{-\frac{\Delta G_i}{k_B T * \log(Z)}}$$
-$$Z = \sum_i e^{-\frac{\Delta G_i}{k_B T}}$$
+### Practical Application in `calculate_free_energy`
 
-#### Practical Application in `calculate_free_energy`
-
-The `calculate_free_energy` function employs a computational analogue of this concept through the use of Kernel Density Estimation (KDE) to estimate the probability density function from a given dataset. This estimation serves as a stand-in for direct calculation of $Z$, allowing for the determination of a free energy landscape based on the density of states within the dataset:
+The `calculate_free_energy` function approximates the partition function $Z$ using Kernel Density Estimation (KDE) to estimate the probability density function from a dataset. This approach allows for the calculation of a free energy landscape based on the density of states within the dataset, without needing to directly compute $Z$ for each state:
 
 ```python
 def calculate_free_energy(self, data):
@@ -179,7 +181,6 @@ def calculate_free_energy(self, data):
     
     return {'X_original': X_original, 'Y_original': Y_original, 'G_original': G_original}
 ```
-
 
 
 Here, $\Delta G$ is expressed as a function of the difference in the logarithms of the probabilities of finding the system in any state versus the state of highest probability (or lowest free energy), multiplied by the system's absolute temperature and the Boltzmann constant. This relationship shows how the free energy difference between two states can be calculated from their relative probabilities, providing a direct bridge between statistical thermodynamics and experimental observations or computational simulations.
