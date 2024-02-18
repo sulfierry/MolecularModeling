@@ -21,7 +21,7 @@ CVs in biomolecular systems are mathematically represented as functions of the a
    $\theta$ is then obtained by taking the arccosine of the dot product result.
 
 3. **Dihedral Angle**: The dihedral angle $(\phi)$ between planes formed by atoms $i$, $j$, $k$, and $l$ is defined as:
-   $$\phi = \arctan2\left( \frac{\vec{r}_{ji} \times \vec{r}_{jk} \cdot \vec{r}_{kl}}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk}\times \vec{r}_{kl}|}, \frac{(\vec{r}_{ji} \times \vec{r}_{jk}) \cdot (\vec{r}_{jk} \times \vec{r}_{kl})}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk} \times \vec{r}_{kl}|} \right)$$
+   $$\phi = \arctan2\left( \frac{\vec{r}_{ji} \times \vec{r}_{jk} \cdot \vec{r}_{kl}}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk} \times \vec{r}_{kl}|}, \frac{(\vec{r}_{ji} \times \vec{r}_{jk}) \cdot (\vec{r}_{jk} \times \vec{r}_{kl})}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk} \times \vec{r}_{kl}|} \right)$$
    
    where $\times$ denotes the cross product, and $\arctan2$ is the two-argument arctangent function that takes into account the signs of both components to determine the correct quadrant of $\phi$.
 
