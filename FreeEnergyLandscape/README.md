@@ -20,11 +20,24 @@ CVs in biomolecular systems are mathematically represented as functions of the a
    $$\cos(\theta) = \frac{(\vec{r}_i - \vec{r}_j) \cdot (\vec{r}_k - \vec{r}_j)}{|\vec{r}_i - \vec{r}_j| |\vec{r}_k - \vec{r}_j|}$$
    $\theta$ is then obtained by taking the arccosine of the dot product result.
 
-3. **Dihedral Angle**: The dihedral angle $\phi$ between planes formed by atoms $i$, $j$, $k$, and $l$ is defined as:
-   $$\phi = \frac{\vec{r}_{ji} \times \vec{r}_{jk} \cdot \vec{r}_{kl}}{\left|\vec{r}_{ji} \times \vec{r}_{jk}\right| \left|\vec{r}_{jk} \times \vec{r}_{kl}\right|}$$
+3. **Dihedral Angle**: The dihedral angle $\phi$ between planes formed by atoms $i$, $j$, $k$, and $l$ can be calculated in steps:
 
+First, compute the normal vectors to the planes formed by atoms $(i, j, k)$ and $(j, k, l)$:
+   $$\vec{n}_1 = \vec{r}_{ji} \times \vec{r}_{jk}$$
+   $$\vec{n}_2 = \vec{r}_{jk} \times \vec{r}_{kl}$$
 
-   where $\times$ denotes the cross product, and $\arctan2$ is the two-argument arctangent function that takes into account the signs of both components to determine the correct quadrant of $\phi$.
+Then, calculate the angle $\phi$ using the arctan2 function, which considers both the sine and cosine components of the angle:
+   $$\phi = \arctan2\left(\frac{\vec{n}_1 \cdot \vec{r}_{kl}}{|\vec{n}_1||\vec{r}_{kl}|}, \frac{\vec{n}_1 \cdot \vec{n}_2}{|\vec{n}_1||\vec{n}_2|}\right)$$
+
+- $\vec{r}_{ji}$, $\vec{r}_{jk}$, and $\vec{r}_{kl}$ are the position vectors between atoms $i$ and $j$, $j$ and $k$, and $k$ and $l$, respectively.
+- $\times$ denotes the cross product which is used to find the normal vectors $\vec{n}_1$ and $\vec{n}_2$ to the planes of interest.
+- $\cdot$ denotes the dot product.
+- $|\vec{n}_1|$ and $|\vec{n}_2|$ represent the magnitudes of the normal vectors.
+- The first argument of $\arctan2$ is the sine component, given by the dot product of $\vec{n}_1$ and $\vec{r}_{kl}$, normalized by the product of their magnitudes. This effectively projects $\vec{r}_{kl}$ onto $\vec{n}_1$ to find the sine of the dihedral angle.
+- The second argument of $\arctan2$ is the cosine component, calculated as the dot product of the normal vectors $\vec{n}_1$ and $\vec{n}_2$, normalized by the product of their magnitudes, providing the cosine of the dihedral angle.
+
+This approach calculates the dihedral angle $\phi$ in a step-wise manner, ensuring clarity and improving the compatibility with Markdown rendering on GitHub.
+
 
 These representations allow for a simplified description of the system's state, facilitating the study of its behavior and properties through the manipulation of a reduced set of variables rather than the full set of atomic coordinates.
 
