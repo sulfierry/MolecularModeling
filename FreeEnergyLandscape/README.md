@@ -18,13 +18,11 @@ CVs in biomolecular systems are mathematically represented as functions of the a
 
 2. **Angle Between Three Atoms**: The angle ($\theta$) formed by three atoms $i$, $j$, and $k$, where $j$ is the vertex, is calculated using the dot product:
    $$\cos(\theta) = \frac{(\vec{r}_i - \vec{r}_j) \cdot (\vec{r}_k - \vec{r}_j)}{|\vec{r}_i - \vec{r}_j| |\vec{r}_k - \vec{r}_j|}$$
-   $theta$ is then obtained by taking the arccosine of the dot product result.
+   $\theta$ is then obtained by taking the arccosine of the dot product result.
 
-3. **Dihedral Angle**: The dihedral angle \(\phi\) between planes formed by atoms \(i\), \(j\), \(k\), and \(l\) is defined as:
-   $$
-   \phi = \arctan2\left( \frac{\vec{r}_{ji} \times \vec{r}_{jk} \cdot \vec{r}_{kl}}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk} \times \vec{r}_{kl}|}, \frac{(\vec{r}_{ji} \times \vec{r}_{jk}) \cdot (\vec{r}_{jk} \times \vec{r}_{kl})}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk} \times \vec{r}_{kl}|} \right)
-   $$
-   where \(\times\) denotes the cross product, and \(\arctan2\) is the two-argument arctangent function that takes into account the signs of both components to determine the correct quadrant of \(\phi\).
+3. **Dihedral Angle**: The dihedral angle $(\phi)$ between planes formed by atoms $i$, $j$, $k$, and $l$ is defined as:
+   $$\phi = \arctan2\left( \frac{\vec{r}_{ji} \times \vec{r}_{jk} \cdot \vec{r}_{kl}}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk} \times \vec{r}_{kl}|}, \frac{(\vec{r}_{ji} \times \vec{r}_{jk}) \cdot (\vec{r}_{jk} \times \vec{r}_{kl})}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk} \times \vec{r}_{kl}|} \right)$$
+   where $\times$ denotes the cross product, and $\arctan2$ is the two-argument arctangent function that takes into account the signs of both components to determine the correct quadrant of $\phi$.
 
 These representations allow for a simplified description of the system's state, facilitating the study of its behavior and properties through the manipulation of a reduced set of variables rather than the full set of atomic coordinates.
 
