@@ -12,13 +12,34 @@ Collective Variables (CVs) are a set of coordinates that describe the macroscopi
 
 CVs in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
 
-1. **Distance Between Two Atoms**: The distance $d$ between two atoms $i$ and $j$ with positions $\vec{r}_i$ and $\vec{r}_j$ is given by the Euclidean distance formula:
-   $$d = |\vec{r}_i - \vec{r}_j| = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + (z_i - z_j)^2}$$
-   where \(x\), \(y\), and \(z\) denote the Cartesian coordinates of the atoms.
+1. **Distance Between Two Atoms**: The distance $d$ between two atoms $i$ and $j$ with positions $\vec{r}_i$ and $\vec{r}_j$ can be calculated using the Euclidean distance formula:
 
-2. **Angle Between Three Atoms**: The angle ($\theta$) formed by three atoms $i$, $j$, and $k$, where $j$ is the vertex, is calculated using the dot product:
-   $$\cos(\theta) = \frac{(\vec{r}_i - \vec{r}_j) \cdot (\vec{r}_k - \vec{r}_j)}{|\vec{r}_i - \vec{r}_j| |\vec{r}_k - \vec{r}_j|}$$
-   $\theta$ is then obtained by taking the arccosine of the dot product result.
+   First, determine the position vectors of atoms $i$ and $j$:
+   $$\vec{r}_i = (x_i, y_i, z_i)$$
+   $$\vec{r}_j = (x_j, y_j, z_j)$$
+
+   Then, calculate the distance $d$ as:
+   $$d = |\vec{r}_i - \vec{r}_j| = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + (z_i - z_j)^2}$$
+
+   - $\vec{r}_i$ and $\vec{r}_j$ are the position vectors of atoms $i$ and $j$, respectively.
+   - $(x_i, y_i, z_i)$ and $(x_j, y_j, z_j)$ denote the Cartesian coordinates of atoms $i$ and $j$.
+   - $|\vec{r}_i - \vec{r}_j|$ represents the magnitude of the vector difference between $\vec{r}_i$ and $\vec{r}_j$, giving the direct distance between the two atoms.
+
+2. **Angle Between Three Atoms**: The angle $\theta$ formed by three atoms $i$, $j$, and $k$, where $j$ is the vertex, can be calculated using the dot product:
+
+   First, determine the vectors $\vec{r}_{ji}$ and $\vec{r}_{jk}$:
+   $$\vec{r}_{ji} = \vec{r}_i - \vec{r}_j$$
+   $$\vec{r}_{jk} = \vec{r}_k - \vec{r}_j$$
+
+   Then, calculate the angle $\theta$ as:
+   $$\cos(\theta) = \frac{\vec{r}_{ji} \cdot \vec{r}_{jk}}{|\vec{r}_{ji}| |\vec{r}_{jk}|}$$
+   $$\theta = \arccos\left(\frac{\vec{r}_{ji} \cdot \vec{r}_{jk}}{|\vec{r}_{ji}| |\vec{r}_{jk}|}\right)$$
+
+   - $\vec{r}_{ji}$ and $\vec{r}_{jk}$ are vectors pointing from atom $j$ to atoms $i$ and $k$, respectively.
+   - $\cdot$ denotes the dot product between the vectors $\vec{r}_{ji}$ and $\vec{r}_{jk}$.
+   - $|\vec{r}_{ji}|$ and $|\vec{r}_{jk}|$ represent the magnitudes of the vectors $\vec{r}_{ji}$ and $\vec{r}_{jk}$, respectively.
+   - $\arccos$ is the inverse cosine function, used to find the angle $\theta$ from the cosine value.
+
 
 3. **Dihedral Angle**: The dihedral angle $\phi$ between planes formed by atoms $i$, $j$, $k$, and $l$ can be calculated in steps:
 
@@ -35,9 +56,6 @@ Then, calculate the angle $\phi$ using the arctan2 function, which considers bot
 - $|\vec{n}_1|$ and $|\vec{n}_2|$ represent the magnitudes of the normal vectors.
 - The first argument of $\arctan2$ is the sine component, given by the dot product of $\vec{n}_1$ and $\vec{r}_kl$, normalized by the product of their magnitudes. This effectively projects $\vec{r}_kl$ onto $\vec{n}_1$ to find the sine of the dihedral angle.
 - The second argument of $\arctan2$ is the cosine component, calculated as the dot product of the normal vectors $\vec{n}_1$ and $\vec{n}_2$, normalized by the product of their magnitudes, providing the cosine of the dihedral angle.
-
-This approach calculates the dihedral angle $\phi$ in a step-wise manner, ensuring clarity and improving the compatibility with Markdown rendering on GitHub.
-
 
 These representations allow for a simplified description of the system's state, facilitating the study of its behavior and properties through the manipulation of a reduced set of variables rather than the full set of atomic coordinates.
 
