@@ -28,16 +28,16 @@ CVs in biomolecular systems are mathematically represented as functions of the a
 2. **Angle Between Three Atoms**: The angle $\theta$ formed by three atoms $i$, $j$, and $k$, where $j$ is the vertex, can be calculated using the dot product:
 
    First, determine the vectors $\vec{r}_{ji}$ and $\vec{r}_{jk}$:
-   $$\vec{r}_{ji} = \vec{r}_i - \vec{r}_j$$
-   $$\vec{r}_{jk} = \vec{r}_k - \vec{r}_j$$
+   $$\vec{r}_ji = \vec{r}_i - \vec{r}_j$$
+   $$\vec{r}_jk = \vec{r}_k - \vec{r}_j$$
 
    Then, calculate the angle $\theta$ as:
-   $$\cos(\theta) = \frac{\vec{r}_{ji} \cdot \vec{r}_{jk}}{|\vec{r}_{ji}| |\vec{r}_{jk}|}$$
-   $$\theta = \arccos\left(\frac{\vec{r}_{ji} \cdot \vec{r}_{jk}}{|\vec{r}_{ji}| |\vec{r}_{jk}|}\right)$$
+   $$\cos(\theta) = \frac{\vec{r}_ji \cdot \vec{r}_jk}{|\vec{r}_ji| |\vec{r}_jk|}$$
+   $$\theta = \arccos\left(\frac{\vec{r}_ji \cdot \vec{r}_jk}{|\vec{r}_ji| |\vec{r}_jk|}\right)$$
 
-   - $\vec{r}_{ji}$ and $\vec{r}_{jk}$ are vectors pointing from atom $j$ to atoms $i$ and $k$, respectively.
-   - $\cdot$ denotes the dot product between the vectors $\vec{r}_{ji}$ and $\vec{r}_{jk}$.
-   - $|\vec{r}_{ji}|$ and $|\vec{r}_{jk}|$ represent the magnitudes of the vectors $\vec{r}_{ji}$ and $\vec{r}_{jk}$, respectively.
+   - $\vec{r}_ji$ and $\vec{r}_jk$ are vectors pointing from atom $j$ to atoms $i$ and $k$, respectively.
+   - $\cdot$ denotes the dot product between the vectors $\vec{r}_ji$ and $\vec{r}_jk$.
+   - $|\vec{r}_ji|$ and $|\vec{r}_jk|$ represent the magnitudes of the vectors $\vec{r}_ji$ and $\vec{r}_jk$, respectively.
    - $\arccos$ is the inverse cosine function, used to find the angle $\theta$ from the cosine value.
 
 
