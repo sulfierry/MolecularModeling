@@ -23,8 +23,8 @@ CVs in biomolecular systems are mathematically represented as functions of the a
 3. **Dihedral Angle**: The dihedral angle $\phi$ between planes formed by atoms $i$, $j$, $k$, and $l$ can be calculated in steps:
 
 First, compute the normal vectors to the planes formed by atoms $(i, j, k)$ and $(j, k, l)$:
-   $$\vec{n}_1 = \vec{r}_ji \times \vec{r}_jk$$
-   $$\vec{n}_2 = \vec{r}_jk \times \vec{r}_kl$$
+   $$\vec{n}_1 = \vec{r}_{ji} \times \vec{r}_{jk}$$
+   $$\vec{n}_2 = \vec{r}_{jk} \times \vec{r}_{kl}$$
 
 Then, calculate the angle $\phi$ using the arctan2 function, which considers both the sine and cosine components of the angle:
    $$\phi = \arctan2\left(\frac{\vec{n}_1 \cdot \vec{r}_kl}{|\vec{n}_1||\vec{r}_kl|}, \frac{\vec{n}_1 \cdot \vec{n}_2}{|\vec{n}_1||\vec{n}_2|}\right)$$
