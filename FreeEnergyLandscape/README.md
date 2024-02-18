@@ -145,23 +145,14 @@ Given the interest in determining the free energy difference $\Delta G$ relative
 $$\Delta G = -k_B T (\ln(P) - \ln(P_{\text{max}}))$$
 
 
+Here, $\Delta G$ is expressed as a function of the difference in the logarithms of the probabilities of finding the system in any state versus the state of highest probability (or lowest free energy), multiplied by the system's absolute temperature and the Boltzmann constant. This relationship shows how the free energy difference between two states can be calculated from their relative probabilities, providing a direct bridge between statistical thermodynamics and experimental observations or computational simulations.
+
+This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln (P_{\text{max}}) - \ln (P_{\text{max}}) = 0\$.
+
+
 #### Incorporating the Concept of the Partition Function into the `calculate_free_energy` Function
 
-The `calculate_free_energy` function implements statistical thermodynamics principles, leveraging the Boltzmann distribution to analyze computational data. This function notably utilizes the concept of the partition function $Z$, which is fundamental in linking microstates to observable macroscopic quantities in thermodynamics.
-
-The partition function $Z$ serves as a normalization factor, ensuring that the total probability of all states in a system sums to one. This is essential for converting theoretical distributions into quantifiable measures that reflect the physical reality of the system:
-
-$$P = -k_B*T*log(Z)$$
-
-Here:
-- $P$ represents the probability of the system being in a state with a certain free energy difference \(\Delta G\),
-- $k_B$ is the Boltzmann constant,
-- $T$ is the absolute temperature,
-- $Z$ is the partition function, summing over all possible states, making probabilities physically meaningful.
-
-### Practical Application in `calculate_free_energy`
-
-The `calculate_free_energy` function approximates the partition function $Z$ using Kernel Density Estimation (KDE) to estimate the probability density function from a dataset. This approach allows for the calculation of a free energy landscape based on the density of states within the dataset, without needing to directly compute $Z$ for each state:
+The `calculate_free_energy` function implements statistical thermodynamics principles, leveraging the Boltzmann distribution to analyze computational data.  The `calculate_free_energy` function approximates the partition function $Z$ using Kernel Density Estimation (KDE) to estimate the probability density function from a dataset. This approach allows for the calculation of a free energy landscape based on the density of states within the dataset, without needing to directly compute $Z$ for each state:
 
 ```python
 def calculate_free_energy(self, data):
@@ -183,9 +174,6 @@ def calculate_free_energy(self, data):
 ```
 
 
-Here, $\Delta G$ is expressed as a function of the difference in the logarithms of the probabilities of finding the system in any state versus the state of highest probability (or lowest free energy), multiplied by the system's absolute temperature and the Boltzmann constant. This relationship shows how the free energy difference between two states can be calculated from their relative probabilities, providing a direct bridge between statistical thermodynamics and experimental observations or computational simulations.
-
-This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln (P_{\text{max}}) - \ln (P_{\text{max}}) = 0\$.
 
 This expression quantitatively links the probability distribution of states within a thermodynamic system to their respective free energy differences, providing a foundation for analyzing the system's behavior at the molecular level. This approach is useful for highlighting the relative differences in free energy between different states or conformations in an MD simulation, facilitating the identification of free energy minima and the relative comparison between different states. By setting the minimum of free energy to 0, you create a clear reference point to evaluate the relative stability of other states compared to the most stable state.
 
