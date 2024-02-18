@@ -16,11 +16,9 @@ CVs in biomolecular systems are mathematically represented as functions of the a
    $$d = |\vec{r}_i - \vec{r}_j| = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + (z_i - z_j)^2}$$
    where \(x\), \(y\), and \(z\) denote the Cartesian coordinates of the atoms.
 
-2. **Angle Between Three Atoms**: The angle \(\theta\) formed by three atoms \(i\), \(j\), and \(k\), where \(j\) is the vertex, is calculated using the dot product:
-   $$
-   \cos(\theta) = \frac{(\vec{r}_i - \vec{r}_j) \cdot (\vec{r}_k - \vec{r}_j)}{|\vec{r}_i - \vec{r}_j| |\vec{r}_k - \vec{r}_j|}
-   $$
-   \(\theta\) is then obtained by taking the arccosine of the dot product result.
+2. **Angle Between Three Atoms**: The angle ($\theta$) formed by three atoms $i$, $j$, and $k$, where $j$ is the vertex, is calculated using the dot product:
+   $$\cos(\theta) = \frac{(\vec{r}_i - \vec{r}_j) \cdot (\vec{r}_k - \vec{r}_j)}{|\vec{r}_i - \vec{r}_j| |\vec{r}_k - \vec{r}_j|}$$
+   $theta$ is then obtained by taking the arccosine of the dot product result.
 
 3. **Dihedral Angle**: The dihedral angle \(\phi\) between planes formed by atoms \(i\), \(j\), \(k\), and \(l\) is defined as:
    $$
