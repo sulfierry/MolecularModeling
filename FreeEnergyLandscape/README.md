@@ -118,7 +118,7 @@ For probability to be a useful concept, it must be normalized so that the sum of
 
 $$P_{\text{max}} \propto e^{-\frac{\Delta G_{\text{max}}}{k_B T}}$$
 
-#### Expressing \(\Delta G\) in Terms of \(P\) and \(P_{\text{max}}\)
+#### Expressing $\Delta G$ in Terms of $P$ and $P_{\text{max}}$
 
 To relate $\Delta G$ with $P$ and $P_{\text{max}}$, first express $P$ in terms of $\Delta G$:
 
@@ -134,7 +134,7 @@ $$\ln(P) = -\frac{\Delta G}{k_B T}$$
 
 $$\ln(P_{\text{max}}) = -\frac{\Delta G_{\text{max}}}{k_B T}$$
 
-Subtracting the second equation from the first eliminates the dependence on the reference state (\(\Delta G_{\text{max}}\)):
+Subtracting the second equation from the first eliminates the dependence on the reference state $\Delta G_{\text{max}}$:
 
 $$\ln(P) - \ln(P_{\text{max}}) = -\frac{\Delta G}{k_B T} + \frac{\Delta G_{\text{max}}}{k_B T}$$
 
@@ -143,23 +143,6 @@ Since we're interested in the difference in free energy \(\Delta G\) relative to
 $$\Delta G = k_B T (\ln(P) - \ln(P_{\text{max}}))$$
 
 Here, \(\Delta G\) is expressed as a function of the difference in the logarithms of the probabilities of finding the system in any state versus the state of highest probability (or lowest free energy), multiplied by the system's absolute temperature and the Boltzmann constant. This relationship shows how the free energy difference between two states can be calculated from their relative probabilities, providing a direct bridge between statistical thermodynamics and experimental observations or computational simulations.
-
-
-
-
-
-
-
-The Boltzmann inversion method is used to calculate the free energy landscape from the probability distribution of CVs. The free energy, $\( G \)$, of a state is related to its probability $\( P \)$, by the Boltzmann equation:
-
-$$\Delta G = -k_B T [\ln(P) - \ln(P_{\text{max}})] \$$
-
-where:
-
-- $k_B$ is the Boltzmann constant $\( 8.314 \times 10^{-3} \ \text{KJ/mol.K} \)$
-- $T$ is the temperature
-- $P$ is the probability distribution of the data, obtained from a histogram of molecular dynamics (MD) data
-- $P_{\text{max}}$ is the maximum value of this probability distribution, representing the most likely state or the minimum of free energy
 
 
 This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln (P_{\text{max}}) - \ln (P_{\text{max}}) = 0\$.
