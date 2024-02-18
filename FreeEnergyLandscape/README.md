@@ -21,7 +21,7 @@ CVs in biomolecular systems are mathematically represented as functions of the a
    $\theta$ is then obtained by taking the arccosine of the dot product result.
 
 3. **Dihedral Angle**: The dihedral angle $\phi$ between planes formed by atoms $i$, $j$, $k$, and $l$ is defined as:
-    $$\phi$$
+    $$\phi = \arctan2$$
   
    where $\times$ denotes the cross product, and $\arctan2$ is the two-argument arctangent function that takes into account the signs of both components to determine the correct quadrant of $\phi$.
 
