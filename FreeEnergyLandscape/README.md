@@ -143,7 +143,7 @@ def calculate_free_energy(self, data):
     G_original = np.clip(G_original - np.min(G_original), 0, 25)
     
     return {'X_original': X_original, 'Y_original': Y_original, 'G_original': G_original}
-
+```
 
 ### Normalization of Probability
 
