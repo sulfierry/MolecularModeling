@@ -10,6 +10,31 @@ The free energy landscape is a conceptual and computational tool used to underst
 
 Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the distance between two atoms, angles, dihedrals, and more complex descriptors.
 
+
+### Mathematical Representation of Collective Variables (CVs)
+
+Collective Variables (CVs) in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
+
+1. **Distance Between Two Atoms**: The distance \(d\) between two atoms \(i\) and \(j\) with positions \(\vec{r}_i\) and \(\vec{r}_j\) is given by the Euclidean distance formula:
+   $$
+   d = |\vec{r}_i - \vec{r}_j| = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + (z_i - z_j)^2}
+   $$
+   where \(x\), \(y\), and \(z\) denote the Cartesian coordinates of the atoms.
+
+2. **Angle Between Three Atoms**: The angle \(\theta\) formed by three atoms \(i\), \(j\), and \(k\), where \(j\) is the vertex, is calculated using the dot product:
+   $$
+   \cos(\theta) = \frac{(\vec{r}_i - \vec{r}_j) \cdot (\vec{r}_k - \vec{r}_j)}{|\vec{r}_i - \vec{r}_j| |\vec{r}_k - \vec{r}_j|}
+   $$
+   \(\theta\) is then obtained by taking the arccosine of the dot product result.
+
+3. **Dihedral Angle**: The dihedral angle \(\phi\) between planes formed by atoms \(i\), \(j\), \(k\), and \(l\) is defined as:
+   $$
+   \phi = \arctan2\left( \frac{\vec{r}_{ji} \times \vec{r}_{jk} \cdot \vec{r}_{kl}}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk} \times \vec{r}_{kl}|}, \frac{(\vec{r}_{ji} \times \vec{r}_{jk}) \cdot (\vec{r}_{jk} \times \vec{r}_{kl})}{|\vec{r}_{ji} \times \vec{r}_{jk}| |\vec{r}_{jk} \times \vec{r}_{kl}|} \right)
+   $$
+   where \(\times\) denotes the cross product, and \(\arctan2\) is the two-argument arctangent function that takes into account the signs of both components to determine the correct quadrant of \(\phi\).
+
+These representations allow for a simplified description of the system's state, facilitating the study of its behavior and properties through the manipulation of a reduced set of variables rather than the full set of atomic coordinates.
+
 ### Kernel Density Estimation (KDE)
 
 This statistical method is crucial for estimating the probability density function (PDF) of a dataset without assuming any predefined distribution shape. In the context of molecular dynamics and simulations, it allows us to visualize and analyze the distribution of free energy across different states or configurations defined by collective variables (CVs).
