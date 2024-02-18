@@ -118,6 +118,8 @@ When translating the proportionality described by the Boltzmann distribution int
 
 $$P = \frac{e^{-\frac{\Delta G}{k_B T}}}{Z}$$
 
+$$P = \frac{e^{-\frac{\Delta G}{k_B T}}}{Z}$$
+
 The partition function $Z$ itself is determined by summing (or integrating, for continuous systems) over the exponential terms corresponding to the free energy of every possible state of the system:
 
 $$Z = \sum_i e^{-\frac{\Delta G_i}{k_B T}}$$
