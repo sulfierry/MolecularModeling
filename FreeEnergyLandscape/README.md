@@ -75,12 +75,6 @@ In the context of KDE the variable $u$ is utilized within the Gaussian kernel fu
 
 The Gaussian KDE method provides a sophisticated approach to model the complex free energy landscapes encountered in molecular dynamics studies. It enables researchers to visualize the distribution of energy states without the constraints of parametric models, offering insights into molecular stability, transitions, and the energetics of molecular interactions.
 
-The `FreeEnergyLandscape` class employs `gaussian_kde` in several key areas:
-
-1. **Free Energy Distribution Estimation:** By applying `gaussian_kde` to the CVs collected from molecular simulations, we obtain a continuous estimate of the free energy landscape. This estimated landscape is crucial for identifying stable configurations (minima) and understanding the transition pathways (energy barriers) between different molecular states.
-
-2. **Visualization:** The KDE result is used to generate visual representations of the free energy landscape, including both static 3D plots and animated GIFs. These visualizations allow for an intuitive exploration of the energy landscape, facilitating the identification of significant energy features that influence molecular behavior.
-
 ### Boltzmann Inversion
 
 Boltzmann distribution relates the energy of a state to its probability in a canonical ensemble, this provides a fundamental link between the microstate probabilities of a thermodynamic system and its macroscopic properties. It expresses the probability $P$ of a system being in a state with a certain free energy $\Delta G$ at a specific temperature $T$:
