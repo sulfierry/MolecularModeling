@@ -11,11 +11,12 @@ from matplotlib.colors import LinearSegmentedColormap
 
 class FreeEnergyLandscape:
     
-    def __init__(self, cv1_path, cv2_path, temperature, boltzmann_constant, bins=100, kde_bandwidth=None):
+    def __init__(self, cv1_path, cv2_path, temperature, boltzmann_constant, bins=100, kde_bandwidth=None, cv_names=['CV1', 'CV2']):
         self.cv1_path = cv1_path
         self.cv2_path = cv2_path
         self.temperature = temperature
         self.kB = boltzmann_constant
+        self.cv_names = cv_names
         self.colors = [
             (0, "darkblue"),    # 0 a 3
             (3/25, "blue"),     # 3 a 6
@@ -150,27 +151,6 @@ class FreeEnergyLandscape:
         plt.title('Free energy landscape')
         plt.show()
 
-    def save_low_energy_frames_to_tsv_2D(self, threshold=5, filename='low_energy_frames.tsv'):
-            data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
-            result = self.calculate_free_energy(data)
-
-            # Mascara para identificar pontos de energia abaixo do limiar
-            low_energy_mask = result['G_original'] <= threshold
-
-            # Preparar e salvar os dados
-            with open(filename, 'w') as file:
-                file.write("frame\tcv1\tcv2\tenergy\n")
-                for idx in np.where(low_energy_mask.ravel())[0]:
-                    # Encontra o frame mais próximo para cada ponto de baixa energia
-                    x, y = np.meshgrid(np.linspace(data[:, 0].min(), data[:, 0].max(), 100), 
-                                    np.linspace(data[:, 1].min(), data[:, 1].max(), 100), indexing='ij')
-                    cv1_val, cv2_val = x.ravel()[idx], y.ravel()[idx]
-                    energy_val = result['G_original'].ravel()[idx]
-
-                    # Identificação aproximada do frame
-                    frame = np.argmin((self.proj1_data_original - cv1_val)**2 + (self.proj2_data_original - cv2_val)**2)
-                    file.write(f"{frame}\t{cv1_val}\t{cv2_val}\t{energy_val}\n")
-
 
     def save_low_energy_points_to_tsv(self, threshold):
         if threshold is None or threshold < 0:
@@ -206,7 +186,7 @@ class FreeEnergyLandscape:
                 g = result['G_original'].flatten()[idx]
                 file.write(f"{frame}\t{cv1}\t{cv2}\t{g}\n")
 
-        print("Low energy points saved to low_energy_points.tsv")
+        # print("Low energy points saved to low_energy_points.tsv")
 
 
 
@@ -332,7 +312,7 @@ class FreeEnergyLandscape:
             sys.exit(1)
 
 
-    def main(self, energy_threshold):
+    def main(self, energy_threshold, cv_names):
         
         # Verificar ambos os arquivos de entrada antes de carregar os dados
         self.verify_input(self.cv1_path)
@@ -341,16 +321,16 @@ class FreeEnergyLandscape:
         
         self.boltzmann_inversion(
             data_list=[self.proj1_data_original, self.proj2_data_original], 
-            titles=['CV1 (Angle)', 'CV2 (Distance)'], 
+            titles=cv_names, 
             threshold=energy_threshold)
         
         self.plot_histogram(
             data_list=[self.proj1_data_original, self.proj2_data_original], 
-            titles=['CV1 (Angle)', 'CV2 (Distance)'])
+            titles=cv_names)
 
         self.cv_by_frame(
             data_list=[self.proj1_data_original, self.proj2_data_original], 
-            titles=['CV1 (Angle)', 'CV2 (Distance)'])
+            titles=cv_names)
 
 
         self.plot_energy_landscape(threshold=energy_threshold)
@@ -358,7 +338,7 @@ class FreeEnergyLandscape:
         # self.plot_3D_energy_landscape()
         # self.create_3D_gif()
         
-        self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
+        # self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
 
     
         # Após o uso final dos dados, limpe-os para liberar memória
@@ -368,45 +348,52 @@ class FreeEnergyLandscape:
 
 
 if __name__ == "__main__":
-
     # Definindo valores padrão
-    t = 300                      # --temperature           [int] [Kelvin]
-    kB = 8.314e-3                # --kb                    [float] [kJ/(mol·K)]
-    energy_threshold = None      # --energy                [int] [kJ/mol]
-    bins_energy_histogram = 100  # --bins_energy_histogram [int]
-    kde_bandwidth_cv = None      # --kde_bandwidth         [float]
-
+    t = 300                     # --temperature           [int] [Kelvin]
+    kB = 8.314e-3               # --kb                    [float] [kJ/(mol·K)]
+    energy_threshold = None     # --energy                [int] [kJ/mol]
+    bins_energy_histogram = 100 # --bins_energy_histogram [int]
+    kde_bandwidth_cv = None     # --kde_bandwidth         [float]
+    cv_names = ['CV1', 'CV2']   # Nomes padrão para as variáveis coletivas
 
     if len(sys.argv) >= 3:
         cv1_path, cv2_path = sys.argv[1], sys.argv[2]
 
         # Processar argumentos adicionais como pares chave-valor
-        for i in range(3, len(sys.argv), 2):
-            if i+1 < len(sys.argv):
-                key = sys.argv[i]
-                value = sys.argv[i+1]
-                if key == "--temperature":
-                    t = float(value)
-                elif key == "--kb":
-                    kB = float(value)
-                elif key == "--energy":
-                    energy_threshold = float(value)
-                elif key == "--bins_energy_histogram":
-                    bins_energy_histogram = int(value)
-                elif key == "--kde_bandwidth":
-                    if value.lower() != "none":
-                        kde_bandwidth_cv = float(value)
-                    else:
-                        kde_bandwidth_cv = None
+        i = 3
+        while i < len(sys.argv):
+            key = sys.argv[i]
+            if key == "--temperature":
+                t = float(sys.argv[i + 1])
+                i += 2
+            elif key == "--kb":
+                kB = float(sys.argv[i + 1])
+                i += 2
+            elif key == "--energy":
+                energy_threshold = float(sys.argv[i + 1])
+                i += 2
+            elif key == "--bins_energy_histogram":
+                bins_energy_histogram = int(sys.argv[i + 1])
+                i += 2
+            elif key == "--kde_bandwidth":
+                kde_bandwidth_cv = float(sys.argv[i + 1]) if sys.argv[i + 1].lower() != "none" else None
+                i += 2
+            elif key == "--name":
+                cv_names = [sys.argv[i + 1], sys.argv[i + 2]]  # Captura os nomes das variáveis coletivas
+                i += 3
+            else:
+                print(f"Unrecognized option: {key}")
+                sys.exit(1)
     else:
-        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt [optional arguments --temperature, --kb, --energy_threshold, --bins_energy_histogram, --kde_bandwidth_cv]")
+        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt [optional arguments --temperature, --kb, --energy_threshold, --bins_energy_histogram, --kde_bandwidth_cv, --name cv1_name cv2_name]")
         sys.exit(1)
+
 
     try:
         fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB,  
                                 bins=bins_energy_histogram, 
                                 kde_bandwidth=kde_bandwidth_cv)
-        fel.main(energy_threshold)
+        fel.main(energy_threshold, cv_names=cv_names)
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         sys.exit(1)
