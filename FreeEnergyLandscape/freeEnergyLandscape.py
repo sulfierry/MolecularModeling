@@ -128,7 +128,9 @@ class FreeEnergyLandscape:
         plt.xlabel('CV1 (Angle)')
         plt.ylabel('CV2 (Distance)')
         plt.title('Free energy landscape')
+        plt.savefig('Free_energy_landscape.png')
         plt.show()
+
 
 
     def save_low_energy_points_to_tsv(self, threshold):
