@@ -343,7 +343,7 @@ class FreeEnergyLandscape:
             --gif_duration [float]           Duration per frame for the 3D GIF in seconds (default: 0.1)
 
         Example:
-            python freeEnergyLandscape.py cv1.txt cv2.txt --names Angle_CV1 Distance_CV2 --temperature 300 --kb 8.314e-3 --energy 5" --bins_energy_histogram 100 --kde_bandwidth 0.5 --gif_angles 20 --gif_elevation 30 --gif_duration 0.05
+            python freeEnergyLandscape.py cv1.txt cv2.txt --names Angle_CV1 Distance_CV2 --temperature 310 --energy 5" --bins_energy_histogram 100 --kde_bandwidth 0.5 --gif_angles 20
 
         """
         #      Notes:
