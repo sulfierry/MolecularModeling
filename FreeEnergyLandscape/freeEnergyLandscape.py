@@ -38,36 +38,58 @@ class FreeEnergyLandscape:
         self.proj2_data_original = np.loadtxt(self.cv2_path, usecols=[1])
 
 
-    def boltzmann_inversion_original(self, data, title, threshold):
-        # Calcular G e plotar o gráfico de energia livre
-        hist, bin_edges = np.histogram(data, bins=100, density=True)
-        bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-        hist = np.clip(hist, a_min=1e-10, a_max=None)
-        G = -self.kB * self.temperature * np.log(hist / np.max(hist))
+    def boltzmann_inversion(self, data_list, titles, threshold):
+        fig_combined, axs_combined = plt.subplots(1, len(data_list), figsize=(20, 6), sharey=True)
+        G_max_global = -np.inf  # Inicializa o máximo global de G como infinito negativo
 
-        plt.figure(figsize=(10, 6))
-        plt.plot(bin_centers, G, label='Free energy', color='red')
+        # Loop para processar cada conjunto de dados individualmente
+        for data, title in zip(data_list, titles):
+            hist, bin_edges = np.histogram(data, bins=100, density=True)
+            hist = np.clip(hist, a_min=1e-10, a_max=None)
+            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+            G = -self.kB * self.temperature * np.log(hist + 1e-10)
 
-        # Verifica se threshold é None antes de comparar
-        if threshold is not None:
-            low_energy_bins = G < threshold
-            if any(low_energy_bins):
-                for bin_center, g_value in zip(bin_centers[low_energy_bins], G[low_energy_bins]):
-                    indices = np.where((data >= bin_center - (bin_centers[1]-bin_centers[0])/2) &
-                                    (data < bin_center + (bin_centers[1]-bin_centers[0])/2))[0]
-                    plt.scatter([bin_center] * len(indices), [g_value] * len(indices), color='magenta')
+            # Atualiza o máximo global de G
+            G_max_global = max(G_max_global, np.max(G))
 
-        plt.xlabel(title)
-        plt.ylabel('Free energy (kJ/mol)')
-        plt.grid(True)
+            # Plot individual
+            plt.figure(figsize=(10, 6))
+            plt.plot(bin_centers, G, label='Free energy', color='red')
+            plt.xlabel(title)
+            plt.ylabel('Free energy (kJ/mol)')
+            plt.grid(True)
+            plt.legend()
+            plt.title(f'Free Energy Profile for {title}')
+            plt.savefig(f'Free_Energy_{title.replace(" ", "_")}.png')  # Salva o plot individual
+            plt.close()
+
+        # Loop para criar o plot combinado
+        for ax, data, title in zip(axs_combined, data_list, titles):
+            hist, bin_edges = np.histogram(data, bins=100, density=True)
+            G = -self.kB * self.temperature * np.log(hist + 1e-10)
+            # Normalizar G para o intervalo [0, G_max_global]
+            G_normalized = G / G_max_global
+
+            ax.plot(bin_centers, G_normalized, label='Free energy', color='red')
+            ax.set_xlabel(title)
+            ax.set_ylim(0, 1)  # Normaliza o eixo Y para o intervalo [0, 1]
+
+            if threshold is not None:
+                # Calcula o threshold normalizado para comparação
+                threshold_normalized = threshold / G_max_global
+                low_energy_bins = G_normalized < threshold_normalized
+                if any(low_energy_bins):
+                    for bin_center, g_value in zip(bin_centers[low_energy_bins], G_normalized[low_energy_bins]):
+                        indices = np.where((data >= bin_center - (bin_centers[1] - bin_centers[0]) / 2) &
+                                        (data < bin_center + (bin_centers[1] - bin_centers[0]) / 2))[0]
+                        ax.scatter([bin_center] * len(indices), [g_value] * len(indices), color='magenta')
+
+        axs_combined[0].set_ylabel('Free Energy')
         plt.legend()
-        plt.title(f'Free Energy Profile for {title}')
+        plt.suptitle('Free Energy Profile Normalized')
+        plt.tight_layout(rect=[0, 0, 1, 0.95])
+        plt.savefig('Combined_Free_Energy_Profile.png')  # Salva o plot combinado
         plt.show()
-        
-        # Chamar a função de identificar e salvar frames de baixa energia apenas se threshold não for None
-        if threshold is not None:
-            self.identify_and_save_low_energy_frames(data, G, bin_centers, threshold, title)
-
 
 
     def identify_and_save_low_energy_frames(self, data, G, bin_centers, threshold, title):
@@ -245,14 +267,62 @@ class FreeEnergyLandscape:
 
         shutil.rmtree(temp_dir)  # Limpa os arquivos temporários
 
-    def plot_histogram(self, data, title):
-        plt.figure(figsize=(8, 6))
-        plt.hist(data, bins=self.bins, density=True, alpha=0.7, color='blue')
-        plt.title(f'Histogram of {title}')
-        plt.xlabel('Value')
-        plt.ylabel('Frequency')
-        plt.grid(True)
+    def plot_histogram(self, data_list, titles):
+        # Plotando histogramas absolutos individualmente
+        for data, title in zip(data_list, titles):
+            plt.figure(figsize=(8, 6))
+            plt.hist(data, bins=self.bins, density=True, alpha=0.7, color='blue')
+            plt.title(f'Absolute {title}')
+            plt.xlabel('Value')
+            plt.ylabel('Frequency')
+            plt.grid(True)
+            plt.savefig(f'histogram_absolute_{title.replace(" ", "_")}.png')
+            plt.close()  # Fecha a figura após salvar
+
+        # Plotando histogramas normalizados lado a lado
+        plt.figure(figsize=(8 * len(data_list), 6))
+        for i, (data, title) in enumerate(zip(data_list, titles)):
+            # Normalização dos dados
+            data_normalized = (data - np.min(data)) / (np.max(data) - np.min(data))
+            
+            # Criação de subplots lado a lado
+            ax = plt.subplot(1, len(data_list), i + 1)
+            ax.hist(data_normalized, bins=self.bins, density=True, alpha=0.7, color='green')
+            ax.set_title(f'Normalized {title}')
+            ax.set_xlabel('Normalized Value')
+            if i == 0:  # Apenas o primeiro subplot terá o label do eixo Y
+                ax.set_ylabel('Frequency')
+            ax.grid(True)
+
+        plt.tight_layout()
+        plt.savefig('histograms_normalized_side_by_side.png')
         plt.show()
+
+
+    def cv_by_frame(self, data_list, titles):
+        frames = np.arange(len(data_list[0]))  # Assumindo que todos os conjuntos têm o mesmo número de frames
+        for data, title in zip(data_list, titles):
+            plt.figure(figsize=(10, 6))
+            plt.plot(frames, data, label=title)
+            plt.xlabel('Frame')
+            plt.ylabel(title)
+            plt.title(f'CV by Frame - {title}')
+            plt.legend()
+            plt.savefig(f'cv_by_frame_absolute_{title.replace(" ", "_")}.png')
+            plt.close()
+
+        # Plot combinado dos valores relativos
+        plt.figure(figsize=(10, 6))
+        for data, title in zip(data_list, titles):
+            data_normalized = (data - np.min(data)) / (np.max(data) - np.min(data))
+            plt.plot(frames, data_normalized, label=title)
+        plt.xlabel('Frame')
+        plt.ylabel('Normalized CV')
+        plt.title('CV by Frame - Combined Normalized')
+        plt.legend()
+        plt.savefig('cv_by_frame_combined_normalized.png')
+        plt.show()
+
 
     def verify_input(self, data_path):
         try:
@@ -276,10 +346,20 @@ class FreeEnergyLandscape:
         self.verify_input(self.cv2_path)
         self.load_data()
         
-        self.boltzmann_inversion_original(self.proj1_data_original, 'CV1 (Angle)',threshold=energy_threshold)
-        self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distance)',threshold=energy_threshold)
-        self.plot_histogram(self.proj1_data_original, 'CV1 (Angle)')
-        self.plot_histogram(self.proj2_data_original, 'CV2 (Distance)')
+        self.boltzmann_inversion(
+            data_list=[self.proj1_data_original, self.proj2_data_original], 
+            titles=['CV1 (Angle)', 'CV2 (Distance)'], 
+            threshold=energy_threshold)
+        
+        self.plot_histogram(
+            data_list=[self.proj1_data_original, self.proj2_data_original], 
+            titles=['CV1 (Angle)', 'CV2 (Distance)'])
+
+        self.cv_by_frame(
+            data_list=[self.proj1_data_original, self.proj2_data_original], 
+            titles=['CV1 (Angle)', 'CV2 (Distance)'])
+
+
         self.plot_energy_landscape(threshold=energy_threshold)
         # self.plot_3D_energy_landscape()
         # self.create_3D_gif()
