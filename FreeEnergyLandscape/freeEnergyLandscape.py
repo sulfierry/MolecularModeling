@@ -313,7 +313,6 @@ class FreeEnergyLandscape:
             data_list=[self.proj1_data_original, self.proj2_data_original], 
             titles=cv_names)
 
-
         self.plot_energy_landscape(threshold=energy_threshold)
 
         self.plot_3D_energy_landscape()
@@ -324,7 +323,6 @@ class FreeEnergyLandscape:
         # Após o uso final dos dados, limpe-os para liberar memória
         if hasattr(self, 'cached_results'):
             del self.cached_results
-
 
 
 if __name__ == "__main__":
@@ -359,17 +357,17 @@ if __name__ == "__main__":
             elif key == "--kde_bandwidth":
                 kde_bandwidth_cv = float(sys.argv[i + 1]) if sys.argv[i + 1].lower() != "none" else None
                 i += 2
-            elif key == "--name":
+            elif key == "--names":
                 cv_names = [sys.argv[i + 1], sys.argv[i + 2]]  # Captura os nomes das variáveis coletivas
                 i += 3
             else:
                 print(f"Unrecognized option: {key}")
                 sys.exit(1)
     else:
-        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt")
-        print("Optional arguments: --temperature, --kb, --energy_threshold, --bins_energy_histogram, --kde_bandwidth_cv, --name cv1_name cv2_name")
-        print("--temperature: Temperature in Kelvin (default: 300)\n--kb: Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)\n--energy: Energy threshold in kJ/mol (default: None)\n--bins_energy_histogram: Number of bins for the energy histogram (default: 100)\n--kde_bandwidth: Bandwidth for the kernel density estimation (default: None)\n--name: Names for the two collective variables (default: CV1 CV2)")
-        print("Example: python freeEnergyLandscape.py cv1.txt cv2.txt --name Angle_CV1 Distance_CV2 --temperature 300 --kb 8.314e-3 --energy 10 --bins_energy_histogram 100 --kde_bandwidth 0.5 ")
+        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt\n")
+        print("Optional arguments: --temperature, --kb, --energy_threshold, --bins_energy_histogram, --kde_bandwidth_cv, --name cv1_name cv2_name\n")
+        print("--temperature: Temperature in Kelvin (default: 300)\n\n--kb: Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)\n\n--energy: Energy threshold in kJ/mol (default: None)\n\n--bins_energy_histogram: Number of bins for the energy histogram (default: 100)\n\n--kde_bandwidth: Bandwidth for the kernel density estimation (default: None)\n\n--names: Names for the two collective variables (default: CV1 CV2)\n\n")
+        print("Example: python freeEnergyLandscape.py cv1.txt cv2.txt --name Angle_CV1 Distance_CV2 --temperature 300 --kb 8.314e-3 --energy 10 --bins_energy_histogram 100 --kde_bandwidth 0.5\n")
         sys.exit(1)
 
 
