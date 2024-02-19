@@ -1,0 +1,27 @@
+# tleap -f tleap.in
+source leaprc.protein.ff19SB
+source leaprc.water.opc3
+source leaprc.gaff2
+
+# Carregar e preparar o ligante
+LIG = loadmol2 ligand_adjusted.mol2
+check LIG
+saveoff LIG ligand.lib
+loadoff ligand.lib
+loadamberparams ligand.frcmod
+
+# Carregar e preparar o complexo
+complex = loadpdb complex.pdb
+check complex
+charge complex
+
+# Adicionar íons e solvatar
+addIons complex Cl- 14
+charge complex
+solvateOct complex OPC3BOX 15.0
+
+# salvar
+# SaveAmberParm complex 6pt0.prmtop 6pt0.rst7
+savePDB complex 6pt0_matrix.pdb
+
+quit

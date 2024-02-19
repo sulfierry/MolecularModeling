@@ -1,0 +1,19 @@
+# tleap -f tleap.in
+
+source leaprc.protein.ff19SB
+source leaprc.water.opc3
+source leaprc.gaff2
+
+loadoff ligand.lib
+loadamberparams ligand.frcmod
+complex = loadpdb 6pt0_align.pdb
+check complex
+charge complex
+
+addIons complex Cl- 14
+solvateOct complex OPC3BOX 15.0
+
+SaveAmberParm complex 6pt0.prmtop 6pt0.rst7
+savePDB complex 6pt0.pdb
+
+quit
