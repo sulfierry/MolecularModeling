@@ -384,5 +384,5 @@ if __name__ == "__main__":
         sys.exit(1)
 
 
-# adicionar a visualizao dos pontos de minimos energitos no grafico 3D tambem
-# em seguida tornar o codigo flexivel para ler apenas um eslacar ou uma lista de escalares para os valores de energia
+# adicionar a visualizao dos pontos de minimos energeticos no grafico 3D tambem
+# em seguida tornar o codigo flexivel para ler apenas um eslacar ou uma lista de escalares para os valores de energia ou nao fazer nada caso nenhum parametros seja passado via prompt
