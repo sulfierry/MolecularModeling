@@ -1,7 +1,6 @@
 import os
 import sys
 import shutil
-import argparse
 import tempfile
 import numpy as np
 import imageio.v2 as imageio
@@ -348,13 +347,14 @@ class FreeEnergyLandscape:
 
 
 if __name__ == "__main__":
+
     # Definindo valores padrão
     t = 300                     # --temperature           [int] [Kelvin]
     kB = 8.314e-3               # --kb                    [float] [kJ/(mol·K)]
     energy_threshold = None     # --energy                [int] [kJ/mol]
     bins_energy_histogram = 100 # --bins_energy_histogram [int]
     kde_bandwidth_cv = None     # --kde_bandwidth         [float]
-    cv_names = ['CV1', 'CV2']   # Nomes padrão para as variáveis coletivas
+    cv_names = ['CV1', 'CV2']   # --name
 
     if len(sys.argv) >= 3:
         cv1_path, cv2_path = sys.argv[1], sys.argv[2]
@@ -385,7 +385,10 @@ if __name__ == "__main__":
                 print(f"Unrecognized option: {key}")
                 sys.exit(1)
     else:
-        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt [optional arguments --temperature, --kb, --energy_threshold, --bins_energy_histogram, --kde_bandwidth_cv, --name cv1_name cv2_name]")
+        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt")
+        print("Optional arguments: --temperature, --kb, --energy_threshold, --bins_energy_histogram, --kde_bandwidth_cv, --name cv1_name cv2_name")
+        print("--temperature: Temperature in Kelvin (default: 300)\n--kb: Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)\n--energy: Energy threshold in kJ/mol (default: None)\n--bins_energy_histogram: Number of bins for the energy histogram (default: 100)\n--kde_bandwidth: Bandwidth for the kernel density estimation (default: None)\n--name: Names for the two collective variables (default: CV1 CV2)")
+        print("Example: python freeEnergyLandscape.py cv1.txt cv2.txt --name Angle_CV1 Distance_CV2 --temperature 300 --kb 8.314e-3 --energy 10 --bins_energy_histogram 100 --kde_bandwidth 0.5 ")
         sys.exit(1)
 
 
@@ -393,7 +396,9 @@ if __name__ == "__main__":
         fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB,  
                                 bins=bins_energy_histogram, 
                                 kde_bandwidth=kde_bandwidth_cv)
+        
         fel.main(energy_threshold, cv_names=cv_names)
+
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         sys.exit(1)
