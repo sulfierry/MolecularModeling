@@ -1,6 +1,7 @@
 import os
 import sys
 import shutil
+import argparse
 import tempfile
 import numpy as np
 import imageio.v2 as imageio
@@ -10,7 +11,7 @@ from matplotlib.colors import LinearSegmentedColormap
 
 class FreeEnergyLandscape:
     
-    def __init__(self, cv1_path, cv2_path, temperature, boltzmann_constant):
+    def __init__(self, cv1_path, cv2_path, temperature, boltzmann_constant, bins=100, kde_bandwidth=None):
         self.cv1_path = cv1_path
         self.cv2_path = cv2_path
         self.temperature = temperature
@@ -29,13 +30,15 @@ class FreeEnergyLandscape:
         self.custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
         self.proj1_data_original = None
         self.proj2_data_original = None
+        self.bins = bins
+        self.kde_bandwidth = kde_bandwidth
 
     def load_data(self):
         self.proj1_data_original = np.loadtxt(self.cv1_path, usecols=[1])
         self.proj2_data_original = np.loadtxt(self.cv2_path, usecols=[1])
 
 
-    def boltzmann_inversion_original(self, data, title, threshold=10):
+    def boltzmann_inversion_original(self, data, title, threshold):
         # Calcular G e plotar o gráfico de energia livre
         hist, bin_edges = np.histogram(data, bins=100, density=True)
         bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
@@ -86,21 +89,23 @@ class FreeEnergyLandscape:
 
 
     def calculate_free_energy(self, data):
-        """
-        Calcula a energia livre e prepara os dados para plotagem.
-        :param data: Dados de entrada para os quais a energia livre será calculada.
-        :return: Dicionário contendo 'X_original', 'Y_original', e 'G_original' para plotagem.
-        """
+        if hasattr(self, 'cached_results'):
+            return self.cached_results
+
         values_original = np.vstack([data[:, 0], data[:, 1]]).T
-        kernel_original = gaussian_kde(values_original.T)
+        if self.kde_bandwidth:
+            kernel_original = gaussian_kde(values_original.T, bw_method=self.kde_bandwidth)
+        else:
+            kernel_original = gaussian_kde(values_original.T)
         X_original, Y_original = np.mgrid[data[:, 0].min():data[:, 0].max():100j, 
-                                        data[:, 1].min():data[:, 1].max():100j]
+                                          data[:, 1].min():data[:, 1].max():100j]
         positions_original = np.vstack([X_original.ravel(), Y_original.ravel()])
         Z_original = np.reshape(kernel_original(positions_original).T, X_original.shape)
         G_original = -self.kB * self.temperature * np.log(Z_original)
         G_original = np.clip(G_original - np.min(G_original), 0, 25)
-        
-        return {'X_original': X_original, 'Y_original': Y_original, 'G_original': G_original}
+
+        self.cached_results = {'X_original': X_original, 'Y_original': Y_original, 'G_original': G_original}
+        return self.cached_results
 
 
     def plot_energy_landscape(self, threshold):
@@ -115,9 +120,10 @@ class FreeEnergyLandscape:
                             cmap=self.custom_cmap, extend='both')
 
         # Identificação dos pontos de baixa energia
+        
         low_energy_mask = result['G_original'] <= threshold
         plt.scatter(result['X_original'][low_energy_mask], result['Y_original'][low_energy_mask], 
-                    color='magenta', s=10, label=f'Low Energy (<= {threshold} kJ/mol)')
+                    color='magenta', s=10, label=f'Energy (<= {threshold} kJ/mol)')
 
         plt.legend(loc='lower left', bbox_to_anchor=(1, 1))
         cbar = plt.colorbar(cont)
@@ -247,36 +253,92 @@ class FreeEnergyLandscape:
 
         shutil.rmtree(temp_dir)  # Limpa os arquivos temporários
 
+    def plot_histogram(self, data, title):
+        plt.figure(figsize=(8, 6))
+        plt.hist(data, bins=self.bins, density=True, alpha=0.7, color='blue')
+        plt.title(f'Histogram of {title}')
+        plt.xlabel('Value')
+        plt.ylabel('Frequency')
+        plt.grid(True)
+        plt.show()
+
+    def verify_input(self, data_path):
+        try:
+            data = np.loadtxt(data_path, dtype=float)
+            if data.shape[1] != 2:
+                raise ValueError("O arquivo de entrada deve ter exatamente duas colunas.")
+
+            frames = data[:, 0]
+            if not np.all(frames == np.arange(len(frames))):
+                raise ValueError("A primeira coluna deve conter valores inteiros sequenciais que representam os frames.")
+
+        except ValueError as e:
+            print(f"Erro na verificação do arquivo {data_path}: {e}")
+            sys.exit(1)
 
 
-    def main(self):
+
+    def main(self, energy_threshold):
+        # Verificar ambos os arquivos de entrada antes de carregar os dados
+        self.verify_input(self.cv1_path)
+        self.verify_input(self.cv2_path)
         self.load_data()
-        self.boltzmann_inversion_original(self.proj1_data_original, 'CV1 (Angle)')
-        self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distance)')
-        self.plot_energy_landscape(threshold=5)
-        self.save_low_energy_points_to_tsv(threshold=5)
+        
+        self.boltzmann_inversion_original(self.proj1_data_original, 'CV1 (Angle)',threshold=energy_threshold)
+        self.boltzmann_inversion_original(self.proj2_data_original, 'CV2 (Distance)',threshold=energy_threshold)
+        self.plot_histogram(self.proj1_data_original, 'CV1 (Angle)')
+        self.plot_histogram(self.proj2_data_original, 'CV2 (Distance)')
+        self.plot_energy_landscape(threshold=energy_threshold)
+        # self.save_low_energy_points_to_tsv(threshold=energy_threshold)
         # self.plot_3D_energy_landscape()
         # self.create_3D_gif()
+    
+        # Após o uso final dos dados, limpe-os para liberar memória
+        if hasattr(self, 'cached_results'):
+            del self.cached_results
+
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt")
+
+    # Definindo valores padrão
+    t = 300  # Temperatura em K
+    kB = 8.314e-3  # Constante de Boltzmann em kJ/(mol·K)
+    energy_threshold = 0  # Limiar para quadros de baixa energia
+    bins_energy_histogram = 100  # Número de bins para o histograma de energia
+    kde_bandwidth_cv = None  # Largura de banda para a estimativa de densidade kernel de CV
+
+    # Processando argumentos opcionais
+    if len(sys.argv) >= 3:
+        cv1_path, cv2_path = sys.argv[1], sys.argv[2]
+
+        # Processar argumentos adicionais como pares chave-valor
+        for i in range(3, len(sys.argv), 2):
+            if i+1 < len(sys.argv):
+                key = sys.argv[i]
+                value = sys.argv[i+1]
+                if key == "--temperature":
+                    t = float(value)
+                elif key == "--kb":
+                    kB = float(value)
+                elif key == "--energy_threshold":
+                    energy_threshold = float(value)
+                elif key == "--bins_energy_histogram":
+                    bins_energy_histogram = int(value)
+                elif key == "--kde_bandwidth_cv":
+                    if value.lower() != "none":
+                        kde_bandwidth_cv = float(value)
+                    else:
+                        kde_bandwidth_cv = None
+    else:
+        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt [optional arguments --temperature, --kb, --energy_threshold, --bins_energy_histogram, --kde_bandwidth_cv]")
         sys.exit(1)
 
-    cv1_path, cv2_path = sys.argv[1:3]
-
     try:
-        t = 300  # Temperature in K
-        kB = 8.314e-3  # Boltzmann constant in kJ/(mol·K)
-        
-        fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB)
-        fel.main()
-
-
+        fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB,  
+                                bins=bins_energy_histogram, 
+                                kde_bandwidth=kde_bandwidth_cv)
+        fel.main(energy_threshold)
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         sys.exit(1)
-
-
-# adiionar a opcao para indicar o trseshold na linha de comando
