@@ -100,11 +100,7 @@ The `FreeEnergyLandscape` class employs `gaussian_kde` in several key areas:
 
 ### Boltzmann Inversion
 
-Gibbs free energy provides a measure of the amount of "useful work" that can be obtained from a thermodynamic system in a process at constant temperature and pressure. The Boltzmann distribution, in turn, relates the energy of a state to its probability in a canonical ensemble.
-
-#### Starting from the Boltzmann Distribution
-
-The Boltzmann distribution provides a fundamental link between the microstate probabilities of a thermodynamic system and its macroscopic properties. It expresses the probability $P$ of a system being in a state with a certain free energy $\Delta G$ at a specific temperature $T$:
+Boltzmann distribution relates the energy of a state to its probability in a canonical ensemble, this provides a fundamental link between the microstate probabilities of a thermodynamic system and its macroscopic properties. It expresses the probability $P$ of a system being in a state with a certain free energy $\Delta G$ at a specific temperature $T$:
 
 $$P \propto e^{-\frac{\Delta G}{k_B T}}$$
 
@@ -146,8 +142,7 @@ Given the interest in determining the free energy difference $\Delta G$ relative
 
 $$\Delta G = -k_B T (\ln(P) - \ln(P_{\text{max}}))$$
 
-
-Here, $\Delta G$ is expressed as a function of the difference in the logarithms of the probabilities of finding the system in any state versus the state of highest probability (or lowest free energy), multiplied by the system's absolute temperature and the Boltzmann constant. This relationship shows how the free energy difference between two states can be calculated from their relative probabilities, providing a direct bridge between statistical thermodynamics and experimental observations or computational simulations.
+The Gibbs free energy provides a measure of the amount of "useful work" that can be obtained from a thermodynamic system in a process at constant temperature and pressure. Here, $\Delta G$ is expressed as a function of the difference in the logarithms of the probabilities of finding the system in any state versus the state of highest probability (or lowest free energy), multiplied by the system's absolute temperature and the Boltzmann constant. This relationship shows how the free energy difference between two states can be calculated from their relative probabilities, providing a direct bridge between statistical thermodynamics and experimental observations or computational simulations.
 
 This relationship allows us to convert a histogram of CV values into a free energy surface and this formulation also adjusts the free energy values so that the minimum energy associated with the highest probability $P_{\text{max}}$ is set to 0. Because the value of $\Delta G$ for the state with $P_{\text{max}}$ will be 0 because $\ln (P_{\text{max}}) - \ln (P_{\text{max}}) = 0\$.
 
