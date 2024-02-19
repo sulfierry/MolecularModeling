@@ -75,9 +75,9 @@ In the context of KDE the variable $u$ is utilized within the Gaussian kernel fu
 
 The Gaussian KDE method provides a sophisticated approach to model the complex free energy landscapes encountered in molecular dynamics studies. It enables researchers to visualize the distribution of energy states without the constraints of parametric models, offering insights into molecular stability, transitions, and the energetics of molecular interactions.
 
-### Boltzmann Inversion
+### Boltzmann distribution
 
-Boltzmann distribution relates the energy of a state to its probability in a canonical ensemble, this provides a fundamental link between the microstate probabilities of a thermodynamic system and its macroscopic properties. It expresses the probability $P$ of a system being in a state with a certain free energy $\Delta G$ at a specific temperature $T$:
+The Boltzmann distribution relates the energy of a state to its probability in a canonical ensemble, this provides a fundamental link between the microstate probabilities of a thermodynamic system and its macroscopic properties. It expresses the probability $P$ of a system being in a state with a certain free energy $\Delta G$ at a specific temperature $T$:
 
 $$P \propto e^{-\frac{\Delta G}{k_B T}}$$
 
