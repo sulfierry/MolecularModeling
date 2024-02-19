@@ -321,7 +321,6 @@ class FreeEnergyLandscape:
         
         # self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
 
-    
         # Após o uso final dos dados, limpe-os para liberar memória
         if hasattr(self, 'cached_results'):
             del self.cached_results
