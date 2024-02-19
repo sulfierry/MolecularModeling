@@ -382,3 +382,7 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         sys.exit(1)
+
+
+# adicionar a visualizao dos pontos de minimos energitos no grafico 3D tambem
+# em seguida tornar o codigo flexivel para ler apenas um eslacar ou uma lista de escalares para os valores de energia
