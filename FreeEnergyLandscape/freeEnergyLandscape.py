@@ -1,7 +1,9 @@
 import os
 import sys
 import shutil
+import platform
 import tempfile
+import subprocess
 import numpy as np
 import imageio.v2 as imageio
 import matplotlib.pyplot as plt
@@ -132,7 +134,6 @@ class FreeEnergyLandscape:
         plt.show()
 
 
-
     def save_low_energy_points_to_tsv(self, threshold):
         if threshold is None or threshold < 0:
             print("Threshold is None or less than 0. No points will be saved.")
@@ -170,25 +171,46 @@ class FreeEnergyLandscape:
         # print("Low energy points saved to low_energy_points.tsv")
 
 
-
-    def plot_3D_energy_landscape(self):
+    def plot_3D_energy_landscape(self, threshold=None):
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
+        
         fig = plt.figure(figsize=(10, 7))
         ax = fig.add_subplot(111, projection='3d')
-        surf = ax.plot_surface(result['X_original'], result['Y_original'], result['G_original'], cmap=self.custom_cmap, edgecolor='none')
+        
+        # Plotar a superfície da paisagem de energia
+        surf = ax.plot_surface(result['X_original'], result['Y_original'], result['G_original'], cmap=self.custom_cmap, edgecolor='none', alpha=0.5)
         ax.set_xlabel('CV1 (Angle)')
         ax.set_ylabel('CV2 (Distance)')
-        ax.set_title('3D Free energy landscape')
+        ax.set_zlabel('Free energy (kJ/mol)')
+        ax.set_title('3D Free Energy Landscape')
+        
+        if threshold is not None:
+            if isinstance(threshold, list):
+                for i, interval in enumerate(threshold):
+                    self.plot_threshold_points(ax, result, interval[0], interval[1], self.colors[i % len(self.colors)], f'Energy {interval[0]}-{interval[1]} kJ/mol')
+            elif isinstance(threshold, (int, float)):
+                self.plot_threshold_points(ax, result, 0, threshold, 'magenta', f'Energy <= {threshold}')
+        
         fig.colorbar(surf, shrink=0.5, aspect=5, label='Free energy (kJ/mol)')
+        plt.legend(loc='upper left')
         plt.show()
+
+
+    def plot_threshold_points(self, ax, result, lower_bound, upper_bound, color, label):
+        G_flat = result['G_original'].flatten()
+        energy_mask = (G_flat >= lower_bound) & (G_flat < upper_bound)
+        
+        if any(energy_mask):
+            X_flat, Y_flat = result['X_original'].flatten(), result['Y_original'].flatten()
+            ax.scatter(X_flat[energy_mask], Y_flat[energy_mask], G_flat[energy_mask], color=color, s=20, label=label)
+
 
     def create_3D_gif(self, gif_filename='energy_landscape_3D.gif', n_angles=10, elevation=15, duration_per_frame=0.01):
         temp_dir = tempfile.mkdtemp()  # Cria um diretório temporário para armazenar os frames
         filenames = []
 
-        # Utiliza a função calculate_free_energy refatorada para obter os dados
-        # Aqui, combinamos proj1_data_original e proj2_data_original para a visualização
+        # Utiliza a função calculate_free_energy para obter os dados
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
 
@@ -220,6 +242,17 @@ class FreeEnergyLandscape:
                 writer.append_data(image)
 
         shutil.rmtree(temp_dir)  # Limpa os arquivos temporários
+
+        # Abrir o GIF gerado automaticamente
+        self.open_gif(gif_filename)
+
+    def open_gif(self, gif_filename):
+        if platform.system() == 'Windows':
+            os.startfile(gif_filename)
+        elif platform.system() == 'Darwin':  # macOS
+            subprocess.run(['open', gif_filename])
+        else:  # Assume Linux ou outra plataforma Unix-like
+            subprocess.run(['xdg-open', gif_filename])
 
     def plot_histogram(self, data_list, titles):
         # Plotando histogramas absolutos individualmente
@@ -293,7 +326,7 @@ class FreeEnergyLandscape:
             sys.exit(1)
 
 
-    def main(self, energy_threshold, cv_names):
+    def main(self, energy_threshold, cv_names, n_angles, elevation, duration_per_frame):
         
         # Verificar ambos os arquivos de entrada antes de carregar os dados
         self.verify_input(self.cv1_path)
@@ -305,18 +338,18 @@ class FreeEnergyLandscape:
             titles=cv_names, 
             threshold=energy_threshold)
         
-        self.plot_histogram(
-            data_list=[self.proj1_data_original, self.proj2_data_original], 
-            titles=cv_names)
+        # self.plot_histogram(
+            # data_list=[self.proj1_data_original, self.proj2_data_original], 
+            # titles=cv_names)
 
-        self.cv_by_frame(
-            data_list=[self.proj1_data_original, self.proj2_data_original], 
-            titles=cv_names)
+        # self.cv_by_frame(
+            # data_list=[self.proj1_data_original, self.proj2_data_original], 
+            # titles=cv_names)
 
         self.plot_energy_landscape(threshold=energy_threshold)
 
-        self.plot_3D_energy_landscape()
-        # self.create_3D_gif()
+        self.plot_3D_energy_landscape(threshold=energy_threshold)
+        self.create_3D_gif(n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
         
         # self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
 
@@ -334,6 +367,9 @@ if __name__ == "__main__":
     bins_energy_histogram = 100 # --bins_energy_histogram [int]
     kde_bandwidth_cv = None     # --kde_bandwidth         [float]
     cv_names = ['CV1', 'CV2']   # --name
+    n_angles = 10               # Número de ângulos para o GIF 3D
+    elevation = 10              # Elevação para o GIF 3D
+    duration_per_frame = 0.1    # Duração por frame para o GIF 3D
 
     if len(sys.argv) >= 3:
         cv1_path, cv2_path = sys.argv[1], sys.argv[2]
@@ -370,18 +406,18 @@ if __name__ == "__main__":
         print("Example: python freeEnergyLandscape.py cv1.txt cv2.txt --name Angle_CV1 Distance_CV2 --temperature 300 --kb 8.314e-3 --energy 10 --bins_energy_histogram 100 --kde_bandwidth 0.5\n")
         sys.exit(1)
 
-
     try:
         fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB,  
                                 bins=bins_energy_histogram, 
                                 kde_bandwidth=kde_bandwidth_cv)
         
-        fel.main(energy_threshold, cv_names=cv_names)
+        fel.main(energy_threshold, cv_names=cv_names, 
+                 n_angles=n_angles, elevation=elevation, 
+                duration_per_frame=duration_per_frame)
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         sys.exit(1)
-
 
 # adicionar a visualizao dos pontos de minimos energeticos no grafico 3D tambem
 # em seguida tornar o codigo flexivel para ler apenas um eslacar ou uma lista de escalares para os valores de energia ou nao fazer nada caso nenhum parametros seja passado via prompt
