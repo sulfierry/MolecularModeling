@@ -198,7 +198,7 @@ The third figure combines both CV1 and CV2 to produce a two-dimensional free ene
 
 - **X-Axis**: CV1, representing an angle, with the same labeling as in Figure 1.
 - **Y-Axis**: CV2, representing a distance, with the same labeling as in Figure 2.
-- **Visualization**: A contour plot or a heatmap showing the free energy levels across the CV1 and CV2 space. The color gradient represents different energy levels, with cooler colors indicating low-energy regions (minima) and warmer colors highlighting high-energy barriers. This visualization is crucial for identifying transition states, stable conformations, and understanding the molecular system's behavior under various conditions.
+- **Visualization**: A heatmap showing the free energy levels across the CV1 and CV2 space. The color gradient represents different energy levels, with cooler colors indicating low-energy regions (minima) and warmer colors highlighting high-energy barriers. This visualization is crucial for identifying transition states, stable conformations, and understanding the molecular system's behavior under various conditions.
 
 ### Figure 4: 3D Free Energy Landscape
 
