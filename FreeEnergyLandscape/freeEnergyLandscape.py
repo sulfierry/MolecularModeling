@@ -316,7 +316,7 @@ class FreeEnergyLandscape:
 
         self.plot_energy_landscape(threshold=energy_threshold)
 
-        # self.plot_3D_energy_landscape()
+        self.plot_3D_energy_landscape()
         # self.create_3D_gif()
         
         # self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
