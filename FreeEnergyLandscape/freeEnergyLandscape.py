@@ -325,6 +325,32 @@ class FreeEnergyLandscape:
             print(f"Erro na verificação do arquivo {data_path}: {e}")
             sys.exit(1)
 
+    @staticmethod
+    def help():
+        help_text = """
+        Usage: 
+            python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt
+
+        Optional arguments:
+            --temperature [int]              Temperature in Kelvin (default: 300)
+            --kb [float]                     Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)
+            --energy [int] or [(start, end)] Energy threshold in kJ/mol or ranges (default: None)
+            --bins_energy_histogram [int]    Number of bins for the energy histogram (default: 100)
+            --kde_bandwidth [float]          Bandwidth for the kernel density estimation (default: None)
+            --names [str] [str]              Names for the two collective variables (default: CV1, CV2)
+            --gif_angles [int]               Number of angles for the 3D GIF (default: 10)
+            --gif_elevation [int]            Elevation angle for the 3D GIF (default: 10)
+            --gif_duration [float]           Duration per frame for the 3D GIF in seconds (default: 0.1)
+
+        Example:
+            python freeEnergyLandscape.py cv1.txt cv2.txt --names Angle_CV1 Distance_CV2 --temperature 300 --kb 8.314e-3 --energy 5" --bins_energy_histogram 100 --kde_bandwidth 0.5 --gif_angles 20 --gif_elevation 30 --gif_duration 0.05
+
+        """
+        #      Notes:
+        #  - The --energy argument can be a single value (e.g., 10) to indicate a maximum energy threshold, or a list of tuples to specify multiple energy ranges.
+        #  - Use quotes for arguments that include spaces or special characters (e.g., --energy "[(0, 1), (1, 2)]").
+        print(help_text)
+
 
     def main(self, energy_threshold, cv_names, n_angles, elevation, duration_per_frame):
         
@@ -349,7 +375,8 @@ class FreeEnergyLandscape:
         self.plot_energy_landscape(threshold=energy_threshold)
 
         self.plot_3D_energy_landscape(threshold=energy_threshold)
-        self.create_3D_gif(n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
+        
+        #self.create_3D_gif(n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
         
         # self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
 
@@ -366,10 +393,10 @@ if __name__ == "__main__":
     energy_threshold = None     # --energy                [int] [kJ/mol]
     bins_energy_histogram = 100 # --bins_energy_histogram [int]
     kde_bandwidth_cv = None     # --kde_bandwidth         [float]
-    cv_names = ['CV1', 'CV2']   # --name
-    n_angles = 10               # Número de ângulos para o GIF 3D
-    elevation = 10              # Elevação para o GIF 3D
-    duration_per_frame = 0.1    # Duração por frame para o GIF 3D
+    cv_names = ['CV1', 'CV2']   # --name                  [str] [str]
+    n_angles = 10               # --gif_angles            [int]
+    elevation = 10              # --gif_elevation         [int]
+    duration_per_frame = 0.1    # --gif_duration          [float]
 
     if len(sys.argv) >= 3:
         cv1_path, cv2_path = sys.argv[1], sys.argv[2]
@@ -396,14 +423,20 @@ if __name__ == "__main__":
             elif key == "--names":
                 cv_names = [sys.argv[i + 1], sys.argv[i + 2]]  # Captura os nomes das variáveis coletivas
                 i += 3
+            elif key == "--gif_angles":
+                n_angles = int(sys.argv[i + 1])
+                i += 2
+            elif key == "--gif_elevation":
+                elevation = int(sys.argv[i + 1])
+                i += 2
+            elif key == "--gif_duration":
+                duration_per_frame = float(sys.argv[i + 1])
+                i += 2
             else:
                 print(f"Unrecognized option: {key}")
                 sys.exit(1)
     else:
-        print("Usage: python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt\n")
-        print("Optional arguments: --temperature, --kb, --energy_threshold, --bins_energy_histogram, --kde_bandwidth_cv, --name cv1_name cv2_name\n")
-        print("--temperature: Temperature in Kelvin (default: 300)\n\n--kb: Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)\n\n--energy: Energy threshold in kJ/mol (default: None)\n\n--bins_energy_histogram: Number of bins for the energy histogram (default: 100)\n\n--kde_bandwidth: Bandwidth for the kernel density estimation (default: None)\n\n--names: Names for the two collective variables (default: CV1 CV2)\n\n")
-        print("Example: python freeEnergyLandscape.py cv1.txt cv2.txt --name Angle_CV1 Distance_CV2 --temperature 300 --kb 8.314e-3 --energy 10 --bins_energy_histogram 100 --kde_bandwidth 0.5\n")
+        FreeEnergyLandscape.help()
         sys.exit(1)
 
     try:
