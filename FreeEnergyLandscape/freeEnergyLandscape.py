@@ -75,26 +75,6 @@ class FreeEnergyLandscape:
         plt.savefig('Combined_Free_Energy_Profile_Normalized.png')
         plt.show()
 
-
-    def identify_and_save_low_energy_frames(self, data, G, bin_centers, threshold, title):
-        hist, bin_edges = np.histogram(data, bins=100, density=True)
-        bin_width = bin_edges[1] - bin_edges[0]
-        filename = f"{title.replace(' ', '_').lower()}_low_energy_frames.tsv"
-
-        with open(filename, 'w') as file:
-            file.write("frame\tcv\tenergy\n")
-            for bin_center, energy in zip(bin_centers, G):
-                if energy < threshold:
-                    # Identifica índices dos dados que caem dentro deste bin de baixa energia
-                    indices_within_bin = np.where((data >= bin_center - bin_width / 2) & 
-                                                (data < bin_center + bin_width / 2))[0]
-                    
-                    for frame in indices_within_bin:
-                        file.write(f"{frame}\t{data[frame]}\t{energy}\n")
-        print(f"Saved low energy frames to {filename}")
-
-
-
     def calculate_free_energy(self, data):
         if hasattr(self, 'cached_results'):
             return self.cached_results
