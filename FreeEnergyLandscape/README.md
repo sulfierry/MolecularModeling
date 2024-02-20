@@ -15,10 +15,6 @@ This tool is designed to analyze and visualize the free energy landscape from mo
 
 - **Low Energy Points Identification**: Marks points below specified energy thresholds, useful for pinpointing stable conformations.
 
-## Usage
-
-
-
 
 ## Required Libraries
 
@@ -39,6 +35,8 @@ These dependencies also are listed in the `requirements.txt` file. To install th
 ```bash
 pip install -r requirements.txt
 ```
+
+## Usage
 
 Ensure your data file is in the correct two-column format. Run the script with the path to your data files and optional arguments as needed:
 
