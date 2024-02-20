@@ -223,8 +223,8 @@ The third figure combines both CV1 and CV2 to produce a two-dimensional free ene
 
 ![Alt text da image](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/fel_angle_distance.png)
 
-- **X-Axis**: CV1, representing an angle, with the same labeling as in Figure 1.
-- **Y-Axis**: CV2, representing a distance, with the same labeling as in Figure 2.
+- **X-Axis**: CV1, representing an angle, with the same labeling as in Figure 1 (left).
+- **Y-Axis**: CV2, representing a distance, with the same labeling as in Figure 1 (right).
 - **Visualization**: A heatmap showing the free energy levels across the CV1 and CV2 space. The color gradient represents different energy levels, with cooler colors indicating low-energy regions (minima) and warmer colors highlighting high-energy barriers. This visualization is crucial for identifying transition states, stable conformations, and understanding the molecular system's behavior under various conditions.
 
 ### Figure 5: 3D Free Energy Landscape
@@ -234,8 +234,8 @@ This figure provides a three-dimensional visualization of the free energy landsc
 ![Alt Text](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/energy_landscape_3D.gif)
 
 
-- **X-Axis**: CV1, representing an angle, with the same labeling as in Figure 1 (left).
-- **Y-Axis**: CV2, representing a distance, with the same labeling as in Figure 1 (right).
+- **X-Axis**: CV1, representing an angle, with the same labeling as in Figure 4.
+- **Y-Axis**: CV2, representing a distance, with the same labeling as in Figure 4.
 - **Z-Axis**: Shows the free energy in kJ/mol, calculated from the probability distribution of CV1 and CV2 using the Boltzmann equation.
 
 **Visualization**: A 3D surface plot illustrates the variations in free energy across the space defined by CV1 and CV2. The color gradient enhances the visualization of energy barriers and minima, aiding in the identification of stable conformations and transition states. The 3D and animated visualizations of the free energy landscape extend the analysis beyond two dimensions, offering a richer and more nuanced understanding of the system's energetics. By exploring the landscape in three dimensions, researchers can better identify and analyze the regions of interest, such as low-energy conformations and high-energy transition states, which are vital for deciphering the molecular mechanisms underlying biological processes and material behaviors.
