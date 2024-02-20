@@ -180,19 +180,6 @@ This relationship allows us to convert a histogram of CV values into a free ener
 
 This expression quantitatively links the probability distribution of states within a thermodynamic system to their respective free energy differences, providing a foundation for analyzing the system's behavior at the molecular level and this approach is useful for highlighting the relative differences in free energy between different states or conformations in an MD simulation, facilitating the identification of free energy minima and the relative comparison between different states. By setting the minimum of free energy to 0, you create a clear reference point to evaluate the relative stability of other states compared to the most stable state.
 
-
-## Implementation Details
-
-### Class `FreeEnergyLandscape`
-
-- **Initialization**: Sets up the paths to data files for CV1 and CV2, the temperature, and the Boltzmann constant. A custom color map is also defined for visualizing the energy levels.
-
-- **Data Loading**: Reads the CV data from the specified files, assuming that the data of interest is in the second column.
-
-- **Boltzmann Inversion**: For a given set of CV data, calculates the histogram (probability distribution), converts it to free energy using the Boltzmann equation, and visualizes the result.
-
-- **Energy Landscape Visualization**: Combines the CV data to construct a 2D free energy landscape. This involves estimating the joint probability density function using a Gaussian kernel density estimate, converting this density into free energy, and plotting the landscape with contour lines representing different energy levels.
-
 ## Visualizations Generated
 
 The `FreeEnergyLandscape` class generates three key visualizations to aid in the analysis of the molecular system's free energy landscape. Each figure provides unique insights into the system's thermodynamic and kinetic behavior.
