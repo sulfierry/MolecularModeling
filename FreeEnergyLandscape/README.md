@@ -36,6 +36,7 @@ These dependencies also are listed in the `requirements.txt` file. To install th
 ```bash
 pip install -r requirements.txt
 ```
+To install the free energy landscape:
 
 ```bash
 pip install free-energy-landscape
