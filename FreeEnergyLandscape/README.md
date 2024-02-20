@@ -41,7 +41,8 @@ The free energy landscape is a conceptual and computational tool used to underst
 
 ### Collective Variables (CVs)
 
-Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the distance between two atoms, angles, dihedrals, and more complex descriptors.
+
+Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the distance between two atoms, angles, dihedrals, and more complex descriptors. The use of distance and angle as collective variables (CVs) in this study serves merely as an example to illustrate the tool's capabilities. However, it's important to note that the input can be any file containing two columns: the first for frames and the second for the value of the collective variable. This flexibility allows the tool to be applicable to a wide range of studies involving different types of collective variables
 
 CVs in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
 
