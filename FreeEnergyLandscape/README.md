@@ -1,6 +1,20 @@
 # Free Energy Landscape Analysis
 
-This Python class `FreeEnergyLandscape`, is designed to analyze and visualize the free energy landscape of molecular systems using collective variables (CVs), such as angles and distances, obtained from molecular dynamics simulations. The approach leverages the concept of Boltzmann inversion to transform probability distributions into free energy surfaces, providing insights into the thermodynamic and kinetic properties of the system.
+This tool is designed to analyze and visualize the free energy landscape from molecular dynamics simulations. It calculates the free energy from collective variable (CV) data across simulation frames and generates insightful visualizations to help understand the system's behavior over time.
+
+
+## Features
+
+- **Free Energy vs. Collective Variable (CV) Plot**: Visualizes the free energy landscape as a function of the CV, aiding in the identification of stable states and energy barriers.
+
+- **CV Value vs. Frame Plot**: Tracks the evolution of the CV over simulation frames, offering insights into the dynamic behavior of the system.
+
+- **Histogram of CV Values**: Presents the distribution of CV values, highlighting the most populated states.
+
+- **3D Free Energy Landscape and GIF Animation**: Creates a 3D visualization of the free energy landscape and an animated GIF for an enhanced perspective.
+
+- **Low Energy Points Identification**: Marks points below specified energy thresholds, useful for pinpointing stable conformations.
+
 
 ## Theoretical Background
 
