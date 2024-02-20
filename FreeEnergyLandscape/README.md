@@ -7,11 +7,11 @@ This tool is designed to analyze and visualize the free energy landscape from mo
 
 - **Enhanced Free Energy vs. Collective Variable (CV) Visualization**: This tool expertly maps the free energy landscape across varying values of collective variables (CVs), such as distances or angles, facilitating a deeper understanding of the system's energetics. It highlights stable states and potential energy barriers, crucial for identifying key transition states and conformational changes.
 
-- **Dynamic CV Value vs. Frame Insights**: With precision, this feature charts the trajectory of collective variables (CVs) across simulation frames, uncovering the temporal dynamics of the system. It provides a clear depiction of how CV values evolve, revealing underlying patterns and fluctuations that characterize the molecular system's behavior over time.
+- **Dynamic CV Value vs. Frame Insights**: This feature charts the trajectory of collective variables (CVs) across simulation frames, uncovering the temporal dynamics of the system. It provides a clear depiction of how CV values evolve, revealing underlying patterns and fluctuations that characterize the molecular system's behavior over time.
 
 - **Comprehensive Histogram Analysis of CV Distributions**: By generating detailed histograms of CV values, this tool underscores the frequency and distribution of collective variable states within the simulation. It accentuates prevalent states, offering a statistical perspective on the system's most favored conformations.
 
-- **Integrated Free Energy Landscape (CV1 vs. CV2)**: This innovative visualization combines two collective variables, offering a two-dimensional free energy landscape that encapsulates the interplay between different CVs. It enables a multifaceted analysis of how combined CVs contribute to the system's stability and transitions, enriching the understanding of complex molecular mechanisms.
+- **Integrated Free Energy Landscape (CV1 vs. CV2)**: This visualization combines two collective variables, offering a two-dimensional free energy landscape that encapsulates the interplay between different CVs. It enables a multifaceted analysis of how combined CVs contribute to the system's stability and transitions, enriching the understanding of complex molecular mechanisms.
 
 - **3D Free Energy Landscape and Animated Insights**: Elevating the analysis, this feature constructs a three-dimensional representation of the free energy landscape, complemented by an animated GIF. This immersive visualization affords a dynamic and comprehensive view of the energy landscape, enhancing the interpretation of the system's energetics from multiple angles and dimensions.
 
