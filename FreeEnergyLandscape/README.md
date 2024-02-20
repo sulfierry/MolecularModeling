@@ -45,15 +45,15 @@ python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt --energy
 
 Optional Arguments:
 
-   --temperature [int]: Simulation temperature in Kelvin (default: 300K).
-   --kb [float]: Boltzmann constant in kJ/(mol·K) (default: 8.314e-3).
-   --energy [int]: Energy threshold(s) for analysis, single value (default: None).
-   --bins_energy_histogram [int]: Bins for energy histogram (default: 100).
-   --kde_bandwidth [float]: Bandwidth for kernel density estimation (default: None).
-   --names [str] [str]: Names for the collective variables (default: CV1, CV2).
-   --gif_angles [int]: Angles for 3D GIF rotation (default: 10).
-   --gif_elevation [int]: Elevation angle for the 3D GIF (default: 10).
-   --gif_duration [float]: Duration per frame in the GIF in seconds (default: 0.1).
+   --temperature           [ int]      Simulation temperature in Kelvin (default: 300K)
+   --kb                    [float]     Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)
+   --energy                [int]       Energy, single value (default: None)
+   --bins_energy_histogram [int]       Bins for energy histogram (default: 100)
+   --kde_bandwidth         [float]     Bandwidth for kernel density estimation (default: None)
+   --names                 [str] [str] Names for the collective variables (default: CV1, CV2)
+   --gif_angles            [int]       Angles for 3D GIF rotation (default: 10)
+   --gif_elevation         [int]       Elevation angle for the 3D GIF (default: 10)
+   --gif_duration          [float]     Duration per frame in the GIF in seconds (default: 0.1)
 
 ```
 ## Theoretical Background
