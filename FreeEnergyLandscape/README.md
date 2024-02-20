@@ -49,7 +49,7 @@ python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt
 ```bash
 Optional Arguments:
 
-   --temperature           [ int]      Simulation temperature in Kelvin (default: 300K)
+   --temperature           [int]       Simulation temperature in Kelvin (default: 300K)
    --kb                    [float]     Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)
    --energy                [int]       Energy, single value (default: None)
    --bins_energy_histogram [int]       Bins for energy histogram (default: 100)
