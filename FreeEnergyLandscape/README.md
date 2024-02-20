@@ -45,7 +45,8 @@ Ensure your data file is in the correct two-column format. Run the script with t
 
 ```bash
 python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt
-
+```
+```bash
 Optional Arguments:
 
    --temperature           [ int]      Simulation temperature in Kelvin (default: 300K)
@@ -57,8 +58,8 @@ Optional Arguments:
    --gif_angles            [int]       Angles for 3D GIF rotation (default: 10)
    --gif_elevation         [int]       Elevation angle for the 3D GIF (default: 10)
    --gif_duration          [float]     Duration per frame in the GIF in seconds (default: 0.1)
-
-
+```
+```bash
 python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt  --names CV1_angle CV2_distance --energy 3
 ```
 
