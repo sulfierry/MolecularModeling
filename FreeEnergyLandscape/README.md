@@ -44,7 +44,7 @@ pip install -r requirements.txt
 Ensure your data file is in the correct two-column format. Run the script with the path to your data files and optional arguments as needed:
 
 ```bash
-python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt --energy 3
+python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt
 
 Optional Arguments:
 
@@ -58,7 +58,10 @@ Optional Arguments:
    --gif_elevation         [int]       Elevation angle for the 3D GIF (default: 10)
    --gif_duration          [float]     Duration per frame in the GIF in seconds (default: 0.1)
 
+
+python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt  --names CV1_angle CV2_distance --energy 3
 ```
+
 ## Theoretical Background
 
 The free energy landscape is a conceptual and computational tool used to understand the energetics and dynamics of molecular systems. It is particularly useful in the study of complex processes such as protein folding, chemical reactions, and phase transitions.
