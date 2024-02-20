@@ -34,6 +34,7 @@ class FreeEnergyLandscape:
         self.proj2_data_original = None
         self.bins = bins
         self.kde_bandwidth = kde_bandwidth
+        
 
     def load_data(self):
         self.proj1_data_original = np.loadtxt(self.cv1_path, usecols=[1])
@@ -263,7 +264,7 @@ class FreeEnergyLandscape:
             plt.xlabel('Value')
             plt.ylabel('Frequency')
             plt.grid(True)
-            plt.savefig(f'histogram_absolute_{title.replace(" ", "_")}.png')
+            # plt.savefig(f'histogram_absolute_{title.replace(" ", "_")}.png')
             plt.close()  # Fecha a figura após salvar
 
         # Plotando histogramas normalizados lado a lado
@@ -295,7 +296,7 @@ class FreeEnergyLandscape:
             plt.ylabel(title)
             plt.title(f'CV by Frame - {title}')
             plt.legend()
-            plt.savefig(f'cv_by_frame_absolute_{title.replace(" ", "_")}.png')
+            # plt.savefig(f'cv_by_frame_absolute_{title.replace(" ", "_")}.png')
             plt.close()
 
         # Plot combinado dos valores relativos
@@ -364,19 +365,19 @@ class FreeEnergyLandscape:
             titles=cv_names, 
             threshold=energy_threshold)
         
-        # self.plot_histogram(
-            # data_list=[self.proj1_data_original, self.proj2_data_original], 
-            # titles=cv_names)
+        self.plot_histogram(
+            data_list=[self.proj1_data_original, self.proj2_data_original], 
+            titles=cv_names)
 
-        # self.cv_by_frame(
-            # data_list=[self.proj1_data_original, self.proj2_data_original], 
-            # titles=cv_names)
+        self.cv_by_frame(
+            data_list=[self.proj1_data_original, self.proj2_data_original], 
+            titles=cv_names)
 
         self.plot_energy_landscape(threshold=energy_threshold)
 
         self.plot_3D_energy_landscape(threshold=energy_threshold)
         
-        #self.create_3D_gif(n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
+        self.create_3D_gif(n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
         
         # self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
 
@@ -451,6 +452,3 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         sys.exit(1)
-
-# adicionar a visualizao dos pontos de minimos energeticos no grafico 3D tambem
-# em seguida tornar o codigo flexivel para ler apenas um eslacar ou uma lista de escalares para os valores de energia ou nao fazer nada caso nenhum parametros seja passado via prompt
