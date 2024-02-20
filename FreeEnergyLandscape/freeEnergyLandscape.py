@@ -40,6 +40,7 @@ class FreeEnergyLandscape:
         self.proj1_data_original = np.loadtxt(self.cv1_path, usecols=[1])
         self.proj2_data_original = np.loadtxt(self.cv2_path, usecols=[1])
 
+
     def boltzmann_inversion(self, data_list, titles, threshold):
         fig_combined, axs_combined = plt.subplots(1, len(data_list), figsize=(20, 6), sharey=True)
 
@@ -98,7 +99,7 @@ class FreeEnergyLandscape:
         return self.cached_results
 
 
-    def plot_energy_landscape(self, threshold):
+    def plot_energy_landscape(self, threshold, titles=['CV1', 'CV2']):
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
         plt.figure(figsize=(8, 6))
@@ -114,25 +115,24 @@ class FreeEnergyLandscape:
                             color='magenta', s=10, label=f'Energy <= {threshold} kJ/mol')
                 plt.legend(loc='lower left', bbox_to_anchor=(1, 1))
 
-        # Salvar os pontos de baixa energia e os frames correspondentes sempre, independente da visualização
         if threshold is not None:
             with open('landscape_cv1_cv2_minimuns.tsv', 'w') as file:
                 file.write("frame\tcv1\tcv2\tenergy\n")
                 for i in np.where(low_energy_mask.ravel())[0]:
-                    # Nota: Esta parte assume uma correspondência direta que pode precisar de revisão para precisão
                     energy = result['G_original'].ravel()[i]
                     cv1 = result['X_original'].ravel()[i]
                     cv2 = result['Y_original'].ravel()[i]
-                    # A identificação precisa do 'frame' corresponde a um desafio adicional aqui
                     file.write(f"{i}\t{cv1}\t{cv2}\t{energy}\n")
 
         cbar = plt.colorbar(cont)
         cbar.set_label('Free energy (kJ/mol)')
-        plt.xlabel('CV1 (Angle)')
-        plt.ylabel('CV2 (Distance)')
+        # Usa os títulos fornecidos para os eixos
+        plt.xlabel(titles[0])
+        plt.ylabel(titles[1])
         plt.title('Free energy landscape')
         plt.savefig('Free_energy_landscape.png')
         plt.show()
+
 
 
     def save_low_energy_points_to_tsv(self, threshold):
@@ -169,7 +169,7 @@ class FreeEnergyLandscape:
                 g = result['G_original'].flatten()[idx]
                 file.write(f"{frame}\t{cv1}\t{cv2}\t{g}\n")
 
-    def plot_3D_energy_landscape(self, threshold=None):
+    def plot_3D_energy_landscape(self, threshold=None, titles=['CV1', 'CV2']):
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
         
@@ -178,8 +178,8 @@ class FreeEnergyLandscape:
         
         # Plotar a superfície da paisagem de energia
         surf = ax.plot_surface(result['X_original'], result['Y_original'], result['G_original'], cmap=self.custom_cmap, edgecolor='none', alpha=0.5)
-        ax.set_xlabel('CV1 (Angle)')
-        ax.set_ylabel('CV2 (Distance)')
+        ax.set_xlabel(titles[0])
+        ax.set_ylabel(titles[1])
         ax.set_zlabel('Free energy (kJ/mol)')
         ax.set_title('3D Free Energy Landscape')
         
@@ -191,7 +191,7 @@ class FreeEnergyLandscape:
                 self.plot_threshold_points(ax, result, 0, threshold, 'magenta', f'Energy <= {threshold}')
         
         fig.colorbar(surf, shrink=0.5, aspect=5, label='Free energy (kJ/mol)')
-        plt.legend(loc='upper left')
+        plt.legend(loc='upper left', frameon=False)  # Adicionado frameon=False para evitar erros caso não haja legendas a serem exibidas
         plt.show()
 
 
@@ -203,8 +203,7 @@ class FreeEnergyLandscape:
             X_flat, Y_flat = result['X_original'].flatten(), result['Y_original'].flatten()
             ax.scatter(X_flat[energy_mask], Y_flat[energy_mask], G_flat[energy_mask], color=color, s=20, label=label)
 
-
-    def create_3D_gif(self, gif_filename='energy_landscape_3D.gif', n_angles=10, elevation=15, duration_per_frame=0.01):
+    def create_3D_gif(self, gif_filename='energy_landscape_3D.gif', n_angles=10, elevation=15, duration_per_frame=0.01, titles=['CV1', 'CV2']):
         temp_dir = tempfile.mkdtemp()  # Cria um diretório temporário para armazenar os frames
         filenames = []
 
@@ -220,10 +219,10 @@ class FreeEnergyLandscape:
             ax = fig.add_subplot(111, projection='3d')
             surf = ax.plot_surface(result['X_original'], result['Y_original'], result['G_original'], cmap=self.custom_cmap, edgecolor='none', vmin=np.min(result['G_original']), vmax=np.max(result['G_original']))
             ax.view_init(elev=elevation, azim=angle)
-            ax.set_xlabel('CV1 (Angle)')
-            ax.set_ylabel('CV2 (Distance)')
+            ax.set_xlabel(titles[0])
+            ax.set_ylabel(titles[1])
             ax.set_zlabel('Free energy (kJ/mol)')
-            ax.set_title('3D Free energy landscape')
+            ax.set_title('3D Free Energy Landscape')
 
             # Adiciona a barra de cores no primeiro e último frame
             if i == 0 or i == len(angles) - 1:
@@ -243,6 +242,7 @@ class FreeEnergyLandscape:
 
         # Abrir o GIF gerado automaticamente
         self.open_gif(gif_filename)
+
 
     def open_gif(self, gif_filename):
         if platform.system() == 'Windows':
@@ -370,11 +370,13 @@ class FreeEnergyLandscape:
             data_list=[self.proj1_data_original, self.proj2_data_original], 
             titles=cv_names)
 
-        self.plot_energy_landscape(threshold=energy_threshold)
+        self.plot_energy_landscape(threshold=energy_threshold, titles=cv_names)
 
-        self.plot_3D_energy_landscape(threshold=energy_threshold)
+        self.plot_3D_energy_landscape(threshold=energy_threshold, titles=cv_names)
         
-        self.create_3D_gif(n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
+        self.create_3D_gif(n_angles=n_angles, elevation=elevation, 
+                           duration_per_frame=duration_per_frame,
+                           titles=cv_names)
         
         # self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
 
