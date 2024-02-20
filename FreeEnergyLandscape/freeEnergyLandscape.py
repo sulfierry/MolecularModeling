@@ -341,7 +341,7 @@ class FreeEnergyLandscape:
             --gif_duration          [float]     Duration per frame in the GIF in seconds (default: 0.1)
 
         Example:
-            python freeEnergyLandscape.py cv1.txt cv2.txt --names Angle_CV1 Distance_CV2 --temperature 310 --energy 5" --bins_energy_histogram 100 --kde_bandwidth 0.5 --gif_angles 20
+            python freeEnergyLandscape.py cv1.txt cv2.txt --names Angle_CV1 Distance_CV2 --temperature 310 --energy 5 --bins_energy_histogram 100 --kde_bandwidth 0.5 --gif_angles 20
 
         """
         #      Notes:
@@ -360,23 +360,32 @@ class FreeEnergyLandscape:
         self.boltzmann_inversion(
             data_list=[self.proj1_data_original, self.proj2_data_original], 
             titles=cv_names, 
-            threshold=energy_threshold)
+            threshold=energy_threshold
+            )
         
         self.plot_histogram(
             data_list=[self.proj1_data_original, self.proj2_data_original], 
-            titles=cv_names)
+            titles=cv_names
+            )
 
         self.cv_by_frame(
             data_list=[self.proj1_data_original, self.proj2_data_original], 
-            titles=cv_names)
+            titles=cv_names
+            )
 
-        self.plot_energy_landscape(threshold=energy_threshold, titles=cv_names)
+        self.plot_energy_landscape(
+            threshold=energy_threshold, titles=cv_names
+            )
 
-        self.plot_3D_energy_landscape(threshold=energy_threshold, titles=cv_names)
+        self.plot_3D_energy_landscape(
+            threshold=energy_threshold, titles=cv_names
+                                      )
         
-        self.create_3D_gif(n_angles=n_angles, elevation=elevation, 
-                           duration_per_frame=duration_per_frame,
-                           titles=cv_names)
+        self.create_3D_gif(
+            n_angles=n_angles, elevation=elevation, 
+            duration_per_frame=duration_per_frame,
+            titles=cv_names
+                           )
         
         # self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
 
