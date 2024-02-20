@@ -17,6 +17,29 @@ This tool is designed to analyze and visualize the free energy landscape from mo
 
 ## Usage
 
+
+
+
+## Required Libraries
+
+This project relies on several key Python libraries for numerical computations, image processing, and plotting capabilities. Ensure you have the following libraries installed along with their specified versions to guarantee compatibility and proper functionality of the scripts:
+
+- **NumPy** (1.23.5): A fundamental package for scientific computing with Python, providing support for large, multi-dimensional arrays and matrices, along with a collection of mathematical functions to operate on these arrays.
+- **ImageIO** (2.34.0): A library for reading and writing a wide range of image, video, scientific, and volumetric data formats. It is used in this project for creating and manipulating images and GIFs.
+- **Matplotlib** (3.7.4): A comprehensive library for creating static, animated, and interactive visualizations in Python. It is used for plotting the free energy landscapes.
+- **SciPy** (1.10.1): An open-source Python library used for scientific computing and technical computing. It contains modules for optimization, linear algebra, integration, interpolation, special functions, FFT, signal and image processing, and more.
+
+To install these libraries, you can use the following command:
+
+```bash
+pip install numpy==1.23.5 imageio==2.34.0 matplotlib==3.7.4 scipy==1.10.1
+```
+These dependencies also are listed in the `requirements.txt` file. To install them, run the following command in your terminal:
+
+```bash
+pip install -r requirements.txt
+```
+
 Ensure your data file is in the correct two-column format. Run the script with the path to your data files and optional arguments as needed:
 
 ```bash
@@ -44,7 +67,7 @@ The free energy landscape is a conceptual and computational tool used to underst
 
 Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the distance between two atoms, angles, dihedrals, and more complex descriptors. 
 
-The use of distance and angle as collective variables (CVs) in this study serves merely as an example to illustrate the tool's capabilities. However, it's important to note that the input can be any file containing two columns: the first for frames and the second for the value of the collective variable. This flexibility allows the tool to be applicable to a wide range of studies involving different types of collective variables
+The use of distance and angle as CVs in this study serves merely as an example to illustrate the tool's capabilities. However, it's important to note that the input can be any file containing two columns: the first for frames and the second for the value of the collective variable. This flexibility allows the tool to be applicable to a wide range of studies involving different types of collective variables
 
 CVs in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
 
@@ -171,36 +194,6 @@ This expression quantitatively links the probability distribution of states with
 - **Boltzmann Inversion**: For a given set of CV data, calculates the histogram (probability distribution), converts it to free energy using the Boltzmann equation, and visualizes the result.
 
 - **Energy Landscape Visualization**: Combines the CV data to construct a 2D free energy landscape. This involves estimating the joint probability density function using a Gaussian kernel density estimate, converting this density into free energy, and plotting the landscape with contour lines representing different energy levels.
-
-## Required Libraries
-
-This project relies on several key Python libraries for numerical computations, image processing, and plotting capabilities. Ensure you have the following libraries installed along with their specified versions to guarantee compatibility and proper functionality of the scripts:
-
-- **NumPy** (1.23.5): A fundamental package for scientific computing with Python, providing support for large, multi-dimensional arrays and matrices, along with a collection of mathematical functions to operate on these arrays.
-- **ImageIO** (2.34.0): A library for reading and writing a wide range of image, video, scientific, and volumetric data formats. It is used in this project for creating and manipulating images and GIFs.
-- **Matplotlib** (3.7.4): A comprehensive library for creating static, animated, and interactive visualizations in Python. It is used for plotting the free energy landscapes.
-- **SciPy** (1.10.1): An open-source Python library used for scientific computing and technical computing. It contains modules for optimization, linear algebra, integration, interpolation, special functions, FFT, signal and image processing, and more.
-
-To install these libraries, you can use the following command:
-
-```bash
-pip install numpy==1.23.5 imageio==2.34.0 matplotlib==3.7.4 scipy==1.10.1
-```
-These dependencies also are listed in the `requirements.txt` file. To install them, run the following command in your terminal:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Usage
-
-To use this class, instantiate it with paths to the CV1 and CV2 data files, then call the `main` method. This will load the data, perform the Boltzmann inversion for each CV, and plot the 2D free energy landscape.
-
-## Example
-
-```bash
-python freeEnergyLandscape.py proj1Out.txt proj2Out.txt 
-```
 
 ## Visualizations Generated
 
