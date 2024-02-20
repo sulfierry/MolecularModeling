@@ -5,7 +5,7 @@ This tool is designed to analyze and visualize the free energy landscape from mo
 
 ## Features
 
-- **Enhanced Free Energy vs. Collective Variable (CV) Visualization**: This tool expertly maps the free energy landscape across varying values of collective variables (CVs), such as distances or angles, facilitating a deeper understanding of the system's energetics. It highlights stable states and potential energy barriers, crucial for identifying key transition states and conformational changes.
+- **Free Energy vs. Collective Variable (CV) Visualization**: This tool expertly maps the free energy landscape across varying values of collective variables (CVs), such as distances or angles, facilitating a deeper understanding of the system's energetics. It highlights stable states and potential energy barriers, crucial for identifying key transition states and conformational changes.
 
 - **Dynamic CV Value vs. Frame Insights**: This feature charts the trajectory of collective variables (CVs) across simulation frames, uncovering the temporal dynamics of the system. It provides a clear depiction of how CV values evolve, revealing underlying patterns and fluctuations that characterize the molecular system's behavior over time.
 
@@ -15,7 +15,7 @@ This tool is designed to analyze and visualize the free energy landscape from mo
 
 - **3D Free Energy Landscape and Animated Insights**: Elevating the analysis, this feature constructs a three-dimensional representation of the free energy landscape, complemented by an animated GIF. This immersive visualization affords a dynamic and comprehensive view of the energy landscape, enhancing the interpretation of the system's energetics from multiple angles and dimensions.
 
-- **Precision in Low Energy Points Identification**: With accuracy, this functionality (--energy) identifies and marks points falling below specific energy ($KJ/mol$) thresholds on the landscape. This is instrumental in pinpointing regions associated with stable conformations and significant for understanding the energetics that govern molecular stability and transitions.
+- **Low Energy Points Identification**: This functionality (--energy) identifies and marks points falling below specific energy ($KJ/mol$) thresholds on the landscape. This is instrumental in pinpointing regions associated with stable conformations and significant for understanding the energetics that govern molecular stability and transitions.
 ions.
 
 
