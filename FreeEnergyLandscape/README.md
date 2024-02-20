@@ -184,27 +184,35 @@ This expression quantitatively links the probability distribution of states with
 
 The `FreeEnergyLandscape` class generates three key visualizations to aid in the analysis of the molecular system's free energy landscape. Each figure provides unique insights into the system's thermodynamic and kinetic behavior.
 
-### Figure 1: Free Energy as a Function of CV1 (Angle)
+### Figure 1:  Normalized Free Energy Profile Comparison (CV1 and CV2)
 
-This figure displays the free energy landscape as a function of the first collective variable (CV1), which represents an angle in the molecular system. It is generated using the Boltzmann inversion method from the histogram of CV1 values.
+This updated figure now integrates the normalized free energy profiles for both CV1 (Angle) and CV2 (Distance) in a single, unified visualization. This enhancement allows for a direct comparison between the two collective variables, illuminating their unique energy landscapes and pinpointing low-energy regions across specified energy threshold ranges.
 
-![Alt text da image](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/fel_angle.png)
+![Alt text da image](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/1_Combined_Free_Energy_Profile_Normalized.png)
 
-- **X-Axis**: Represents the angle (CV1) in degrees or radians, depending on the system being studied.
-- **Y-Axis**: Shows the free energy in kJ/mol, calculated from the probability distribution of CV1 using the Boltzmann equation.
-- **Visualization**: A plot of free energy versus CV1, highlighting the energy barriers and minima that correspond to different conformational states of the molecule.
+- **X-Axis**: Displays both CV1 and CV2, with CV1 representing an angle and CV2 denoting distance in Ångströms, facilitating a comprehensive view of the system's energetics.
+- **Y-Axis**: Represents the normalized free energy, derived from the probability distributions of CV1 and CV2 using the Boltzmann equation.
+- **Visualization**: A comparative plot of free energy versus both CV1 and CV2, highlighting key energy barriers and minima corresponding to the molecular system's different conformational states.
 
-### Figure 2: Free Energy as a Function of CV2 (Distance)
+### Figure 2: Histograms of Normalized CV1 and CV2 Values Side by Side
 
-Similar to Figure 1, this visualization plots the free energy landscape but as a function of the second collective variable (CV2), typically representing a distance within the molecular system.
+![Alt text da image](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/2_histograms_normalized_side_by_side.png)
 
-![Alt text da image](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/fel_distance.png)
+- **Visualization**: Two histograms placed side by side, one for CV1 (Angle) and the other for CV2 (Distance), each showing the normalized value distribution. This format allows for an easy comparison of the two variables' behaviors and predominant states within the simulation.
 
-- **X-Axis**: Denotes the distance (CV2) in appropriate units (e.g., Ångströms).
-- **Y-Axis**: Indicates the free energy, with the same calculation method and units as Figure 1.
-- **Visualization**: Demonstrates how the free energy changes with variations in CV2, providing insights into the significance of certain distances for the system's stability and transitions.
 
-### Figure 3: 2D Free Energy Landscape (CV1 vs. CV2)
+### Figure 3: CV Value vs. Frame for CV1 and CV2
+
+This figure innovatively plots the values of CV1 (Angle) and CV2 (Distance) against simulation frames in the same image. It offers insights into how the values of these collective variables evolve over time, shedding light on the dynamic aspects of the system's behavior.
+
+![Alt text da image](https://github.com/sulfierry/MolecularModeling/blob/main/FreeEnergyLandscape/3_cv_by_frame_combined_normalized.png)
+
+
+- **X-Axis**: Represents the simulation frames, providing a temporal dimension to the analysis.
+- **Y-Axis**: Displays values of CV1 and CV2, allowing for a direct observation of how each collective variable changes throughout the simulation.
+- **Visualization**: A combined plot that tracks the fluctuation of both CV1 and CV2 over the course of the simulation, highlighting trends, transitions, and stability regions within the molecular system.
+
+### Figure 4: 2D Free Energy Landscape (CV1 vs. CV2)
 
 The third figure combines both CV1 and CV2 to produce a two-dimensional free energy landscape, offering a comprehensive view of the system's energetics over the considered collective variables.
 
@@ -214,7 +222,7 @@ The third figure combines both CV1 and CV2 to produce a two-dimensional free ene
 - **Y-Axis**: CV2, representing a distance, with the same labeling as in Figure 2.
 - **Visualization**: A heatmap showing the free energy levels across the CV1 and CV2 space. The color gradient represents different energy levels, with cooler colors indicating low-energy regions (minima) and warmer colors highlighting high-energy barriers. This visualization is crucial for identifying transition states, stable conformations, and understanding the molecular system's behavior under various conditions.
 
-### Figure 4: 3D Free Energy Landscape
+### Figure 5: 3D Free Energy Landscape
 
 This figure provides a three-dimensional visualization of the free energy landscape, combining both collective variables, CV1 and CV2, along with the calculated free energy values to offer a dynamic perspective on the system's energetics.
 
