@@ -169,9 +169,6 @@ class FreeEnergyLandscape:
                 g = result['G_original'].flatten()[idx]
                 file.write(f"{frame}\t{cv1}\t{cv2}\t{g}\n")
 
-        # print("Low energy points saved to low_energy_points.tsv")
-
-
     def plot_3D_energy_landscape(self, threshold=None):
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
@@ -333,15 +330,15 @@ class FreeEnergyLandscape:
             python freeEnergyLandscape.py path/to/cv1_data.txt path/to/cv2_data.txt
 
         Optional arguments:
-            --temperature [int]              Temperature in Kelvin (default: 300)
-            --kb [float]                     Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)
-            --energy [int] or [(start, end)] Energy threshold in kJ/mol or ranges (default: None)
-            --bins_energy_histogram [int]    Number of bins for the energy histogram (default: 100)
-            --kde_bandwidth [float]          Bandwidth for the kernel density estimation (default: None)
-            --names [str] [str]              Names for the two collective variables (default: CV1, CV2)
-            --gif_angles [int]               Number of angles for the 3D GIF (default: 10)
-            --gif_elevation [int]            Elevation angle for the 3D GIF (default: 10)
-            --gif_duration [float]           Duration per frame for the 3D GIF in seconds (default: 0.1)
+            --temperature           [int]       Simulation temperature in Kelvin (default: 300K)
+            --kb                    [float]     Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)
+            --energy                [int]       Energy, single value (default: None)
+            --bins_energy_histogram [int]       Bins for energy histogram (default: 100)
+            --kde_bandwidth         [float]     Bandwidth for kernel density estimation (default: None)
+            --names                 [str] [str] Names for the collective variables (default: CV1, CV2)
+            --gif_angles            [int]       Angles for 3D GIF rotation (default: 10)
+            --gif_elevation         [int]       Elevation angle for the 3D GIF (default: 10)
+            --gif_duration          [float]     Duration per frame in the GIF in seconds (default: 0.1)
 
         Example:
             python freeEnergyLandscape.py cv1.txt cv2.txt --names Angle_CV1 Distance_CV2 --temperature 310 --energy 5" --bins_energy_histogram 100 --kde_bandwidth 0.5 --gif_angles 20
@@ -375,9 +372,9 @@ class FreeEnergyLandscape:
 
         self.plot_energy_landscape(threshold=energy_threshold)
 
-        self.plot_3D_energy_landscape(threshold=energy_threshold)
+        # self.plot_3D_energy_landscape(threshold=energy_threshold)
         
-        self.create_3D_gif(n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
+        # self.create_3D_gif(n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
         
         # self.save_low_energy_points_to_tsv(threshold=energy_threshold) # save low energy frames to tsv
 
