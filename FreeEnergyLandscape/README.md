@@ -1,4 +1,4 @@
-# Free Energy Landscape Analysis
+# Free energy landscape analysis
 
 This tool is designed to analyze and visualize the free energy landscape from molecular dynamics simulations. It calculates the free energy from collective variable (CV) data across simulation frames and generates insightful visualizations to help understand the system's behavior over time.
 
