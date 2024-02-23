@@ -146,5 +146,27 @@ class MDTraj:
         plt.show()
 
 
-        
+    def main(self):
+        rmsd_statistics = self.calculate_rmsd()
+        self.select_representative_frames(rmsd_statistics)
+        self.save_representative_pdbs()
+        self.plot_rmsd()
+        self.plot_rmsd_distribution()
+        self.calculate_pca()
+        self.extract_pca_collective_variables()
+        self.plot_pca_projections()
+
+
+
+
+def main():
+    md_traj = MDTraj("/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/traj_concatenate_aligned/5cc8_wr_1.prmtop",
+                "/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/traj_concatenate_aligned/all_traj_aligned.dcd")
+    
+    md_traj.main()
+
+
+if __name__ == "__main__":
+    main()
+
 
