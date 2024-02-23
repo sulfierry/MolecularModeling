@@ -103,4 +103,48 @@ class MDTraj:
         plt.show()
 
 
+    def calculate_pca(self):
+        # Selecionando os átomos para PCA (usando todos os átomos ou apenas o backbone, por exemplo)
+        atoms_to_analyze = self.u.select_atoms("backbone")
+        
+        # Inicializando a matriz para armazenar as coordenadas
+        n_frames = len(self.u.trajectory)
+        n_atoms = len(atoms_to_analyze)
+        coordinates = np.zeros((n_frames, n_atoms * 3))
+        
+        # Preenchendo a matriz com as coordenadas dos átomos em cada frame
+        for i, ts in enumerate(self.u.trajectory):
+            coordinates[i, :] = atoms_to_analyze.positions.flatten()
+        
+        # Realizando PCA com 3 componentes
+        self.pca = PCA(n_components=3)
+        self.pca_result = self.pca.fit_transform(coordinates)
+
+    
+    def extract_pca_collective_variables(self):
+        """
+        Salva as projeções PCA em arquivos TSV.
+        """
+        frames = np.arange(len(self.u.trajectory)).reshape(-1, 1)
+        for i in range(3):  # Para as três primeiras componentes principais
+            data = np.hstack((frames, self.pca_result[:, i:i+1]))
+            filename = f"cv_pca{i+1}.tsv"
+            pd.DataFrame(data).to_csv(filename, sep='\t', index=False, header=False)
+    
+    def plot_pca_projections(self):
+        # Plotando a projeção dos frames nos três primeiros componentes principais
+        plt.figure(figsize=(10, 6))
+        plt.plot(self.pca_result[:, 0], label='PC1', color='red')
+        plt.plot(self.pca_result[:, 1], label='PC2', color='green')
+        plt.plot(self.pca_result[:, 2], label='PC3', color='blue')
+        plt.title('Projeção dos Frames nas Três Principais Componentes da PCA')
+        plt.xlabel('Frame')
+        plt.ylabel('Projeção nos Componentes Principais')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig('./pca_projections.png')
+        plt.show()
+
+
+        
 
