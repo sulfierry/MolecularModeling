@@ -170,3 +170,13 @@ class MDTraj:
         self.plot_pca_projections()
         print("Finish!")
         
+
+def main():
+    md_traj = MDTraj("/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/traj_concatenate_aligned/5cc8_wr_1.prmtop",
+                "/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/traj_concatenate_aligned/all_traj_aligned.dcd")
+    
+    md_traj.main()
+
+
+if __name__ == "__main__":
+    main()
