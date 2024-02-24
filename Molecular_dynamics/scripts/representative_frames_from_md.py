@@ -4,11 +4,12 @@ import warnings
 import numpy as np
 import pandas as pd # realizar estas operacoes com numpy
 import seaborn as sns # realizar estas operacoes com matplot
+from tqdm import tqdm
 import MDAnalysis as mda
 import matplotlib.pyplot as plt
-from sklearn.decomposition import IncrementalPCA # realizar com numpy
 from MDAnalysis.analysis.rms import RMSD
-from tqdm import tqdm
+from sklearn.decomposition import IncrementalPCA # realizar com numpy
+
 
 
 warnings.filterwarnings("ignore")
