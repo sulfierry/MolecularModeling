@@ -1,25 +1,24 @@
+# ressaltar que o script esta otimizado para trabalhar em paralelo para conseguir processar grandes volumes de dados
 import os
 import warnings
 import numpy as np
-import pandas as pd
-import seaborn as sns
+import pandas as pd # realizar estas operacoes com numpy
+import seaborn as sns # realizar estas operacoes com matplot
 import MDAnalysis as mda
 import matplotlib.pyplot as plt
-from scipy.stats import shapiro
-from sklearn.decomposition import PCA
+from sklearn.decomposition import IncrementalPCA # realizar com numpy
 from MDAnalysis.analysis.rms import RMSD
+from tqdm import tqdm
 
 
-warnings.filterwarnings("ignore", category=DeprecationWarning, module="MDAnalysis.coordinates.DCD")
-warnings.filterwarnings('ignore', category=UserWarning, module='MDAnalysis')
-warnings.filterwarnings('ignore', category=UserWarning, module='scipy')
-
+warnings.filterwarnings("ignore")
 
 class MDTraj:
     def __init__(self, topology_path, trajectory_path):
         self.u = mda.Universe(topology_path, trajectory_path)
         self.rmsd_results = None
         self.selected_frames = None
+
 
 
     def calculate_rmsd(self):
@@ -29,8 +28,7 @@ class MDTraj:
         self.rmsd_results = pd.DataFrame(rmsd_analysis.results.rmsd, columns=["Frame", "Time (ps)", "RMSD"])
         csv_path = "./1_rmsd.csv"
         self.rmsd_results.to_csv(csv_path, index=False)
-        print(f"RMSD data saved to {csv_path}")
-        print("\n")
+        print(f"RMSD data saved to {csv_path}\n")
         estatisticas_descritivas = self.rmsd_results['RMSD'].describe()
         print(f"Estatísticas Descritivas do RMSD:\n{estatisticas_descritivas}")
         return estatisticas_descritivas
@@ -85,7 +83,7 @@ class MDTraj:
         plt.show()
 
 
-    def plot_rmsd_distribution(self):
+    def plot_rmsd_histogram(self):
         plt.figure(figsize=(10, 6))
         sns.histplot(self.rmsd_results['RMSD'], kde=True, bins=30, color='blue', label='Distribuição de RMSD')
         
@@ -103,22 +101,34 @@ class MDTraj:
         plt.show()
 
 
-    def calculate_pca(self):
-        # Selecionando os átomos para PCA (usando todos os átomos ou apenas o backbone, por exemplo)
+    def calculate_pca_incremental(self, n_components=3, chunk_size=1024):
         atoms_to_analyze = self.u.select_atoms("backbone")
-        
-        # Inicializando a matriz para armazenar as coordenadas
+        pca = IncrementalPCA(n_components=n_components)
         n_frames = len(self.u.trajectory)
         n_atoms = len(atoms_to_analyze)
-        coordinates = np.zeros((n_frames, n_atoms * 3))
+
+        # Adicionando tqdm para barra de progresso
+        for start_frame in tqdm(range(0, n_frames, chunk_size), desc="Calculating PCA"):
+            end_frame = min(start_frame + chunk_size, n_frames)
+            coordinates_chunk = np.zeros((end_frame - start_frame, n_atoms * 3))
+            for i, ts in enumerate(self.u.trajectory[start_frame:end_frame]):
+                coordinates_chunk[i, :] = atoms_to_analyze.positions.flatten()
+            pca.partial_fit(coordinates_chunk)
+
+        self.u.trajectory[0]  # Reset para início
+        transformed_data = np.zeros((n_frames, n_components))
+	
+        # Adicionando tqdm ao loop para a transformação dos dados pelo modelo PCA ajustado
+        for start_frame in tqdm(range(0, n_frames, chunk_size), desc="Transforming data with PCA"):
+            end_frame = min(start_frame + chunk_size, n_frames)
+            coordinates_chunk = np.zeros((end_frame - start_frame, n_atoms * 3))
+            for i, ts in enumerate(self.u.trajectory[start_frame:end_frame]):
+                coordinates_chunk[i, :] = atoms_to_analyze.positions.flatten()
+            transformed_data[start_frame:end_frame, :] = pca.transform(coordinates_chunk)
+
+        self.pca_result = transformed_data
+        return self.pca_result
         
-        # Preenchendo a matriz com as coordenadas dos átomos em cada frame
-        for i, ts in enumerate(self.u.trajectory):
-            coordinates[i, :] = atoms_to_analyze.positions.flatten()
-        
-        # Realizando PCA com 3 componentes
-        self.pca = PCA(n_components=3)
-        self.pca_result = self.pca.fit_transform(coordinates)
 
     
     def extract_pca_collective_variables(self):
@@ -146,27 +156,17 @@ class MDTraj:
         plt.show()
 
 
+        
     def main(self):
+        print("Calculating RMSD...")
         rmsd_statistics = self.calculate_rmsd()
         self.select_representative_frames(rmsd_statistics)
         self.save_representative_pdbs()
         self.plot_rmsd()
-        self.plot_rmsd_distribution()
-        self.calculate_pca()
+        self.plot_rmsd_histogram()
+        print("Calculating PCA...")
+        self.calculate_pca_incremental()
         self.extract_pca_collective_variables()
         self.plot_pca_projections()
-
-
-
-
-def main():
-    md_traj = MDTraj("/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/traj_concatenate_aligned/5cc8_wr_1.prmtop",
-                "/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/traj_concatenate_aligned/all_traj_aligned.dcd")
-    
-    md_traj.main()
-
-
-if __name__ == "__main__":
-    main()
-
-
+        print("Finish!")
+        
