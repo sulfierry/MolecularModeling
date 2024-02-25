@@ -1,9 +1,8 @@
 import os
 import shutil
-from MDAnalysis.coordinates.DCD import DCDWriter
 import MDAnalysis as mda
 from MDAnalysis.analysis import align
-
+from MDAnalysis.coordinates.DCD import DCDWriter
 
 
 def concatenate_and_align_trajectories(base_path, output_path, topology, coordinates_prefix):
@@ -49,4 +48,3 @@ if __name__ == "__main__":
     base_path = "./"  # Caminho base onde as pastas "1", "2", ..., "10" estão localizadas
     output_path = "./traj_concatenate_aligned"  # Caminho da pasta de saída para a trajetória concatenada e alinhada
     concatenate_and_align_trajectories(base_path, output_path, topology, coordinates_prefix)
-
