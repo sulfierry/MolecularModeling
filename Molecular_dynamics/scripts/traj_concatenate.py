@@ -1,18 +1,20 @@
 import os
 import shutil
+from MDAnalysis.coordinates.DCD import DCDWriter
 import MDAnalysis as mda
 from MDAnalysis.analysis import align
-from MDAnalysis.coordinates.DCD import DCDWriter
 
-def concatenate_and_align_trajectories(base_path, output_path):
+
+
+def concatenate_and_align_trajectories(base_path, output_path, topology, coordinates_prefix):
     # Garantir a criação do diretório de saída
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
     # Caminho para a topologia inicial
-    topology_path = os.path.join(base_path, "1/5cc8_wr_1.prmtop")
+    topology_path = os.path.join(base_path, f"1/{topology}.prmtop")
     # Lista de trajetórias a serem carregadas e concatenadas
-    trajectory_paths = [os.path.join(base_path, f"{i}/5cc8_wr_{i}.dcd") for i in range(1, 11)]
+    trajectory_paths = [os.path.join(base_path, f"{i}/{coordinates_prefix}{i}.dcd") for i in range(1, 11)]
     
     # Carregar a primeira trajetória para inicializar o universo
     u = mda.Universe(topology_path, trajectory_paths[0])
@@ -37,10 +39,14 @@ def concatenate_and_align_trajectories(base_path, output_path):
                 W.write(u)
     
     # Copiar a topologia para a pasta de saída
-    shutil.copy(topology_path, os.path.join(output_path, "5cc8_wr_1.prmtop"))
+    shutil.copy(topology_path, os.path.join(output_path, "wr_prod_1.prmtop"))
 
 if __name__ == "__main__":
+
+    topology ="wr_prod_1"
+    coordinates_prefix = "wr_prod_"
+
     base_path = "./"  # Caminho base onde as pastas "1", "2", ..., "10" estão localizadas
     output_path = "./traj_concatenate_aligned"  # Caminho da pasta de saída para a trajetória concatenada e alinhada
-    concatenate_and_align_trajectories(base_path, output_path)
+    concatenate_and_align_trajectories(base_path, output_path, topology, coordinates_prefix)
 
