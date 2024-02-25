@@ -72,10 +72,25 @@ The free energy landscape is a conceptual and computational tool used to underst
 
 ### Collective Variables (CVs)
 
+Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the analysis of principal components (PCA), the distance between two atoms, angles, dihedrals, and more complex descriptors.
 
-Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the distance between two atoms, angles, dihedrals, and more complex descriptors. 
+The inclusion of Principal Component Analysis (PCA) as an example of CVs is crucial for understanding the dimensional reduction in complex systems. PCA identifies the directions (principal components) along which the variance in the data is maximized. In the context of CVs, the first two principal components, denoted as $PC_1$ and $PC_2$, serve as collective variables that capture the most significant modes of variation within the system. Mathematically, PCA transforms the original data into a new set of variables, the principal components, which are linear combinations of the original variables with weights given by the eigenvectors of the data's covariance matrix.
 
-The use of distance and angle as CVs in this study serves merely as an example to illustrate the tool's capabilities. However, it's important to note that the input can be any file containing two columns: the first for frames and the second for the value of the collective variable. This flexibility allows the tool to be applicable to a wide range of studies involving different types of collective variables
+1. **Principal Component Analysis (PCA)**: Consider a dataset with variables $X_1, X_2, ..., X_n$. PCA seeks to find the principal components $PC_1, PC_2, ..., PC_m$ where $m \leq n$, such that:
+   - $PC_1$ is the direction of maximum variance in the data.
+   - $PC_2$ is orthogonal to $PC_1$ and is the direction of the next highest variance.
+   - This process continues for subsequent principal components.
+   
+   The first principal component $PC_1$ can be represented as:
+   $$PC_1 = a_{11}X_1 + a_{12}X_2 + ... + a_{1n}X_n$$
+   
+   Similarly, the second principal component $PC_2$ is:
+   $$PC_2 = a_{21}X_1 + a_{22}X_2 + ... + a_{2n}X_n$$
+   
+   Here, $a_{ij}$ are the coefficients that define the linear combination of the original variables $X_i$ to form the principal component $PC_j$.
+
+Following PCA, the use of distance and angle as CVs in this study serves merely as an example to illustrate the tool's capabilities. However, it's important to note that the input can be any file containing two columns: the first for frames and the second for the value of the collective variable. This flexibility allows the tool to be applicable to a wide range of studies involving different types of collective variables.
+
 
 CVs in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
 
