@@ -49,12 +49,13 @@ Ensure your data file is in the correct two-column format. Run the script with t
 ```bash
 free_energy_landscape path/to/cv1_data.txt path/to/cv2_data.txt
 ```
-```bash
-Optional Arguments:
 
+Optional arguments:
+
+```bash
    --temperature           [int]       Simulation temperature in Kelvin (default: 300K)
    --kb                    [float]     Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)
-   --energy                [int]       Energy, single value (default: None)
+   --energy                [float]     Energy, single value (default: None)
    --bins_energy_histogram [int]       Bins for energy histogram (default: 100)
    --kde_bandwidth         [float]     Bandwidth for kernel density estimation (default: None)
    --names                 [str] [str] Names for the collective variables (default: CV1, CV2)
@@ -62,6 +63,7 @@ Optional Arguments:
    --gif_elevation         [int]       Elevation angle for the 3D GIF (default: 10)
    --gif_duration          [float]     Duration per frame in the GIF in seconds (default: 0.1)
 ```
+Example with optional arguments:
 ```bash
 free_energy_landscape path/to/cv1_data.txt path/to/cv2_data.txt --names "CV1 (Angle)" "CV2 (Distance)" --energy 3
 ```
@@ -88,9 +90,6 @@ The inclusion of Principal Component Analysis (PCA) as an example of CVs is cruc
    $$PC_2 = a_{21}X_1 + a_{22}X_2 + ... + a_{2n}X_n$$
    
    Here, $a_{ij}$ are the coefficients that define the linear combination of the original variables $X_i$ to form the principal component $PC_j$.
-
-Following PCA, the use of distance and angle as CVs in this study serves merely as an example to illustrate the tool's capabilities. However, it's important to note that the input can be any file containing two columns: the first for frames and the second for the value of the collective variable. This flexibility allows the tool to be applicable to a wide range of studies involving different types of collective variables.
-
 
 CVs in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
 
@@ -121,6 +120,8 @@ CVs in biomolecular systems are mathematically represented as functions of the a
    - $\cdot$ denotes the dot product between the vectors $\vec{r}_ji$ and $\vec{r}_jk$.
    - $|\vec{r}_ji|$ and $|\vec{r}_jk|$ represent the magnitudes of the vectors $\vec{r}_ji$ and $\vec{r}_jk$, respectively.
    - $\arccos$ is the inverse cosine function, used to find the angle $\theta$ from the cosine value.
+
+Following PCA, the use of distance and angle as CVs in this study serves as an example to illustrate the tool's capabilities. However, it's important to note that the input can be any file containing two columns: the first for frames and the second for the value of the collective variable. This flexibility allows the tool to be applicable to a wide range of studies involving different types of collective variables.
 
 These representations allow for a simplified description of the system's state, facilitating the study of its behavior and properties through the manipulation of a reduced set of variables rather than the full set of atomic coordinates.
 
