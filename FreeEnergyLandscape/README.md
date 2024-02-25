@@ -74,7 +74,7 @@ The free energy landscape is a conceptual and computational tool used to underst
 
 ### Collective Variables (CVs)
 
-Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the analysis of principal components (PCA), the distance between two atoms, angles, dihedrals, and more complex descriptors.
+Collective Variables (CVs) are a set of coordinates that describe the macroscopic state of a system. They are used to reduce the complexity of molecular systems by focusing on the relevant degrees of freedom. Examples include the analysis of principal components (PCA), the distance between two atoms, angles, dihedrals, and more complex descriptors. Below are examples of commonly used CVs and their mathematical formulations:
 
 The inclusion of Principal Component Analysis (PCA) as an example of CVs is crucial for understanding the dimensional reduction in complex systems. PCA identifies the directions (principal components) along which the variance in the data is maximized. In the context of CVs, the first two principal components, denoted as $PC_1$ and $PC_2$, serve as collective variables that capture the most significant modes of variation within the system. Mathematically, PCA transforms the original data into a new set of variables, the principal components, which are linear combinations of the original variables with weights given by the eigenvectors of the data's covariance matrix.
 
@@ -91,8 +91,6 @@ $$\mathbf{PC} = \mathbf{X}\mathbf{A}$$
 where $\mathbf{PC}$ is the matrix of principal components, $\mathbf{X}$ is the original data matrix (centered or standardized, if necessary), and $\mathbf{A}$ is the matrix whose columns are the eigenvectors of $\mathbf{C}$.
 
 This algebraic and geometric perspective highlights the essence of PCA as a method for identifying the directions (in the space of the original variables) that maximize the variance of the projected data, thereby reducing its dimensionality while preserving as much of the original data's variation as possible.
-
-CVs in biomolecular systems are mathematically represented as functions of the atomic coordinates. These functions are designed to capture the essential features of the system's configuration that are relevant to its macroscopic properties or behaviors. Below are examples of commonly used CVs and their mathematical formulations:
 
 2. **Angle**: The angle $\theta$ formed by three atoms $i$, $j$, and $k$, where $j$ is the vertex, can be calculated using the dot product:
 
