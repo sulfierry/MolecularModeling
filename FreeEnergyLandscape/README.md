@@ -86,7 +86,7 @@ Geometrically, PCA seeks the line (in the case of a single principal component) 
 
 1. **Principal Component Analysis (PCA)**: Can be expressed as:
 $$PC_k = \sum_{i=1}^{p} a_{ki}X_i$$
-where $PC_k$ is the $k$th principal component, $X_i$ are the original variables, and $a_{ki}$ are the coefficients (loadings) for the $k$th principal component, given by the $k$th eigenvector of the covariance matrix $\mathbf{C}$. The transformation can be represented in matrix form as:
+where $PC_k$ is the $k_th$ principal component, $X_i$ are the original variables, and $a_{ki}$ are the coefficients (loadings) for the $k_th$ principal component, given by the $k$th eigenvector of the covariance matrix $\mathbf{C}$. The transformation can be represented in matrix form as:
 $$\mathbf{PC} = \mathbf{X}\mathbf{A}$$
 where $\mathbf{PC}$ is the matrix of principal components, $\mathbf{X}$ is the original data matrix (centered or standardized, if necessary), and $\mathbf{A}$ is the matrix whose columns are the eigenvectors of $\mathbf{C}$.
 
