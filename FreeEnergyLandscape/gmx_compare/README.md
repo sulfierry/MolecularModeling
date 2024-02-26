@@ -70,4 +70,42 @@ Consider throwing darts at a target with different zones, where each zone repres
 
 This mechanism enables `gmx_sham` to provide a detailed analysis of free energy landscapes, crucial for understanding molecular dynamics simulations. The tool's ability to dissect complex data into understandable energy landscapes makes it invaluable for researchers and scientists in the field of computational chemistry and molecular dynamics.
 
+# WHAM Method in GMX WHAM
+
+The `gmx_wham` tool within the GROMACS suite utilizes the Weighted Histogram Analysis Method (WHAM) to derive free energy landscapes from multiple simulations. This sophisticated statistical approach interpolates and combines data from various histograms to estimate the system's free energy landscape accurately. Below is a detailed mathematical explanation of WHAM's process:
+
+## Data Preparation and Histogram Creation
+
+1. **Histogram Generation**: For each simulation data set, a histogram is created based on a specific reaction coordinate. These histograms represent the frequency distribution of system states across the sampled parameter space.
+
+2. **Bias Correction**: Simulations often apply a bias to explore specific regions of the parameter space more effectively. WHAM corrects these biases across all histograms, ensuring a fair contribution from each to the final analysis.
+
+## Statistical Interpolation and Free Energy Calculation
+
+WHAM applies statistical methods to interpolate between histograms and calculate the free energy landscape:
+
+1. **Combining Histograms**: WHAM combines the biased histograms using weights that are iteratively adjusted. The weight for each histogram reflects its contribution to the overall free energy calculation, accounting for the bias applied during simulation.
+
+2. **Iterative Solution**: The method solves the WHAM equations iteratively to find the set of weights that maximizes the likelihood of the combined histogram data. The equations are:
+
+   - Let $N_i(j)$ be the number of counts in the $j^{th}$ bin of the $i^{th}$ histogram, with $n_i$ total observations and a biasing energy $U_i(j)$ applied to the $i^{th}$ simulation.
+   - The unbiased probability distribution $P(j)$ for the $j^{th}$ bin is estimated by minimizing the free energy difference across simulations, leading to the WHAM equations:
+
+     $$
+     P(j) = \frac{\sum_{i} N_i(j)}{\sum_{i} n_i \exp\left[-\beta (U_i(j) - F_i)\right]}
+     $$
+
+   - Here, $\beta = 1/(k_BT)$, where $k_B$ is Boltzmann's constant, $T$ is the temperature, and $F_i$ is the free energy of the $i^{th}$ simulation, which is iteratively adjusted during the solution process.
+
+3. **Free Energy Landscape**: The free energy $G$ for a state is calculated from the probability distribution $P(j)$ using:
+
+   $$
+   G(j) = -k_BT \ln(P(j))
+   $$
+
+   - This equation transforms the probability distribution into a free energy landscape, revealing the energetically favorable states and barriers between them.
+
+## Conclusion
+
+The WHAM implemented in `gmx_wham.cpp` is a robust statistical tool for analyzing complex free energy landscapes from molecular dynamics simulations. By accurately combining histograms from multiple biased simulations, it provides a detailed and comprehensive view of the free energy surface, essential for understanding molecular processes and system dynamics.
 
