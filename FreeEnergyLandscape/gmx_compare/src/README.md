@@ -79,11 +79,10 @@ The WHAM approach combines biased histograms from different simulations into a s
      $$P(j) = \frac{\sum_{i} N_i(j)}{\sum_{i} n_i \exp\left[-\beta (U_i(j) - F_i)\right]}$$
      where \(N_i(j)\) is the number of counts in the \(j^{th}\) bin of the \(i^{th}\) histogram, \(n_i\) is the total observations in the \(i^{th}\) histogram, \(U_i(j)\) is the biasing energy, and \(F_i\) is the free energy of the \(i^{th}\) simulation.
 
+   - Normalization of \(P(j)\) ensures that the probabilities sum to 1 across all bins, and is crucial for accurate free energy calculation. The normalization is mathematically represented as:
+$$P_{normalized}(j) = \frac{P(j)}{\sum_{bins} P(j)}$$
+     
    - The free energy \(G(j)\) for each state is calculated from \(P(j)\) as:
      $$G(j) = -k_BT \ln(P(j))$$
 
-Normalization of \(P(j)\) ensures that the probabilities sum to 1 across all bins, and is crucial for accurate free energy calculation. The normalization is mathematically represented as:
-$$P_{normalized}(j) = \frac{P(j)}{\sum_{bins} P(j)}$$
-
-This description provides a comprehensive view of the WHAM process for calculating the Free Energy Landscape, suitable for inclusion in GitHub documentation.
 
