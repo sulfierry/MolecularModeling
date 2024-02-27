@@ -124,7 +124,6 @@ where \(P(x)\) is the probability density function for the state \(x\). This con
 
 The KDE provides a smoothly interpolated probability density function across the configurational space, enabling the calculation of the free energy landscape over a continuous range of collective variable values. This interpolation facilitates the visualization and analysis of the energy landscape, highlighting energetically favorable states and barriers between them.
 
---
 
 # Free Energy Landscape Calculation with Python Script
 
