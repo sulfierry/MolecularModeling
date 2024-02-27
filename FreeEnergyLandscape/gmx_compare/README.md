@@ -68,7 +68,7 @@ The conversion from the estimated density to free energy is typically done using
 
 $$G(x) = -k_B T \ln(\hat{f}(x))$$
 
-where ($G(x)$) is the free energy at point ($x$), ($k_B$) is the Boltzmann constant, and ($T$) is the temperature.
+where $G(x)$ is the free energy at point ($x$), ($k_B$) is the Boltzmann constant, and ($T$) is the temperature.
 
 **Function Location:** Your script implements KDE in the `freeEnergyLandscape.py` file, using functions from libraries such as `numpy` and `scipy` for numerical operations and density estimation.
 
