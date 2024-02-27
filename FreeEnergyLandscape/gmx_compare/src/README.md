@@ -26,7 +26,10 @@ $$\int P(x) \, dx = 1$$
 
 Histogram-based methods approximate the PDF using a piecewise constant function.
 # AQUI
-$$P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} \mathbf{1}_{[x_i, x_{i+1})}(x)$$
+```math
+
+P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} \mathbf{1}_{[x_i, x_{i+1})}(x)
+```
 
 $$P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} \(\mathbb{1}_{[x_i, x_{i+1})}(x)\)$$
 
