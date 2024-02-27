@@ -102,11 +102,11 @@ The `gmx_sham` tool is part of the GROMACS suite, designed to analyze free energ
 
 $$P_{acum}(bin) = \frac{N_{bin}}{N_{total}}$$
 
-3. **Free Energy Calculation**: Free energy \(G\) for each bin is determined using the inverse Boltzmann relation, where the accumulated probability informs the energy level:
+3. **Free Energy Calculation**: Free energy ($G$) for each bin is determined using the inverse Boltzmann relation, where the accumulated probability informs the energy level:
 
 $$G(bin) = -kT \ln(P_{acum}(bin))$$
 
-   Here, \(k\) is Boltzmann's constant, and \(T\) is the system's temperature. This step is executed within the `calculate_free_energy` method.
+   Here, ($k$) is Boltzmann's constant, and ($T$) is the system's temperature. This step is executed within the `calculate_free_energy` method.
 
 4. **Probability Normalization and Energy Adjustment**: Finally, the probability in each bin is normalized, and the free energy values are adjusted so the minimum free energy across the landscape is set to zero, facilitating easier interpretation and visualization.
 
