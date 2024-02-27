@@ -116,3 +116,51 @@ $$
 The smoothly interpolated probability density function provided by KDE enables calculating the free energy landscape over a continuous range of collective variable values, highlighting energetically favorable states and barriers between them.
 
 
+## SHAM (Self-Consistent Histogram Analysis Method)
+
+SHAM is a method used for data analysis in molecular dynamics simulations, especially useful for calculating free energy differences between states. The iterative nature of SHAM, which seeks to find a self-consistent set of free energies, influences its computational complexity.
+
+### Time Complexity
+- **Depends on the number of states (or histograms) analyzed**, denoted as \(N\), and the number of iterations required for convergence.
+- **Time Complexity**: \(O(IN)\), assuming the work done per state per iteration is constant.
+- **Quadratic Behavior**: Under certain conditions, such as when the number of iterations \(I\) approaches or exceeds \(N\), the time complexity can approach \(O(N^2)\), indicating a potential quadratic behavior in cases where convergence is slow or difficult to achieve.
+
+### Space Complexity
+- **Influenced by the storage of histograms and auxiliary data structures** needed for analysis.
+- **Space Complexity**: \(O(NC)\), where \(C\) represents the constant size of each histogram.
+
+## WHAM (Weighted Histogram Analysis Method)
+
+WHAM is employed to calculate free energy differences from multiple histograms, combining them in a weighted manner to optimize the free energy estimate.
+
+### Time Complexity
+- **Similar to SHAM**, depends on the number of histograms (\(N\)) and the number of iterations (\(I\)) to achieve convergence.
+- **Time Complexity**: \(O(IN)\), where each iteration involves detailed calculations over each histogram.
+- **Quadratic Behavior**: Like SHAM, WHAM can exhibit quadratic time complexity (\(O(N^2)\)) under conditions where the number of iterations is large relative to the number of histograms, particularly when convergence criteria are stringent or the dataset is complex.
+
+### Space Complexity
+- **Affected by the storage of multiple histograms and the associated weights**.
+- **Space Complexity**: \(O(NC)\), with \(C\) representing the constant size of each histogram, similarly to SHAM.
+
+
+## Python Script for Free Energy Landscape Analysis
+
+This Python script utilizes Kernel Density Estimation (KDE) to analyze free energy landscapes from molecular dynamics simulations. The computational complexity of the script is influenced by the data size and the nature of the KDE implementation.
+
+### Time Complexity
+
+### Time Complexity
+- **Efficient KDE Implementation**: The script's time complexity is primarily determined by the KDE computation. Leveraging the `scipy` library's KDE, known for efficient handling of large datasets, the average case time complexity is generally \(O(n \log n)\), where \(n\) is the number of data points.
+- **Parallel Processing Enhancements**: Given that the script is designed to utilize parallel processing capabilities, this can further reduce the effective computational time, especially on multi-core systems, making the actual run time lower than the theoretical complexity might suggest.
+- **High-Dimensional Data Caution**: While the KDE computation avoids naive pairwise distance calculations, the complexity can still be higher for very large or high-dimensional datasets due to the intrinsic challenges of high-dimensional space (the "curse of dimensionality"). However, this does not necessarily imply quadratic complexity in all scenarios.
+
+
+### Space Complexity
+- **Data and Computation Requirements**: The space complexity is influenced by the requirements for storing the dataset and any intermediate structures needed for KDE computation. This is typically \(O(n)\), where \(n\) is the number of data points, with additional considerations for the storage of KDE results.
+- **Optimized Data Handling**: Assuming the implementation makes use of efficient data structures and algorithms, the space complexity remains manageable even for large datasets.
+
+### Performance Consideration
+The actual performance of this script can vary significantly depending on the specifics of the `scipy` library's KDE implementation and the dataset characteristics. For datasets that are large or high-dimensional, employing strategies to optimize data handling and computation, like using more efficient algorithms or data structures for KDE, can significantly enhance performance.
+
+
+
