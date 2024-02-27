@@ -165,6 +165,43 @@ However, this linear interpolation method is specifically applied to the scenari
 `gmx_wham.cpp` implements WHAM, a robust tool for analyzing complex free energy landscapes from molecular dynamics simulations. By combining histograms from multiple biased simulations and employing linear interpolation for tabulated potentials, it offers a comprehensive view of the free energy surface, crucial for understanding molecular processes and dynamics.
 
 
+# Free Energy Landscape Analysis with freeEnergyLandscape.py
+
+`freeEnergyLandscape.py` is a comprehensive Python tool designed for analyzing and visualizing free energy landscapes from molecular dynamics simulation data. This script employs Kernel Density Estimation (KDE) with Scott's default bandwidth selection and the Boltzmann inversion method to calculate and interpret the energy landscapes.
+
+## Key Features
+
+- **Ease of Use**: Simple command-line execution for broad accessibility.
+- **Flexibility**: Supports various data inputs and adjustable parameters for tailored analysis.
+- **Integrated Visualization**: Directly generates plots of the free energy landscape.
+
+## Mathematical Background
+
+### Kernel Density Estimation (KDE)
+
+KDE is applied to smooth the distribution of collective variables, using Scott's rule by default for bandwidth selection:
+
+$$
+\text{Bandwidth (Scott's Rule)} = \sigma \cdot n^{-1/5}
+$$
+
+where $\sigma$ is the standard deviation of the sample, and $n$ is the sample size.
+
+### Boltzmann Inversion
+
+The free energy \(G\) of a state is calculated from the probability distribution \(P\) obtained via KDE:
+
+$$
+G = -k_BT \ln(P)
+$$
+
+where \(k_B\) is the Boltzmann constant, \(T\) is the temperature, and \(P\) is the probability density.
+
+### Interpolation
+
+Although not directly mentioned, the smooth KDE provides an interpolated probability density function across the configurational space, facilitating the calculation of the free energy landscape over a continuous range of collective variable values.
+
+
 # Overview of FreeEnergyLandscape.py
 
 Developed as an independent project, `FreeEnergyLandscape.py` is a versatile Python script designed for calculating and visualizing free energy landscapes from molecular dynamics simulation data. This tool stands out for its accessibility, flexibility, and efficiency, making it a valuable asset for researchers and enthusiasts in the field of computational chemistry and molecular dynamics simulations.
