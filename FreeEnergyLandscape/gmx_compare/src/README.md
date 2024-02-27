@@ -26,7 +26,7 @@ $$\int P(x) \, dx = 1$$
 
 Histogram-based methods approximate the PDF using a piecewise constant function.
 # AQUI
-$$P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} \mathbf{1}$$
+$$P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N}$$
 
 - $N$ is the total number of bins.
 - $\Delta x$ is the width of each bin.
