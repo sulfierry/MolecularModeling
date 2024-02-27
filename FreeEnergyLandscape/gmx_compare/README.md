@@ -48,7 +48,7 @@ In conclusion, while `gmx_sham` and `gmx_wham` are powerful tools for free energ
 
 Interpolation in the context of calculating free energy landscapes often involves estimating values between known data points to construct a continuous representation of the energy landscape. While specific details of the interpolation method used in `gmx sham` or `gmx wham` are not detailed in the provided source code, a common approach is linear interpolation, which can be represented mathematically as follows:
 
-Given two known points (($x_1, y_1$)) and (($x_2, y_2$)), the linear interpolation formula to find a value ($y$) at a point ($x$) is given by:
+Given two known points ($x_1, y_1$) and ($x_2, y_2$), the linear interpolation formula to find a value ($y$) at a point ($x$) is given by:
 
 $$y = y_1 + \frac{(x - x_1) \cdot (y_2 - y_1)}{x_2 - x_1}$$
 
