@@ -31,14 +31,13 @@ Histogram-based methods approximate the PDF using a piecewise constant function.
 P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} \mathbf{1}_{[x_i, x_{i+1})}(x)
 ```
 
-$$P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} \(\mathbb{1}_{[x_i, x_{i+1})}(x)\)$$
+\newcommand{\indic}[1]{\mathbf{1}_{\{#1\}}}
+
+P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} \indic{x_i \leq x < x_{i+1}}
 
 - $N$ is the total number of bins.
 - $\Delta x$ is the width of each bin.
-```math
-\text{-}  \mathbf{1}_{[x_i, x_{i+1})}(x) \text{is the indicator function, where $\mathbf{1}_{[a,b)}(x)$ equals 1 if $x$ is within the interval $[a,b)$ and 0 otherwise.}
-
-``` 
+-  \mathbf{1}_{[x_i, x_{i+1})}(x) is the indicator function, where $\mathbf{1}_{[a,b)}(x)$ equals 1 if $x$ is within the interval $[a,b)$ and 0 otherwise.
 
 
 ### Normalization of Histograms
