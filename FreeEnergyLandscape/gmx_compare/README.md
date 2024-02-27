@@ -106,7 +106,7 @@ The `gmx_wham.cpp` file also incorporates linear interpolation in the context of
 
 ### Linear Interpolation Formula
 
-Given two known points on the potential curve, ($(x_1, y_1)$) and ($(x_2, y_2)$), where ($y$) represents the potential energy at a distance ($x$), the value of ($y$) at any point ($x$) can be found using the formula:
+Given two known points on the potential curve, (($x_1, y_1$)) and (($x_2, y_2$)), where ($y$) represents the potential energy at a distance ($x$), the value of ($y$) at any point ($x$) can be found using the formula:
 
 $$y = y_1 + \frac{(x - x_1) \cdot (y_2 - y_1)}{x_2 - x_1}$$
 
