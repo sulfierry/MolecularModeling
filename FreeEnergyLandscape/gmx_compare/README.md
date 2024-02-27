@@ -71,57 +71,47 @@ This mechanism enables `gmx_sham` to provide a detailed analysis of free energy 
 
 # WHAM Method in GMX WHAM
 
-The `gmx_wham` tool within the GROMACS suite utilizes the Weighted Histogram Analysis Method (WHAM) to derive free energy landscapes from multiple simulations. This sophisticated statistical approach interpolates and combines data from various histograms to estimate the system's free energy landscape accurately. Below is a detailed mathematical explanation of WHAM's process, including the utilization of linear interpolation within the tool:
+The `gmx_wham` tool within the GROMACS suite utilizes the Weighted Histogram Analysis Method (WHAM) to derive free energy landscapes from multiple simulations. This sophisticated statistical approach combines data from various histograms to estimate the system's free energy landscape accurately. Additionally, `gmx_wham` employs linear interpolation for handling tabulated potentials. Below is a detailed explanation of WHAM's process, incorporating the clarification regarding interpolation methods:
 
 ## Data Preparation and Histogram Creation
 
-1. **Histogram Generation**: For each simulation data set, a histogram is created based on a specific reaction coordinate. These histograms represent the frequency distribution of system states across the sampled parameter space.
+1. **Histogram Generation**: Each simulation dataset contributes a histogram based on a specific reaction coordinate, representing the frequency distribution of system states across the sampled parameter space.
 
-2. **Bias Correction**: Simulations often apply a bias to explore specific regions of the parameter space more effectively. WHAM corrects these biases across all histograms, ensuring a fair contribution from each to the final analysis.
+2. **Bias Correction**: To effectively explore specific regions of the parameter space, simulations often apply a bias. WHAM corrects these biases across all histograms, ensuring equitable contributions to the final analysis.
 
-## Statistical Interpolation and Free Energy Calculation
+## Statistical Combination and Free Energy Calculation
 
-WHAM applies statistical methods to interpolate between histograms and calculate the free energy landscape:
+WHAM utilizes a statistical method to combine histograms and derive the free energy landscape:
 
-1. **Combining Histograms**: WHAM combines the biased histograms using weights that are iteratively adjusted. The weight for each histogram reflects its contribution to the overall free energy calculation, accounting for the bias applied during simulation.
+1. **Combining Histograms**: The method combines biased histograms using iteratively adjusted weights. Each histogram's weight reflects its contribution to the overall free energy calculation, considering the applied bias during simulation.
 
-2. **Iterative Solution**: The method solves the WHAM equations iteratively to find the set of weights that maximizes the likelihood of the combined histogram data. The equations are:
+2. **Iterative Solution**: WHAM solves a set of self-consistent equations to find the weights that maximize the likelihood of the combined histogram data:
 
-   - Let $N_i(j)$ be the number of counts in the $j^{th}$ bin of the $i^{th}$ histogram, with $n_i$ total observations and a biasing energy $U_i(j)$ applied to the $i^{th}$ simulation.
-   - The unbiased probability distribution $P(j)$ for the $j^{th}$ bin is estimated by minimizing the free energy difference across simulations, leading to the WHAM equations:
+   - Let $N_i(j)$ be the number of counts in the $j^{th}$ bin of the $i^{th}$ histogram, with $n_i$ total observations and a biasing energy $U_i(j)$.
+   - The unbiased probability distribution $P(j)$ for the $j^{th}$ bin is estimated by:
 
-$$P(j) = \frac{\sum_{i} N_i(j)}{\sum_{i} n_i \exp\left[-\beta (U_i(j) - F_i)\right]}$$
+     $$
+     P(j) = \frac{\sum_{i} N_i(j)}{\sum_{i} n_i \exp\left[-\beta (U_i(j) - F_i)\right]}
+     $$
 
-   - Here, $\beta = 1/(k_BT)$, where $k_B$ is Boltzmann's constant, $T$ is the temperature, and $F_i$ is the free energy of the $i^{th}$ simulation, which is iteratively adjusted during the solution process.
+     Here, $\beta = 1/(k_BT)$, $k_B$ is Boltzmann's constant, $T$ is the temperature, and $F_i$ is the iteratively adjusted free energy of the $i^{th}$ simulation.
 
-3. **Free Energy Landscape**: The free energy $G$ for a state is calculated from the probability distribution $P(j)$ using:
+3. **Free Energy Landscape**: The free energy $G$ for each state is calculated from the probability distribution $P(j)$:
 
-$$G(j) = -k_BT \ln(P(j))$$
+   $$
+   G(j) = -k_BT \ln(P(j))
+   $$
 
-   - This equation transforms the probability distribution into a free energy landscape, revealing the energetically favorable states and barriers between them.
+   This reveals the energetically favorable states and barriers between them.
 
-## Linear Interpolation in GMX WHAM
+## Linear Interpolation for Tabulated Potentials
 
-The `gmx_wham.cpp` file also incorporates linear interpolation in the context of tabulated potentials, specifically within the `tabulated_pot` function. This is essential for calculating potential energy values at intermediate distances not explicitly defined in the input table, providing a continuous representation of the potential energy landscape.
+In addition to the statistical combination of histograms, `gmx_wham` uses linear interpolation within the `tabulated_pot` function for tabulated potentials. This method estimates potential energy values at intermediate distances, providing a continuous potential energy landscape.
 
-### Linear Interpolation Formula
-
-Given two known points on the potential curve, (($x_1, y_1$)) and (($x_2, y_2$)), where ($y$) represents the potential energy at a distance ($x$), the value of ($y$) at any point ($x$) can be found using the formula:
-
-$$y = y_1 + \frac{(x - x_1) \cdot (y_2 - y_1)}{x_2 - x_1}$$
-
-### Implementation in `gmx_wham.cpp`
-
-- **Function:** `tabulated_pot`
-- **Purpose:** This function calculates the potential energy at a given distance using linear interpolation between points in a tabulated potential provided by the user.
-- **Process:**
-  1. Identify the closest points ($x_1$) and ($x_2$) on either side of the given distance ($x$).
-  2. Apply the linear interpolation formula to calculate the potential energy ($y$) at ($x$).
-  3. Return the interpolated potential energy value.
-
-This interpolation is critical for accurately modeling the energy landscape using tabulated potentials, especially when dealing with complex molecular interactions not easily described by simple analytical functions.
+However, this linear interpolation method is specifically applied to the scenario of dealing with tabulated potentials and does not directly influence the primary WHAM algorithm's statistical combination of histograms for free energy calculation. The WHAM methodology itself does not inherently use linear interpolation as part of its core algorithm for combining histograms or calculating the free energy landscape. Instead, WHAM relies on a statistical approach to optimally combine data from multiple biased simulations to reconstruct the unbiased free energy profile.
 
 ## Conclusion
 
-The WHAM implemented in `gmx_wham.cpp` is a robust statistical tool for analyzing complex free energy landscapes from molecular dynamics simulations. By accurately combining histograms from multiple biased simulations, and utilizing linear interpolation for tabulated potentials, it provides a detailed and comprehensive view of the free energy surface, essential for understanding molecular processes and system dynamics.
+`gmx_wham.cpp` implements WHAM, a robust tool for analyzing complex free energy landscapes from molecular dynamics simulations. By combining histograms from multiple biased simulations and employing linear interpolation for tabulated potentials, it offers a comprehensive view of the free energy surface, crucial for understanding molecular processes and dynamics.
+
 
