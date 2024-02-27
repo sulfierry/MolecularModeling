@@ -62,7 +62,7 @@ The KDE method provides a way to estimate the probability density function (PDF)
 
 $$\hat{f}(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left( \frac{x - x_i}{h} \right)$$
 
-where ($\hat{f}(x)$) is the estimated density at point ($x$), ($K$) is the kernel function (e.g., Gaussian), and ($h$) is the bandwidth, a parameter that controls the smoothness of the density estimate.
+where $\hat{f}(x)$ is the estimated density at point ($x$), ($K$) is the kernel function (e.g., Gaussian), and ($h$) is the bandwidth, a parameter that controls the smoothness of the density estimate.
 
 The conversion from the estimated density to free energy is typically done using the relation:
 
