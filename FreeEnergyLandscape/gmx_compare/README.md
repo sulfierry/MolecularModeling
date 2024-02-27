@@ -7,13 +7,11 @@ This document provides a detailed mathematical comparison of free energy calcula
 ### gmx_sham and gmx_wham
 Both `gmx_sham` and `gmx_wham` utilize statistical methods to analyze free energy landscapes from molecular dynamics simulations. The core principle is the weighted histogram analysis method (WHAM), which combines data from multiple biased simulations to estimate the unbiased free energy landscape.
 
-- **Mathematical Foundation**: The WHAM approach solves a set of self-consistent equations to optimize weights for each simulation data set, thereby minimizing the free energy differences across simulations. The free energy \(G\) for a given state is calculated using the Boltzmann relation:
+- **Mathematical Foundation**: The WHAM approach solves a set of self-consistent equations to optimize weights for each simulation data set, thereby minimizing the free energy differences across simulations. The free energy ($G$) for a given state is calculated using the Boltzmann relation:
 
-  $$
-  G = -kT \ln(P)
-  $$
+$$G = -kT \ln(P)$$
 
-  where \(P\) is the probability distribution of observing a system in a particular state, \(k\) is Boltzmann's constant, and \(T\) is the temperature.
+  where ($P$) is the probability distribution of observing a system in a particular state, ($k$) is Boltzmann's constant, and ($T$) is the temperature.
 
 ### freeEnergyLandscape.py
 The `freeEnergyLandscape.py` script calculates the free energy landscape by first generating histograms from collective variable data and optionally applying kernel density estimation (KDE) to smooth the distribution. The free energy is then calculated using the Boltzmann inversion method.
@@ -22,9 +20,7 @@ The `freeEnergyLandscape.py` script calculates the free energy landscape by firs
 
 - **Free Energy Calculation**: Similar to `gmx_sham` and `gmx_wham`, the script calculates the free energy based on the probability distribution derived from the data, using the formula:
 
-  $$
-  G = -kT \ln(P)
-  $$
+$$G = -kT \ln(P)$$
 
   However, the script enhances data handling by offering flexibility in adjusting the KDE bandwidth, directly impacting the smoothness and accuracy of the interpolated free energy landscape.
 
@@ -52,11 +48,9 @@ In conclusion, while `gmx_sham` and `gmx_wham` are powerful tools for free energ
 
 Interpolation in the context of calculating free energy landscapes often involves estimating values between known data points to construct a continuous representation of the energy landscape. While specific details of the interpolation method used in `gmx sham` or `gmx wham` are not detailed in the provided source code, a common approach is linear interpolation, which can be represented mathematically as follows:
 
-Given two known points \((x_1, y_1)\) and \((x_2, y_2)\), the linear interpolation formula to find a value \(y\) at a point \(x\) is given by:
+Given two known points (($x_1, y_1$)) and (($x_2, y_2$)), the linear interpolation formula to find a value ($y$) at a point ($x$) is given by:
 
-$$
-y = y_1 + \frac{(x - x_1) \cdot (y_2 - y_1)}{x_2 - x_1}
-$$
+$$y = y_1 + \frac{(x - x_1) \cdot (y_2 - y_1)}{x_2 - x_1}$$
 
 This method is straightforward but may not capture the complexities of free energy landscapes, especially in higher dimensions or with complex energy barriers.
 
@@ -64,21 +58,17 @@ This method is straightforward but may not capture the complexities of free ener
 
 ### Kernel Density Estimation (KDE) Method
 
-The KDE method provides a way to estimate the probability density function (PDF) of a random variable in a non-parametric way. In the context of your script for calculating the Free Energy Landscape, KDE is used to estimate the density of states, which can then be converted into free energy using the Boltzmann relation. The KDE for a set of \(n\) points \(\{x_i\}\) can be mathematically represented as:
+The KDE method provides a way to estimate the probability density function (PDF) of a random variable in a non-parametric way. In the context of your script for calculating the Free Energy Landscape, KDE is used to estimate the density of states, which can then be converted into free energy using the Boltzmann relation. The KDE for a set of ($n$) points (${x_i}$) can be mathematically represented as:
 
-$$
-\hat{f}(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left( \frac{x - x_i}{h} \right)
-$$
+$$\hat{f}(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left( \frac{x - x_i}{h} \right)$$
 
-where \(\hat{f}(x)\) is the estimated density at point \(x\), \(K\) is the kernel function (e.g., Gaussian), and \(h\) is the bandwidth, a parameter that controls the smoothness of the density estimate.
+where ($\hat{f}(x)$) is the estimated density at point ($x$), ($K$) is the kernel function (e.g., Gaussian), and ($h$) is the bandwidth, a parameter that controls the smoothness of the density estimate.
 
 The conversion from the estimated density to free energy is typically done using the relation:
 
-$$
-G(x) = -k_B T \ln(\hat{f}(x))
-$$
+$$G(x) = -k_B T \ln(\hat{f}(x))$$
 
-where \(G(x)\) is the free energy at point \(x\), \(k_B\) is the Boltzmann constant, and \(T\) is the temperature.
+where ($G(x)$) is the free energy at point ($x$), ($k_B$) is the Boltzmann constant, and ($T$) is the temperature.
 
 **Function Location:** Your script implements KDE in the `freeEnergyLandscape.py` file, using functions from libraries such as `numpy` and `scipy` for numerical operations and density estimation.
 
