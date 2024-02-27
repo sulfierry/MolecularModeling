@@ -190,10 +190,10 @@ $$
 
 ### Probability Normalization
 
-To ensure accurate energy calculation, the probability densities are normalized so they sum to one across the configurational space:
+To ensure accurate energy calculation, the probability densities are normalized over the entire range of possible values, ensuring they sum to one across the configurational space:
 
 $$
-\int \hat{f}(x) \, dx = 1
+\int_{-\infty}^{\infty} \hat{f}(x) \, dx = 1
 $$
 
 ### Interpolation
