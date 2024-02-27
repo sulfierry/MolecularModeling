@@ -108,7 +108,7 @@ $$
 To ensure accurate energy calculation, the probability densities are normalized so they sum to one across the configurational space:
 
 $$
-\int \hat{f}(x) \, dx = 1
+\int_{-\infty}^{\infty} \hat{f}(x) \, dx = 1
 $$
 
 ### Interpolation
