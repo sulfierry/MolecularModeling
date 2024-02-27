@@ -148,8 +148,6 @@ WHAM is employed to calculate free energy differences from multiple histograms, 
 This Python script utilizes Kernel Density Estimation (KDE) to analyze free energy landscapes from molecular dynamics simulations. The computational complexity of the script is influenced by the data size and the nature of the KDE implementation.
 
 ### Time Complexity
-
-### Time Complexity
 - **Efficient KDE Implementation**: The script's time complexity is primarily determined by the KDE computation. Leveraging the `scipy` library's KDE, known for efficient handling of large datasets, the average case time complexity is generally \(O(n \log n)\), where \(n\) is the number of data points.
 - **Parallel Processing Enhancements**: Given that the script is designed to utilize parallel processing capabilities, this can further reduce the effective computational time, especially on multi-core systems, making the actual run time lower than the theoretical complexity might suggest.
 - **High-Dimensional Data Caution**: While the KDE computation avoids naive pairwise distance calculations, the complexity can still be higher for very large or high-dimensional datasets due to the intrinsic challenges of high-dimensional space (the "curse of dimensionality"). However, this does not necessarily imply quadratic complexity in all scenarios.
