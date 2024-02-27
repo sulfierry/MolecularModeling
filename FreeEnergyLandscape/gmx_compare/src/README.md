@@ -86,3 +86,42 @@ $$P_{normalized}(j) = \frac{P(j)}{\sum_{bins} P(j)}$$
      $$G(j) = -k_BT \ln(P_{normalized}(j))$$
 
 
+## Free Energy Landscape Calculation
+
+This process involves several key mathematical and computational techniques to estimate the free energy landscape of a system based on its collective variables.
+
+### Kernel Density Estimation (KDE)
+
+KDE smooths the distribution of collective variables, enhancing the estimation of probability densities. It employs Scott's rule for bandwidth selection:
+
+$$
+\text{Bandwidth (Scott's Rule)} = \sigma \cdot n^{-1/5}
+$$
+
+where $\sigma$ is the standard deviation of the sample, and $n$ is the sample size. This method ensures the KDE is appropriately smooth for the data's scale.
+
+### Boltzmann Inversion
+
+The free energy \(G\) of a state is directly calculated from the probability density \(P\), obtained via KDE, using the equation:
+
+$$
+G = -k_BT \ln(P)
+$$
+
+where \(k_B\) is the Boltzmann constant, \(T\) is the temperature, and \(P\) is the probability density. This relation derives from the Boltzmann distribution, relating the state's energy to its probability.
+
+### Probability Normalization
+
+For accurate energy calculation, the probability densities must sum to one across the configurational space. Normalization is achieved by ensuring the integral of the KDE over all possible states equals one:
+
+$$
+\int P(x) \, dx = 1
+$$
+
+where \(P(x)\) is the probability density function for the state \(x\). This condition ensures that \(P\) represents a valid probability distribution, crucial for the correct Boltzmann inversion.
+
+### Interpolation
+
+The KDE provides a smoothly interpolated probability density function across the configurational space, enabling the calculation of the free energy landscape over a continuous range of collective variable values. This interpolation facilitates the visualization and analysis of the energy landscape, highlighting energetically favorable states and barriers between them.
+
+
