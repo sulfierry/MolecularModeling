@@ -151,74 +151,53 @@ However, this linear interpolation method is specifically applied to the scenari
 `gmx_wham.cpp` implements WHAM, a robust tool for analyzing complex free energy landscapes from molecular dynamics simulations. By combining histograms from multiple biased simulations and employing linear interpolation for tabulated potentials, it offers a comprehensive view of the free energy surface, crucial for understanding molecular processes and dynamics.
 
 
-# Free Energy Landscape Analysis with freeEnergyLandscape.py
+####
 
-`freeEnergyLandscape.py` is a comprehensive Python tool designed for analyzing and visualizing free energy landscapes from molecular dynamics simulation data. This script employs Kernel Density Estimation (KDE) with Scott's default bandwidth selection and the Boltzmann inversion method to calculate and interpret the energy landscapes.
+## Free Energy Landscape Calculation with Python Script
 
-## Key Features
+This document outlines the use of Kernel Density Estimation (KDE) and Boltzmann Inversion by the `freeEnergyLandscape.py` script to estimate the free energy landscape of a system from its collective variables.
 
-- **Ease of Use**: Simple command-line execution for broad accessibility.
-- **Flexibility**: Supports various data inputs and adjustable parameters for tailored analysis.
-- **Integrated Visualization**: Directly generates plots of the free energy landscape.
+### Kernel Density Estimation (KDE) Method
 
-## Mathematical Background
-
-### Kernel Density Estimation (KDE)
-
-KDE is applied to smooth the distribution of collective variables, using Scott's rule by default for bandwidth selection:
+KDE smooths the distribution of collective variables to enhance the estimation of probability densities. It employs Scott's rule for bandwidth selection, ensuring an appropriately smooth density estimate for the data's scale.
 
 $$
 \text{Bandwidth (Scott's Rule)} = \sigma \cdot n^{-1/5}
 $$
 
-where $\sigma$ is the standard deviation of the sample, and $n$ is the sample size.
+- $\sigma$ is the standard deviation of the sample.
+- $n$ is the sample size.
+
+KDE for a set of points is given by:
+
+$$
+\hat{f}(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left( \frac{x - x_i}{h} \right)
+$$
+
+- $K$ is the kernel function, typically Gaussian.
+- $h$ is the bandwidth.
 
 ### Boltzmann Inversion
 
-The free energy \(G\) of a state is calculated from the probability distribution \(P\) obtained via KDE:
+The free energy $G(x)$ of a state is calculated from the probability density $\hat{f}(x)$, obtained via KDE:
 
 $$
-G = -k_BT \ln(P)
+G(x) = -k_BT \ln(\hat{f}(x))
 $$
 
-where \(k_B\) is the Boltzmann constant, \(T\) is the temperature, and \(P\) is the probability density.
+- $k_B$ is the Boltzmann constant.
+- $T$ is the temperature.
+
+### Probability Normalization
+
+To ensure accurate energy calculation, the probability densities are normalized so they sum to one across the configurational space:
+
+$$
+\int \hat{f}(x) \, dx = 1
+$$
 
 ### Interpolation
 
-Although not directly mentioned, the smooth KDE provides an interpolated probability density function across the configurational space, facilitating the calculation of the free energy landscape over a continuous range of collective variable values.
-
-
-# Overview of FreeEnergyLandscape.py
-
-Developed as an independent project, `FreeEnergyLandscape.py` is a versatile Python script designed for calculating and visualizing free energy landscapes from molecular dynamics simulation data. This tool stands out for its accessibility, flexibility, and efficiency, making it a valuable asset for researchers and enthusiasts in the field of computational chemistry and molecular dynamics simulations.
-
-## Key Features
-
-### Accessibility and Usability
-- Easy installation via `pip` ensures that `FreeEnergyLandscape.py` is readily accessible to a broad audience.
-- A straightforward command-line interface allows for simple execution of the script, enhancing its usability.
-
-### Flexibility
-- Capable of analyzing data from any molecular dynamics simulation, regardless of the source, `FreeEnergyLandscape.py` offers unmatched flexibility compared to more ecosystem-integrated tools.
-
-### Customization and Extensibility
-- The open-source nature and Python programming base enable users to easily customize and extend the script to meet their specific research needs.
-
-### Parallelism and Computational Efficiency
-- Designed with the capability to operate in parallel, the script efficiently leverages modern computational resources, accelerating the analysis of large datasets.
-
-## Advantages Over gmx_sham and gmx_wham
-
-While `gmx_sham` and `gmx_wham` benefit from the support of a large development community and continuous enhancements, `FreeEnergyLandscape.py` addresses specific needs that these more complex tools might overlook. Its development by an independent programmer underscores the potential for innovation and filling gaps left by established solutions.
-
-### Community and Support
-- The script exemplifies how independent development can inspire and contribute to the scientific community, offering valuable alternatives and insights.
-
-### Scientific Contribution
-- Independent tools like `FreeEnergyLandscape.py` play a crucial role in advancing computational science, providing tailored solutions that align closely with researchers' unique requirements.
-
-## Conclusion
-
-`FreeEnergyLandscape.py` embodies a significant contribution to the fields of computational chemistry and molecular dynamics by offering a practical, flexible, and efficient tool for free energy landscape analysis. The script's development highlights the critical role independent programmers play in technological progress and innovation within computational science.
+The smoothly interpolated probability density function provided by KDE enables calculating the free energy landscape over a continuous range of collective variable values, highlighting energetically favorable states and barriers between them.
 
 
