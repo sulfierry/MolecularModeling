@@ -125,46 +125,52 @@ where \(P(x)\) is the probability density function for the state \(x\). This con
 The KDE provides a smoothly interpolated probability density function across the configurational space, enabling the calculation of the free energy landscape over a continuous range of collective variable values. This interpolation facilitates the visualization and analysis of the energy landscape, highlighting energetically favorable states and barriers between them.
 
 
-# Free Energy Landscape Calculation with Python Script
 
-This document outlines the use of Kernel Density Estimation (KDE) in the `freeEnergyLandscape.py` script for estimating the Free Energy Landscape, emphasizing the advantages of KDE over histogram-based methods used in SHAM and WHAM.
+## Free Energy Landscape Calculation with Python Script
 
-### Kernel Density Estimation (KDE)
+This document outlines the use of Kernel Density Estimation (KDE) and Boltzmann Inversion by the `freeEnergyLandscape.py` script to estimate the free energy landscape of a system from its collective variables.
 
-KDE offers several advantages for estimating the probability density function (PDF) of a continuous random variable:
+### Kernel Density Estimation (KDE) Method
 
-1. **Smoothness and Continuity**: KDE produces a smooth PDF, eliminating the discontinuities of histograms.
-   $$P_{KDE}(x) = \frac{1}{Nh}\sum_{i=1}^{N} K\left(\frac{x-x_i}{h}\right)$$
-   - \(K\) is the kernel function, typically Gaussian.
-   - \(h\) is the bandwidth, determining the smoothness.
-   - \(x_i\) are the data points, and \(N\) is the number of data points.
+KDE smooths the distribution of collective variables to enhance the estimation of probability densities. It employs Scott's rule for bandwidth selection, ensuring an appropriately smooth density estimate for the data's scale.
 
-2. **Bandwidth Selection**: KDE utilizes methods like Scott's rule to optimize bandwidth.
-   $$\text{Bandwidth (Scott's Rule)} = \sigma \cdot n^{-1/5}$$
-   - \(\sigma\) is the standard deviation of the sample.
-   - \(n\) is the sample size.
+$$
+\text{Bandwidth (Scott's Rule)} = \sigma \cdot n^{-1/5}
+$$
 
-3. **Handling Sparse Data**: KDE can effectively estimate densities in sparse data areas, a challenge for histogram-based methods.
+- $\sigma$ is the standard deviation of the sample.
+- $n$ is the sample size.
 
-### Normalization in KDE
+KDE for a set of points is given by:
 
-Normalization ensures the integral of the KDE over all states equals one, making it a valid probability distribution:
-$$\int P(x) \, dx = 1$$
+$$
+\hat{f}(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left( \frac{x - x_i}{h} \right)
+$$
 
-### Piecewise Constant Approximation in SHAM and WHAM
+- $K$ is the kernel function, typically Gaussian.
+- $h$ is the bandwidth.
 
-Histogram-based methods approximate the PDF using a piecewise constant function.
-$$P_{histogram}(x) = \frac{1}{N \cdot \Delta x}\sum_{i=1}^{N} \mathbf{1}_{[x_i, x_{i+1})}(x)$$
-- \(N\) is the total number of bins.
-- \(\Delta x\) is the width of each bin.
-- \(\mathbf{1}_{[x_i, x_{i+1})}(x)\) is the indicator function.
+### Boltzmann Inversion
 
-### Normalization of Histograms
+The free energy $G(x)$ of a state is calculated from the probability density $\hat{f}(x)$, obtained via KDE:
 
-Normalization ensures that the area under the histogram equals one, making it a valid PDF:
-$$\int_{-\infty}^{\infty} P_{histogram}(x) \, dx = 1$$
+$$
+G(x) = -k_BT \ln(\hat{f}(x))
+$$
 
-This comprehensive explanation integrates the mathematical details for KDE and its normalization process, suitable for GitHub documentation.
+- $k_B$ is the Boltzmann constant.
+- $T$ is the temperature.
 
+### Probability Normalization
+
+To ensure accurate energy calculation, the probability densities are normalized so they sum to one across the configurational space:
+
+$$
+\int \hat{f}(x) \, dx = 1
+$$
+
+### Interpolation
+
+The smoothly interpolated probability density function provided by KDE enables calculating the free energy landscape over a continuous range of collective variable values, highlighting energetically favorable states and barriers between them.
 
 
