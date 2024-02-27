@@ -66,3 +66,24 @@ $$G(bin) = -kT \ln(P_{normalized}(bin))$$
 
 Here, \(k\) is the Boltzmann constant, \(T\) is the temperature, and \(P_{normalized}(bin)\) is the normalized probability. The free energy landscape is adjusted so that the minimum free energy value is set to zero for ease of interpretation.
 
+
+## Free Energy Calculation Using WHAM
+
+The WHAM approach combines biased histograms from different simulations into a single, unbiased histogram to calculate the free energy landscape. The process involves:
+
+1. **Histogram Combination**: Biased histograms are combined using iteratively adjusted weights, accounting for the bias applied during simulations. This combination uses a self-consistent method to ensure all histograms contribute appropriately to the final free energy landscape.
+
+2. **Probability and Free Energy Calculation**: The probability distribution \(P(j)\) for each bin and the corresponding free energy \(G(j)\) are calculated as follows:
+
+   - The probability distribution \(P(j)\) is estimated by:
+     $$P(j) = \frac{\sum_{i} N_i(j)}{\sum_{i} n_i \exp\left[-\beta (U_i(j) - F_i)\right]}$$
+     where \(N_i(j)\) is the number of counts in the \(j^{th}\) bin of the \(i^{th}\) histogram, \(n_i\) is the total observations in the \(i^{th}\) histogram, \(U_i(j)\) is the biasing energy, and \(F_i\) is the free energy of the \(i^{th}\) simulation.
+
+   - The free energy \(G(j)\) for each state is calculated from \(P(j)\) as:
+     $$G(j) = -k_BT \ln(P(j))$$
+
+Normalization of \(P(j)\) ensures that the probabilities sum to 1 across all bins, and is crucial for accurate free energy calculation. The normalization is mathematically represented as:
+$$P_{normalized}(j) = \frac{P(j)}{\sum_{bins} P(j)}$$
+
+This description provides a comprehensive view of the WHAM process for calculating the Free Energy Landscape, suitable for inclusion in GitHub documentation.
+
