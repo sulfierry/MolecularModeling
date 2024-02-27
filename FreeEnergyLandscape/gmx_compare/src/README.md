@@ -25,7 +25,7 @@ $$\int P(x) \, dx = 1$$
 ### Piecewise Constant Approximation in SHAM and WHAM
 
 Histogram-based methods approximate the PDF using a piecewise constant function.
-$$P_{histogram}{x} = \frac{1}{N \cdot \Delta x}\sum_{i=1}^{N} \mathbf{1}_{[x_i, x_{i+1})}(x)$$
+$$\frac{1}{N \cdot \Delta x}\sum_{i=1}^{N} \mathbf{1}_{[x_i, x_{i+1})}(x)$$
 - ($N$) is the total number of bins.
 - ($\Delta x$) is the width of each bin.
 - ($\mathbf{1}_{[x_i, x_{i+1})}(x)\$) is the indicator function.
