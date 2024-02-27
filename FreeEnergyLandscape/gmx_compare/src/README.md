@@ -41,3 +41,28 @@ $$\int_{-\infty}^{\infty} P_{histogram}(x) \, dx = 1$$
 - **Cons**: More computationally intensive, especially for large datasets or high-dimensional spaces.
 
 KDE's smooth and accurate PDF estimates offer valuable insights into the energy landscape that histogram-based methods may miss.
+
+## Probability Calculation and Normalization
+
+The probability \(P\) of a system's state occurring within a specific bin is calculated as:
+
+$$P(bin) = \frac{N_{bin}}{N_{total}}$$
+
+where \(N_{bin}\) is the number of occurrences in the bin, and \(N_{total}\) is the total number of observations.
+
+### Normalization of Probability
+
+To ensure the probabilities sum up to 1 across all bins, normalization is performed as follows:
+
+$$P_{normalized}(bin) = \frac{P(bin)}{\sum_{bins} P(bin)}$$
+
+This step is crucial for the accurate calculation of the free energy landscape.
+
+## Free Energy Calculation
+
+The free energy \(G\) for each bin, after normalization, is calculated using the Boltzmann relation:
+
+$$G(bin) = -kT \ln(P_{normalized}(bin))$$
+
+Here, \(k\) is the Boltzmann constant, \(T\) is the temperature, and \(P_{normalized}(bin)\) is the normalized probability. The free energy landscape is adjusted so that the minimum free energy value is set to zero for ease of interpretation.
+
