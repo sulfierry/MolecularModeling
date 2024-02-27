@@ -36,7 +36,7 @@ $$P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} 1_{[x_i, x
 
 - $N$ is the total number of bins.
 - $\Delta x$ is the width of each bin.
--  ${1}_{[x_i, x_{i+1})}(x)$ is the indicator function, where $\mathbf{1}_{[a,b)}(x)$ equals 1 if $x$ is within the interval $[a,b)$ and 0 otherwise.
+-  $1_{[x_i, x_{i+1})}(x)$ is the indicator function, where $\mathbf{1}_{[a,b)}(x)$ equals 1 if $x$ is within the interval $[a,b)$ and 0 otherwise.
 
 
 ### Normalization of Histograms
