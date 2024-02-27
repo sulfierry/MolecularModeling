@@ -83,6 +83,6 @@ The WHAM approach combines biased histograms from different simulations into a s
 $$P_{normalized}(j) = \frac{P(j)}{\sum_{bins} P(j)}$$
      
    - The free energy \(G(j)\) for each state is calculated from \(P(j)\) as:
-     $$G(j) = -k_BT \ln(P(j))$$
+     $$G(j) = -k_BT \ln(P_{normalized}(j))$$
 
 
