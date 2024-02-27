@@ -31,9 +31,8 @@ Histogram-based methods approximate the PDF using a piecewise constant function.
 P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} \mathbf{1}_{[x_i, x_{i+1})}(x)
 ```
 
-\newcommand{\indic}[1]{\mathbf{1}_{\{#1\}}}
+$$P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} 1_{[x_i, x_{i+1})}(x)$$
 
-P_{\text{histogram}}(x) = \frac{1}{N \cdot \Delta x} \sum_{i=1}^{N} \indic{x_i \leq x < x_{i+1}}
 
 - $N$ is the total number of bins.
 - $\Delta x$ is the width of each bin.
