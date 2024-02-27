@@ -142,7 +142,7 @@ WHAM utilizes a statistical method to combine histograms and derive the free ene
 
 $$P(j) = \frac{\sum_{i} N_i(j)}{\sum_{i} n_i \exp\left[-\beta (U_i(j) - F_i)\right]}$$
 
-     Here, $\beta = 1/(k_BT)$, $k_B$ is Boltzmann's constant, $T$ is the temperature, and $F_i$ is the iteratively adjusted free energy of the $i^{th}$ simulation.
+Here, $\beta = 1/(k_BT)$, $k_B$ is Boltzmann's constant, $T$ is the temperature, and $F_i$ is the iteratively adjusted free energy of the $i^{th}$ simulation.
 
 3. **Free Energy Landscape**: The free energy $G$ for each state is calculated from the probability distribution $P(j)$:
 
