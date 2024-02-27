@@ -146,9 +146,7 @@ Here, $\beta = 1/(k_BT)$, $k_B$ is Boltzmann's constant, $T$ is the temperature,
 
 3. **Free Energy Landscape**: The free energy $G$ for each state is calculated from the probability distribution $P(j)$:
 
-   $$
-   G(j) = -k_BT \ln(P(j))
-   $$
+$$G(j) = -k_BT \ln(P(j))$$
 
    This reveals the energetically favorable states and barriers between them.
 
