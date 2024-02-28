@@ -427,3 +427,78 @@ class FreeEnergyLandscape:
         if hasattr(self, 'cached_results'):
             del self.cached_results
 
+
+def main():
+
+    # Definindo valores padrão
+    t = 300                     # --temperature           [int] [Kelvin]
+    kB = 8.314e-3               # --kb                    [float] [kJ/(mol·K)]
+    energy_threshold = None     # --energy                [int] [kJ/mol]
+    bins_energy_histogram = 100 # --bins_energy_histogram [int]
+    kde_bandwidth_cv = None     # --kde_bandwidth         [float]
+    cv_names = ['CV1', 'CV2']   # --name                  [str] [str]
+    n_angles = 10               # --gif_angles            [int]
+    elevation = 10              # --gif_elevation         [int]
+    duration_per_frame = 0.1    # --gif_duration          [float]
+
+    if len(sys.argv) >= 3:
+        cv1_path, cv2_path = sys.argv[1], sys.argv[2]
+
+        # Processar argumentos adicionais como pares chave-valor
+        i = 3
+        while i < len(sys.argv):
+            key = sys.argv[i]
+            if key == "--temperature":
+                t = float(sys.argv[i + 1])
+                i += 2
+            elif key == "--kb":
+                kB = float(sys.argv[i + 1])
+                i += 2
+            elif key == "--energy":
+                energy_threshold = float(sys.argv[i + 1])
+                i += 2
+            elif key == "--bins_energy_histogram":
+                bins_energy_histogram = int(sys.argv[i + 1])
+                i += 2
+            elif key == "--kde_bandwidth":
+                kde_bandwidth_cv = float(sys.argv[i + 1]) if sys.argv[i + 1].lower() != "none" else None
+                i += 2
+            elif key == "--names":
+                cv_names = [sys.argv[i + 1], sys.argv[i + 2]]  # Captura os nomes das variáveis coletivas
+                i += 3
+            elif key == "--gif_angles":
+                n_angles = int(sys.argv[i + 1])
+                i += 2
+            elif key == "--gif_elevation":
+                elevation = int(sys.argv[i + 1])
+                i += 2
+            elif key == "--gif_duration":
+                duration_per_frame = float(sys.argv[i + 1])
+                i += 2
+            else:
+                print(f"Unrecognized option: {key}")
+                sys.exit(1)
+    else:
+        FreeEnergyLandscape.help()
+        sys.exit(1)
+
+    try:
+        fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB,
+                                bins=bins_energy_histogram,
+                                kde_bandwidth=kde_bandwidth_cv)
+
+        fel.main(energy_threshold, cv_names=cv_names,
+                 n_angles=n_angles, elevation=elevation,
+                duration_per_frame=duration_per_frame)
+        
+        if energy_threshold is not None:
+            print("Calculating and saving energy for each frame...")
+            fel.calculate_and_save_free_energy(threshold=energy_threshold)
+            print("Energy saved successfully!\n")
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
