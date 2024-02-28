@@ -115,22 +115,26 @@ class FreeEnergyLandscape:
         fig = plt.figure(figsize=(10, 7))
         ax = fig.add_subplot(111, projection='3d')
 
-        # Plotar a superfície da paisagem de energia
         surf = ax.plot_surface(result['X_original'], result['Y_original'], result['G_original'], cmap=self.custom_cmap, edgecolor='none', alpha=0.6)
         ax.set_xlabel(titles[0])
         ax.set_ylabel(titles[1])
         ax.set_zlabel('Free energy (kJ/mol)')
         ax.set_title('3D Free Energy Landscape')
 
-        if threshold is not None:
-            if isinstance(threshold, list):
-                for i, interval in enumerate(threshold):
-                    self.plot_threshold_points(ax, result, interval[0], interval[1], self.colors[i % len(self.colors)], f'Energy {interval[0]}-{interval[1]} kJ/mol')
-            elif isinstance(threshold, (int, float)):
-                self.plot_threshold_points(ax, result, 0, threshold, 'magenta', f'Energy <= {threshold}')
+        # Incluindo pontos discretizados na visualização 3D
+        if self.discrete is not None and threshold is not None:
+            discrete_intervals = np.arange(0, threshold, self.discrete)
+            for i, interval in enumerate(discrete_intervals):
+                end = min(interval + self.discrete, threshold)
+                mask = (result['G_original'].flatten() <= end) & (result['G_original'].flatten() > interval)
+                X_flat, Y_flat, Z_flat = result['X_original'].flatten(), result['Y_original'].flatten(), result['G_original'].flatten()
 
-        fig.colorbar(surf, shrink=0.5, aspect=5, label='Free energy (kJ/mol)')
-        plt.legend(loc='upper left', frameon=False)  # Adicionado frameon=False para evitar erros caso não haja legendas a serem exibidas
+                if np.any(mask):
+                    ax.scatter(X_flat[mask], Y_flat[mask], Z_flat[mask], color=self.colors[i % len(self.colors)][1], label=f'{interval:.1f}-{end:.1f} KJ/mol')
+
+        cbar = fig.colorbar(surf, shrink=0.5, aspect=5, label='Free energy (kJ/mol)')
+        plt.legend(loc='upper left', bbox_to_anchor=(1.1, 1))
+
         plt.show()
 
 
@@ -371,7 +375,7 @@ class FreeEnergyLandscape:
                                 marker=markers[i % len(markers)], label=f'{interval:.1f}-{end:.1f} KJ/mol')
 
         if threshold is not None:
-            plt.legend(loc='center', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
+            plt.legend(loc='lower left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
 
         cbar = plt.colorbar(cont)
         cbar.set_label('Free energy (kJ/mol)')
@@ -417,11 +421,11 @@ class FreeEnergyLandscape:
             )
         print("Paisagem de energia livre gerada com sucesso.\n")
 
-        #print("Plotting the free energy landscape in 3D...")
-        #self.plot_3D_energy_landscape(
-        #     threshold=energy_threshold, titles=cv_names
-        #                               )
-        #print("Plotting 3D gif...")
+        print("Plotting the free energy landscape in 3D...")
+        self.plot_3D_energy_landscape(
+            threshold=energy_threshold, titles=cv_names
+                                      )
+        print("Plotting 3D gif...")
         #self.create_3D_gif(
         #     n_angles=n_angles, elevation=elevation,
         #     duration_per_frame=duration_per_frame,
