@@ -22,15 +22,17 @@ class FreeEnergyLandscape:
         self.kB = boltzmann_constant
         self.cv_names = cv_names
         self.colors = [
-            (0, "darkblue"),    # 0 a 3
-            (3/25, "blue"),     # 3 a 6
-            (6/25, "lightblue"),# 6 a 9
-            (9/25, "#ADD8E6"),  # 9 a 12 azul claríssimo
-            (12/25, "#FFA07A"), # 12 a 15 vermelho claro (quase salmão)
-            (15/25, "#FF4500"), # 15 a 18 mais escuro (quase laranja)
-            (18/25, "#FF6347"), # 18 a 21 laranja/vermelho
-            (21/25, "darkred"), # 21 a 24 vermelho escuro
-            (1, "darkred")      # Garante que o máximo seja vermelho escuro
+            (0.0, "darkblue"),
+            (0.1, "blue"),
+            (0.2, "dodgerblue"),
+            (0.3, "deepskyblue"),
+            (0.4, "lightblue"),
+            (0.5, "azure"),
+            (0.6, "oldlace"),
+            (0.7, "wheat"),
+            (0.8, "lightcoral"),
+            (0.9, "indianred"),
+            (1.0, "darkred")
         ]
         self.custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
         self.proj1_data_original = None
@@ -108,19 +110,8 @@ class FreeEnergyLandscape:
         result = self.calculate_free_energy(data)
         plt.figure(figsize=(8, 6))
 
-        # Cria uma nova paleta de cores com transição suave
-        colors = [
-            (0.0, "darkblue"),    
-            (0.125, "blue"),       
-            (0.25, "lightblue"),  
-            (0.375, "cyan"),      
-            (0.5, "lightgreen"),  
-            (0.625, "wheat"),    
-            (0.75, "orange"),     
-            (0.875, "red"),       
-            (1.0, "darkred")      
-        ]
-        custom_cmap = LinearSegmentedColormap.from_list("custom_energy", colors)
+
+        custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
 
         # Define os níveis de contorno para uma variação suave de 2 em 2
         G_min, G_max = np.min(result['G_original']), np.max(result['G_original'])
@@ -411,22 +402,21 @@ class FreeEnergyLandscape:
             )
         print("Paisagem de energia livre gerada com sucesso.\n")
 
-        # print("Plotting the free energy landscape in 3D...")
-        # self.plot_3D_energy_landscape(
+        #print("Plotting the free energy landscape in 3D...")
+        #self.plot_3D_energy_landscape(
         #     threshold=energy_threshold, titles=cv_names
         #                               )
-        # print("Plotting 3D gif...")
-        # self.create_3D_gif(
+        #print("Plotting 3D gif...")
+        #self.create_3D_gif(
         #     n_angles=n_angles, elevation=elevation,
         #     duration_per_frame=duration_per_frame,
         #     titles=cv_names
         #                    )
-        # print("3D plot successfully generated.\n")
+        #print("3D plot successfully generated.\n")
 
         # Após o uso final dos dados, limpe-os para liberar memória
         if hasattr(self, 'cached_results'):
             del self.cached_results
-
 
 def main():
 
