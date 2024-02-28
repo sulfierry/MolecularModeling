@@ -15,7 +15,11 @@ from matplotlib.colors import LinearSegmentedColormap
 
 class FreeEnergyLandscape:
 
-    def __init__(self, cv1_path, cv2_path, temperature, boltzmann_constant, bins=100, kde_bandwidth=None, cv_names=['CV1', 'CV2']):
+    def __init__(self, cv1_path, cv2_path, 
+                 temperature, boltzmann_constant, 
+                 bins=100, kde_bandwidth=None, 
+                 cv_names=['CV1', 'CV2'], discrete=None):
+        
         self.cv1_path = cv1_path
         self.cv2_path = cv2_path
         self.temperature = temperature
@@ -41,6 +45,7 @@ class FreeEnergyLandscape:
         # self.proj2_data_index = None
         self.bins = bins
         self.kde_bandwidth = kde_bandwidth
+        self.discrete = discrete
 
 
     def load_data(self):
@@ -101,43 +106,6 @@ class FreeEnergyLandscape:
 
         self.cached_results = {'X_original': X_original, 'Y_original': Y_original, 'G_original': G_original}
         return self.cached_results
-
-
-
-    def plot_energy_landscape(self, threshold, titles=['CV1', 'CV2']):
-        # Utiliza os dados já carregados e processados para plotar a paisagem de energia livre
-        data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
-        result = self.calculate_free_energy(data)
-        plt.figure(figsize=(8, 6))
-
-
-        custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
-
-        # Define os níveis de contorno para uma variação suave de 2 em 2
-        G_min, G_max = np.min(result['G_original']), np.max(result['G_original'])
-        levels = np.arange(G_min, G_max, 2)
-        
-        cont = plt.contourf(result['X_original'], result['Y_original'], result['G_original'],
-                            levels=levels, cmap=custom_cmap, extend='both')
-
-        # Adiciona linhas de contorno para definição
-        plt.contour(result['X_original'], result['Y_original'], result['G_original'],
-                    levels=levels, colors='k', linewidths=0.5)
-
-        if threshold is not None:
-            low_energy_mask = result['G_original'] <= threshold
-            if np.any(low_energy_mask):
-                plt.scatter(result['X_original'][low_energy_mask], result['Y_original'][low_energy_mask],
-                            color='magenta', s=50, label=f'Energy <= {threshold} kJ/mol')
-                plt.legend()
-
-        cbar = plt.colorbar(cont)
-        cbar.set_label('Free energy (kJ/mol)')
-        plt.xlabel(titles[0])
-        plt.ylabel(titles[1])
-        plt.title('Free Energy Landscape')
-        plt.savefig('Free_energy_landscape.png')
-        plt.show()
 
 
     def plot_3D_energy_landscape(self, threshold=None, titles=['CV1', 'CV2']):
@@ -368,6 +336,53 @@ class FreeEnergyLandscape:
 
         print(f"Energy data saved in'{filename}'.")
 
+
+    def plot_energy_landscape(self, threshold, titles=['CV1', 'CV2']):
+        data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
+        result = self.calculate_free_energy(data)
+        plt.figure(figsize=(8, 6))
+
+        custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
+
+        # Define os níveis de contorno para uma variação suave de 2 em 2
+        G_min, G_max = np.min(result['G_original']), np.max(result['G_original'])
+        levels = np.arange(G_min, G_max, 2)
+        
+        cont = plt.contourf(result['X_original'], result['Y_original'], result['G_original'],
+                            levels=levels, cmap=custom_cmap, extend='both')
+
+        # Adiciona linhas de contorno para definição
+        plt.contour(result['X_original'], result['Y_original'], result['G_original'],
+                    levels=levels, colors='k', linewidths=0.5)
+
+        # Lógica para plotar pontos discretizados se self.discrete for especificado
+        if self.discrete is not None and threshold is not None:
+            discrete_intervals = np.arange(0, threshold, self.discrete)
+            colors = ['purple', 'magenta', 'green', 'orange', 'red']  # Exemplo de cores
+            markers = ['o', 's', '^', 'D', '*']  # Exemplo de marcadores
+
+            for i, interval in enumerate(discrete_intervals):
+                end = min(interval + self.discrete, threshold)
+                mask = (result['G_original'].flatten() <= end) & (result['G_original'].flatten() > interval)
+                X_flat, Y_flat = result['X_original'].flatten(), result['Y_original'].flatten()
+
+                if np.any(mask):
+                    plt.scatter(X_flat[mask], Y_flat[mask], color=colors[i % len(colors)],
+                                marker=markers[i % len(markers)], label=f'{interval:.1f}-{end:.1f} KJ/mol')
+
+        if threshold is not None:
+            plt.legend(loc='center', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
+
+        cbar = plt.colorbar(cont)
+        cbar.set_label('Free energy (kJ/mol)')
+        plt.xlabel(titles[0])
+        plt.ylabel(titles[1])
+        plt.title('Free Energy Landscape with Discrete Points')
+        plt.tight_layout(rect=[0, 0, 0.85, 1])  # Ajuste para garantir que a legenda fique visível e não sobreponha o gráfico
+        plt.savefig('Free_energy_landscape_with_discrete_points.png')
+        plt.show()
+
+
     def main(self, energy_threshold, cv_names, n_angles, elevation, duration_per_frame):
 
         # Verificar ambos os arquivos de entrada antes de carregar os dados
@@ -419,17 +434,17 @@ class FreeEnergyLandscape:
             del self.cached_results
 
 def main():
-
     # Definindo valores padrão
     t = 300                     # --temperature           [int] [Kelvin]
     kB = 8.314e-3               # --kb                    [float] [kJ/(mol·K)]
-    energy_threshold = None     # --energy                [int] [kJ/mol]
+    energy_threshold = None     # --energy                [float] [kJ/mol]
     bins_energy_histogram = 100 # --bins_energy_histogram [int]
     kde_bandwidth_cv = None     # --kde_bandwidth         [float]
     cv_names = ['CV1', 'CV2']   # --name                  [str] [str]
     n_angles = 10               # --gif_angles            [int]
     elevation = 10              # --gif_elevation         [int]
     duration_per_frame = 0.1    # --gif_duration          [float]
+    discrete_val = None         # --discrete              [float]
 
     if len(sys.argv) >= 3:
         cv1_path, cv2_path = sys.argv[1], sys.argv[2]
@@ -454,7 +469,7 @@ def main():
                 kde_bandwidth_cv = float(sys.argv[i + 1]) if sys.argv[i + 1].lower() != "none" else None
                 i += 2
             elif key == "--names":
-                cv_names = [sys.argv[i + 1], sys.argv[i + 2]]  # Captura os nomes das variáveis coletivas
+                cv_names = [sys.argv[i + 1], sys.argv[i + 2]]
                 i += 3
             elif key == "--gif_angles":
                 n_angles = int(sys.argv[i + 1])
@@ -465,6 +480,9 @@ def main():
             elif key == "--gif_duration":
                 duration_per_frame = float(sys.argv[i + 1])
                 i += 2
+            elif key == "--discrete":
+                discrete_val = float(sys.argv[i + 1])  # Captura o valor para discretização
+                i += 2
             else:
                 print(f"Unrecognized option: {key}")
                 sys.exit(1)
@@ -473,13 +491,9 @@ def main():
         sys.exit(1)
 
     try:
-        fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB,
-                                bins=bins_energy_histogram,
-                                kde_bandwidth=kde_bandwidth_cv)
+        fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB, bins=bins_energy_histogram, kde_bandwidth=kde_bandwidth_cv, cv_names=cv_names, discrete=discrete_val)
 
-        fel.main(energy_threshold, cv_names=cv_names,
-                 n_angles=n_angles, elevation=elevation,
-                duration_per_frame=duration_per_frame)
+        fel.main(energy_threshold, cv_names=cv_names, n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
         
         if energy_threshold is not None:
             print("Calculating and saving energy for each frame...")
