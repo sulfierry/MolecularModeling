@@ -5,13 +5,12 @@ import platform
 import tempfile
 import subprocess
 import numpy as np
-from matplotlib import cm
+import multiprocessing
 import imageio.v2 as imageio
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 from joblib import Parallel, delayed
 from matplotlib.colors import LinearSegmentedColormap
-
 
 class FreeEnergyLandscape:
 
@@ -326,8 +325,8 @@ class FreeEnergyLandscape:
         Optional arguments:
             --temperature           [int]       Simulation temperature in Kelvin (default: 300K)
             --kb                    [float]     Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)
-            --energy                [float]     Energy, single value (default: None)
-            --discrete              [float]     Discrete value for energy (default: None)
+            --energy                [float]     Energy (KJ/mol), single value (default: None)
+            --discrete              [float]     Discrete value (KJ/mol) for energy (default: None)
             --bins_energy_histogram [int]       Bins for energy histogram (default: 100)
             --kde_bandwidth         [float]     Bandwidth for kernel density estimation (default: None)
             --names                 [str] [str] Names for the collective variables (default: CV1, CV2)
@@ -339,9 +338,6 @@ class FreeEnergyLandscape:
             free_energy_landscape cv1.txt cv2.txt --names Angle_CV1 Distance_CV2 --temperature 310 --energy 5 --bins_energy_histogram 100 --kde_bandwidth 0.5 --gif_angles 20
 
         """
-        #      Notes:
-        #  - The --energy argument can be a single value (e.g., 10) to indicate a maximum energy threshold, or a list of tuples to specify multiple energy ranges.
-        #  - Use quotes for arguments that include spaces or special characters (e.g., --energy "[(0, 1), (1, 2)]").
         print(help_text)
 
     def calculate_density_for_chunk(self, combined_data_chunk, bw_method):
@@ -351,7 +347,6 @@ class FreeEnergyLandscape:
         return density
 
     def calculate_and_save_free_energy(self, threshold=None):
-        import multiprocessing
 
         # Verifica se os dados foram carregados
         if self.proj1_data_original is None or self.proj2_data_original is None:
@@ -482,6 +477,9 @@ def main():
             elif key == "--energy":
                 energy_threshold = float(sys.argv[i + 1])
                 i += 2
+            elif key == "--discrete":
+                discrete_val = float(sys.argv[i + 1])  
+                i += 2
             elif key == "--bins_energy_histogram":
                 bins_energy_histogram = int(sys.argv[i + 1])
                 i += 2
@@ -499,9 +497,6 @@ def main():
                 i += 2
             elif key == "--gif_duration":
                 duration_per_frame = float(sys.argv[i + 1])
-                i += 2
-            elif key == "--discrete":
-                discrete_val = float(sys.argv[i + 1])  # Captura o valor para discretização
                 i += 2
             else:
                 print(f"Unrecognized option: {key}")
