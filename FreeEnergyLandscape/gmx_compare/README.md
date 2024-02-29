@@ -92,8 +92,6 @@ $$
 - $K$ is the kernel function, typically Gaussian.
 - $h$ is the bandwidth.
 
-This KDE approach offers advantages in terms of smoothness and adaptability to complex data distributions, making it particularly suited for capturing detailed features of free energy landscapes.
-
 ### Boltzmann Inversion
 
 The free energy $G(x)$ of a state is calculated from the probability density $\hat{f}(x)$, obtained via KDE:
