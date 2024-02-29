@@ -41,8 +41,6 @@ class FreeEnergyLandscape:
         self.custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
         self.proj1_data_original = None
         self.proj2_data_original = None
-        # self.proj1_data_index = None
-        # self.proj2_data_index = None
         self.bins = bins
         self.kde_bandwidth = kde_bandwidth
         self.discrete = discrete
@@ -52,47 +50,6 @@ class FreeEnergyLandscape:
         # Carrega os dados das variáveis coletivas e os índices dos frames
         self.proj1_data_original = np.loadtxt(self.cv1_path, usecols=[1])
         self.proj2_data_original = np.loadtxt(self.cv2_path, usecols=[1])
-
-
-    def boltzmann_inversion(self, data_list, titles, threshold=None):
-        fig_combined, axs_combined = plt.subplots(1, len(data_list), figsize=(20, 6), sharey=True)
-
-        # Cores e marcadores para pontos discretizados
-        colors = ['purple', 'magenta', 'green', 'orange', 'red']
-        markers = ['o', 's', '^', 'D', '*']
-
-        for ax, data, title in zip(axs_combined, data_list, titles):
-            # Calcula o histograma e a energia livre G para cada conjunto de dados
-            hist, bin_edges = np.histogram(data, bins=100, density=True)
-            hist = np.clip(hist, a_min=1e-10, a_max=None)
-            G = -self.kB * self.temperature * np.log(hist)
-            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-
-            # Normaliza G subtraindo o mínimo para que o menor valor seja zero
-            G_min_normalized = G - np.min(G)
-
-            # Plota a curva de energia livre
-            ax.plot(bin_centers, G_min_normalized, label='Free energy', color='red')
-            ax.set_xlabel(title)
-
-            # Se um threshold é especificado e self.discrete é definido
-            if threshold is not None and self.discrete:
-                discrete_intervals = np.arange(0, threshold, self.discrete)
-                for i, interval in enumerate(discrete_intervals):
-                    end = min(interval + self.discrete, threshold)
-                    mask = (G_min_normalized > interval) & (G_min_normalized <= end)
-                    if np.any(mask):
-                        ax.scatter(bin_centers[mask], G_min_normalized[mask], color=colors[i % len(colors)],
-                                marker=markers[i % len(markers)], label=f'{interval:.1f}-{end:.1f} KJ/mol', s=50)
-
-        axs_combined[0].set_ylabel('Free Energy (kJ/mol)')
-        # Colocando a legenda fora do gráfico, similar ao ajuste anterior
-        axs_combined[-1].legend(loc='center left', bbox_to_anchor=(1, 0.5))
-        plt.suptitle('Normalized Free Energy Profile Comparison')
-        plt.tight_layout(rect=[0, 0, 0.85, 1])
-        plt.savefig('Combined_Free_Energy_Profile_Normalized.png')
-        plt.show()
-
 
 
     def calculate_free_energy(self, data):
@@ -115,6 +72,158 @@ class FreeEnergyLandscape:
         return self.cached_results
 
 
+    def boltzmann_inversion(self, data_list, titles, threshold=None):
+        fig_combined, axs_combined = plt.subplots(1, len(data_list), figsize=(20, 6), sharey=True)
+        colors = ['purple', 'magenta', 'green', 'orange', 'red']
+        markers = ['o', 's', '^', 'D', '*']
+
+        # Armazena os handles e labels para a legenda
+        handles_list = []
+        labels_list = []
+
+        for ax, data, title in zip(axs_combined, data_list, titles):
+            hist, bin_edges = np.histogram(data, bins=100, density=True)
+            hist = np.clip(hist, a_min=1e-10, a_max=None)
+            G = -self.kB * self.temperature * np.log(hist)
+            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+            G_min_normalized = G - np.min(G)
+
+            ax.plot(bin_centers, G_min_normalized, label='Free energy', color='red')
+            ax.set_xlabel(title)
+
+            if threshold is not None and self.discrete:
+                discrete_intervals = np.arange(0, threshold + self.discrete, self.discrete)
+                for i, interval in enumerate(discrete_intervals):
+                    end = min(interval + self.discrete, threshold)
+                    mask = (G_min_normalized >= interval) & (G_min_normalized < end)
+                    if np.any(mask):
+                        scatter = ax.scatter(bin_centers[mask], G_min_normalized[mask], color=colors[i % len(colors)],
+                                            marker=markers[i % len(markers)], s=50)
+                        # Armazena somente um handle e label por intervalo para evitar duplicatas
+                        if f'{interval:.1f}-{end:.1f} KJ/mol' not in labels_list:
+                            handles_list.append(scatter)
+                            labels_list.append(f'{interval:.1f}-{end:.1f} KJ/mol')
+
+        axs_combined[0].set_ylabel('Free Energy (kJ/mol)')
+
+        # Cria a legenda fora do último subplot
+        fig_combined.legend(handles_list, labels_list, loc='upper left', bbox_to_anchor=(1.05, 1), title="Energy intervals")
+
+        plt.suptitle('Normalized Free Energy Profile Comparison')
+        plt.tight_layout(rect=[0, 0, 0.85, 1])  # Ajuste para garantir que a legenda fique visível e não sobreponha o gráfico
+        plt.savefig('Combined_Free_Energy_Profile_Normalized.png')
+        plt.show()
+
+
+    def plot_histogram(self, data_list, titles):
+        plt.figure(figsize=(8 * len(data_list), 6))
+        
+        # Normalizar os dados e calcular as frequências em porcentagem
+        all_counts = []
+        for data in data_list:
+            data_normalized = (data - np.min(data)) / (np.max(data) - np.min(data))
+            counts, _ = np.histogram(data_normalized, bins=self.bins)
+            all_counts.append(counts)
+        total_counts_max = max([max(counts) for counts in all_counts])
+        
+        for i, (data, title) in enumerate(zip(data_list, titles)):
+            data_normalized = (data - np.min(data)) / (np.max(data) - np.min(data))
+            counts, bin_edges = np.histogram(data_normalized, bins=self.bins)
+            # Ajustar as contagens para que o valor máximo de contagem represente 100%
+            normalized_counts = (counts / total_counts_max) * 100
+            bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
+            
+            ax = plt.subplot(1, len(data_list), i + 1)
+            bars = ax.bar(bin_centers, normalized_counts, width=(bin_centers[1] - bin_centers[0]), alpha=0.7, color='green')
+            ax.set_ylim(0, 100)  # Definir explicitamente o eixo Y de 0 a 100%
+            ax.set_title(f'Normalized {title}')
+            ax.set_xlabel('Value')
+            if i == 0:
+                ax.set_ylabel('Frequency (%)')
+            ax.grid(True)
+        
+        # Ajustar as marcas do eixo Y para incluir o valor máximo (100%)
+        plt.yticks(np.arange(0, 101, 20))
+        
+        # Adicionar a legenda fora do loop, apenas uma vez
+        plt.figlegend(['Normalized Frequency (%)'], loc='upper right')
+        plt.tight_layout()
+        plt.savefig('histograms_normalized_side_by_side.png')
+        plt.show()
+
+
+    def cv_by_frame(self, data_list, titles):
+        frames = np.arange(len(data_list[0]))  # Assumindo que todos os conjuntos têm o mesmo número de frames
+        for data, title in zip(data_list, titles):
+            plt.figure(figsize=(10, 6))
+            plt.plot(frames, data, label=title)
+            plt.xlabel('Frame')
+            plt.ylabel(title)
+            plt.title(f'CV by Frame - {title}')
+            plt.legend()
+            # plt.savefig(f'cv_by_frame_absolute_{title.replace(" ", "_")}.png')
+            plt.close()
+
+        # Plot combinado dos valores relativos, ajustado para exibir de 0 a 100
+        plt.figure(figsize=(10, 6))
+        for data, title in zip(data_list, titles):
+            # Normalizando os dados de 0 a 1 e multiplicando por 100 para ajustar a escala de 0 a 100
+            data_normalized = ((data - np.min(data)) / (np.max(data) - np.min(data))) * 100
+            plt.plot(frames, data_normalized, label=title)
+        plt.xlabel('Frame')
+        plt.ylabel('CV (%)')  # Atualização da etiqueta do eixo Y para refletir a escala de porcentagem
+        plt.title('CV by Frame - Combined Normalized')
+        plt.legend()
+        plt.ylim(0, 100)  # Garantindo que o eixo Y esteja limitado de 0 a 100
+        plt.savefig('cv_by_frame_combined_normalized.png')
+        plt.show()
+
+
+    def plot_energy_landscape(self, threshold, titles=['CV1', 'CV2']):
+        data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
+        result = self.calculate_free_energy(data)
+        plt.figure(figsize=(8, 6))
+
+        custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
+
+        # Define os níveis de contorno para uma variação suave de 2 em 2
+        G_min, G_max = np.min(result['G_original']), np.max(result['G_original'])
+        levels = np.arange(G_min, G_max, 2)
+        
+        cont = plt.contourf(result['X_original'], result['Y_original'], result['G_original'],
+                            levels=levels, cmap=custom_cmap, extend='both')
+
+        # Adiciona linhas de contorno para definição
+        plt.contour(result['X_original'], result['Y_original'], result['G_original'],
+                    levels=levels, colors='k', linewidths=0.5)
+
+        # Lógica para plotar pontos discretizados se self.discrete for especificado
+        if self.discrete is not None and threshold is not None:
+            discrete_intervals = np.arange(0, threshold, self.discrete)
+            colors = ['purple', 'magenta', 'green', 'orange', 'red']  # Exemplo de cores
+            markers = ['*', 's', '^', 'D', 'o']  # Exemplo de marcadores
+
+            for i, interval in enumerate(discrete_intervals):
+                end = min(interval + self.discrete, threshold)
+                mask = (result['G_original'].flatten() <= end) & (result['G_original'].flatten() > interval)
+                X_flat, Y_flat = result['X_original'].flatten(), result['Y_original'].flatten()
+
+                if np.any(mask):
+                    plt.scatter(X_flat[mask], Y_flat[mask], color=colors[i % len(colors)],
+                                marker=markers[i % len(markers)], label=f'{interval:.1f}-{end:.1f} KJ/mol')
+
+        if threshold is not None:
+            plt.legend(loc='lower left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
+
+        cbar = plt.colorbar(cont)
+        cbar.set_label('Free energy (kJ/mol)')
+        plt.xlabel(titles[0])
+        plt.ylabel(titles[1])
+        plt.title('Free Energy Landscape with Discrete Points')
+        plt.tight_layout(rect=[0, 0, 0.85, 1])  # Ajuste para garantir que a legenda fique visível e não sobreponha o gráfico
+        plt.savefig('Free_energy_landscape_with_discrete_points.png')
+        plt.show()
+
     def plot_3D_energy_landscape(self, threshold=None, titles=['CV1', 'CV2']):
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
@@ -129,9 +238,8 @@ class FreeEnergyLandscape:
         ax.set_title('3D Free Energy Landscape')
 
         # Cores e marcadores para pontos discretizados
-        colors = ['purple', 'magenta', 'green', 'orange', 'red']
-        # Marcadores disponíveis em 3D: 'o', '^', 'D', 's', '*'. Alguns podem não funcionar como esperado.
-        markers = ['o', '^', 'd', 's', '*']
+        colors = ['purple', 'magenta', 'green', 'orange', 'red']  # Exemplo de cores
+        markers = ['*', 's', '^', 'D', 'o']  # Exemplo de marcadores
 
         if self.discrete is not None and threshold is not None:
             discrete_intervals = np.arange(0, threshold, self.discrete)
@@ -209,71 +317,6 @@ class FreeEnergyLandscape:
         else:  # Assume Linux ou outra plataforma Unix-like
             subprocess.run(['xdg-open', gif_filename])
 
-    def plot_histogram(self, data_list, titles):
-        plt.figure(figsize=(8 * len(data_list), 6))
-        
-        # Normalizar os dados e calcular as frequências em porcentagem
-        all_counts = []
-        for data in data_list:
-            data_normalized = (data - np.min(data)) / (np.max(data) - np.min(data))
-            counts, _ = np.histogram(data_normalized, bins=self.bins)
-            all_counts.append(counts)
-        total_counts_max = max([max(counts) for counts in all_counts])
-        
-        for i, (data, title) in enumerate(zip(data_list, titles)):
-            data_normalized = (data - np.min(data)) / (np.max(data) - np.min(data))
-            counts, bin_edges = np.histogram(data_normalized, bins=self.bins)
-            # Ajustar as contagens para que o valor máximo de contagem represente 100%
-            normalized_counts = (counts / total_counts_max) * 100
-            bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
-            
-            ax = plt.subplot(1, len(data_list), i + 1)
-            bars = ax.bar(bin_centers, normalized_counts, width=(bin_centers[1] - bin_centers[0]), alpha=0.7, color='green')
-            ax.set_ylim(0, 100)  # Definir explicitamente o eixo Y de 0 a 100%
-            ax.set_title(f'Normalized {title}')
-            ax.set_xlabel('Value')
-            if i == 0:
-                ax.set_ylabel('Frequency (%)')
-            ax.grid(True)
-        
-        # Ajustar as marcas do eixo Y para incluir o valor máximo (100%)
-        plt.yticks(np.arange(0, 101, 20))
-        
-        # Adicionar a legenda fora do loop, apenas uma vez
-        plt.figlegend(['Normalized Frequency (%)'], loc='upper right')
-        plt.tight_layout()
-        plt.savefig('histograms_normalized_side_by_side.png')
-        plt.show()
-
-
-    def cv_by_frame(self, data_list, titles):
-        frames = np.arange(len(data_list[0]))  # Assumindo que todos os conjuntos têm o mesmo número de frames
-        for data, title in zip(data_list, titles):
-            plt.figure(figsize=(10, 6))
-            plt.plot(frames, data, label=title)
-            plt.xlabel('Frame')
-            plt.ylabel(title)
-            plt.title(f'CV by Frame - {title}')
-            plt.legend()
-            # plt.savefig(f'cv_by_frame_absolute_{title.replace(" ", "_")}.png')
-            plt.close()
-
-        # Plot combinado dos valores relativos, ajustado para exibir de 0 a 100
-        plt.figure(figsize=(10, 6))
-        for data, title in zip(data_list, titles):
-            # Normalizando os dados de 0 a 1 e multiplicando por 100 para ajustar a escala de 0 a 100
-            data_normalized = ((data - np.min(data)) / (np.max(data) - np.min(data))) * 100
-            plt.plot(frames, data_normalized, label=title)
-        plt.xlabel('Frame')
-        plt.ylabel('CV (%)')  # Atualização da etiqueta do eixo Y para refletir a escala de porcentagem
-        plt.title('CV by Frame - Combined Normalized')
-        plt.legend()
-        plt.ylim(0, 100)  # Garantindo que o eixo Y esteja limitado de 0 a 100
-        plt.savefig('cv_by_frame_combined_normalized.png')
-        plt.show()
-
-
-
     @staticmethod
     def help():
         help_text = """
@@ -283,7 +326,8 @@ class FreeEnergyLandscape:
         Optional arguments:
             --temperature           [int]       Simulation temperature in Kelvin (default: 300K)
             --kb                    [float]     Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)
-            --energy                [int]       Energy, single value (default: None)
+            --energy                [float]     Energy, single value (default: None)
+            --discrete              [float]     Discrete value for energy (default: None)
             --bins_energy_histogram [int]       Bins for energy histogram (default: 100)
             --kde_bandwidth         [float]     Bandwidth for kernel density estimation (default: None)
             --names                 [str] [str] Names for the collective variables (default: CV1, CV2)
@@ -357,52 +401,6 @@ class FreeEnergyLandscape:
         print(f"Energy data saved in'{filename}'.")
 
 
-    def plot_energy_landscape(self, threshold, titles=['CV1', 'CV2']):
-        data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
-        result = self.calculate_free_energy(data)
-        plt.figure(figsize=(8, 6))
-
-        custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
-
-        # Define os níveis de contorno para uma variação suave de 2 em 2
-        G_min, G_max = np.min(result['G_original']), np.max(result['G_original'])
-        levels = np.arange(G_min, G_max, 2)
-        
-        cont = plt.contourf(result['X_original'], result['Y_original'], result['G_original'],
-                            levels=levels, cmap=custom_cmap, extend='both')
-
-        # Adiciona linhas de contorno para definição
-        plt.contour(result['X_original'], result['Y_original'], result['G_original'],
-                    levels=levels, colors='k', linewidths=0.5)
-
-        # Lógica para plotar pontos discretizados se self.discrete for especificado
-        if self.discrete is not None and threshold is not None:
-            discrete_intervals = np.arange(0, threshold, self.discrete)
-            colors = ['purple', 'magenta', 'green', 'orange', 'red']  # Exemplo de cores
-            markers = ['o', 's', '^', 'D', '*']  # Exemplo de marcadores
-
-            for i, interval in enumerate(discrete_intervals):
-                end = min(interval + self.discrete, threshold)
-                mask = (result['G_original'].flatten() <= end) & (result['G_original'].flatten() > interval)
-                X_flat, Y_flat = result['X_original'].flatten(), result['Y_original'].flatten()
-
-                if np.any(mask):
-                    plt.scatter(X_flat[mask], Y_flat[mask], color=colors[i % len(colors)],
-                                marker=markers[i % len(markers)], label=f'{interval:.1f}-{end:.1f} KJ/mol')
-
-        if threshold is not None:
-            plt.legend(loc='lower left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
-
-        cbar = plt.colorbar(cont)
-        cbar.set_label('Free energy (kJ/mol)')
-        plt.xlabel(titles[0])
-        plt.ylabel(titles[1])
-        plt.title('Free Energy Landscape with Discrete Points')
-        plt.tight_layout(rect=[0, 0, 0.85, 1])  # Ajuste para garantir que a legenda fique visível e não sobreponha o gráfico
-        plt.savefig('Free_energy_landscape_with_discrete_points.png')
-        plt.show()
-
-
     def main(self, energy_threshold, cv_names, n_angles, elevation, duration_per_frame):
 
         # Verificar ambos os arquivos de entrada antes de carregar os dados
@@ -412,42 +410,44 @@ class FreeEnergyLandscape:
         print("Data loaded successfully!")
         print(f"CV1: {self.cv1_path}, CV2: {self.cv2_path}\n")
 
-        print("Plotting histograms and free energy profiles...")
+        print("Plotting free energy profiles...\n")
         self.boltzmann_inversion(
             data_list=[self.proj1_data_original, self.proj2_data_original],
             titles=cv_names,
             threshold=energy_threshold
             )
 
+        print("Plotting histograms...\n")
         self.plot_histogram(
             data_list=[self.proj1_data_original, self.proj2_data_original],
             titles=cv_names
             )
-
+        print("Plotting Collective variables normalized by frame...\n")
         self.cv_by_frame(
             data_list=[self.proj1_data_original, self.proj2_data_original],
             titles=cv_names
             )
         
-        print("Successfully generated histograms and free energy profiles.\n")
+        print("Successfully generated, free energy profiles, histograms and normalized collective variables.\n")
 
-        print("Plotting the free energy landscape...")
+        print("Plotting the free energy landscape...\n")
         self.plot_energy_landscape(
             threshold=energy_threshold, titles=cv_names
             )
-        print("Paisagem de energia livre gerada com sucesso.\n")
+        print("Plot successfully generated.\n")
 
-        print("Plotting the free energy landscape in 3D...")
+        print("Plotting the free energy landscape in 3D...\n")
         self.plot_3D_energy_landscape(
             threshold=energy_threshold, titles=cv_names
                                       )
-        print("Plotting 3D gif...")
-        #self.create_3D_gif(
-        #     n_angles=n_angles, elevation=elevation,
-        #     duration_per_frame=duration_per_frame,
-        #     titles=cv_names
-        #                    )
-        #print("3D plot successfully generated.\n")
+        print("Plotting 3D gif...\n")
+
+        self.create_3D_gif(
+            n_angles=n_angles, elevation=elevation,
+            duration_per_frame=duration_per_frame,
+            titles=cv_names
+                           )
+        print("3D plot successfully generated.\n")
 
         # Após o uso final dos dados, limpe-os para liberar memória
         if hasattr(self, 'cached_results'):
