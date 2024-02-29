@@ -8,6 +8,7 @@ import numpy as np
 import multiprocessing
 import imageio.v2 as imageio
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 from scipy.stats import gaussian_kde
 from joblib import Parallel, delayed
 from matplotlib.colors import LinearSegmentedColormap
@@ -71,48 +72,57 @@ class FreeEnergyLandscape:
         return self.cached_results
 
 
+
     def boltzmann_inversion(self, data_list, titles, threshold=None):
+        import matplotlib.pyplot as plt
+        import numpy as np
+
         fig_combined, axs_combined = plt.subplots(1, len(data_list), figsize=(20, 6), sharey=True)
         colors = ['purple', 'magenta', 'green', 'orange', 'red']
         markers = ['o', 's', '^', 'D', '*']
-
-        # Armazena os handles e labels para a legenda
-        handles_list = []
-        labels_list = []
-
-        for ax, data, title in zip(axs_combined, data_list, titles):
-            hist, bin_edges = np.histogram(data, bins=100, density=True)
+        
+        # Inicializa a lista de elementos da legenda com o elemento para a linha de energia livre
+        legend_elements = [plt.Line2D([0], [0], color='red', lw=2, label='Free energy')]
+        
+        for idx, (ax, data, title) in enumerate(zip(axs_combined, data_list, titles)):
+            hist, bin_edges = np.histogram(data, bins=self.bins, density=True)
             hist = np.clip(hist, a_min=1e-10, a_max=None)
             G = -self.kB * self.temperature * np.log(hist)
             bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
             G_min_normalized = G - np.min(G)
-
-            ax.plot(bin_centers, G_min_normalized, label='Free energy', color='red')
+            
+            # Plotar a linha de energia livre
+            ax.plot(bin_centers, G_min_normalized, color='red', label='Free energy' if idx == 0 else "_nolegend_")
             ax.set_xlabel(title)
+            
+        if threshold is not None and hasattr(self, 'discrete') and self.discrete:
+            discrete_intervals = np.arange(0, threshold, self.discrete)
+            for i, interval in enumerate(discrete_intervals):
+                end = interval + self.discrete if i < len(discrete_intervals) - 1 else threshold
+                # Evita adicionar intervalos redundantes na legenda
+                if end > interval:
+                    legend_elements.append(plt.Line2D([0], [0], marker=markers[i % len(markers)], color='w', markerfacecolor=colors[i % len(colors)], markersize=10, label=f'{interval:.1f}-{end:.1f} kJ/mol'))
 
-            if threshold is not None and self.discrete:
-                discrete_intervals = np.arange(0, threshold + self.discrete, self.discrete)
-                for i, interval in enumerate(discrete_intervals):
-                    end = min(interval + self.discrete, threshold)
+                # Plotar os pontos para cada intervalo nos gráficos
+                for ax, data in zip(axs_combined, data_list):
+                    hist, bin_edges = np.histogram(data, bins=self.bins, density=True)
+                    hist = np.clip(hist, a_min=1e-10, a_max=None)
+                    G = -self.kB * self.temperature * np.log(hist)
+                    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+                    G_min_normalized = G - np.min(G)
                     mask = (G_min_normalized >= interval) & (G_min_normalized < end)
                     if np.any(mask):
-                        scatter = ax.scatter(bin_centers[mask], G_min_normalized[mask], color=colors[i % len(colors)],
-                                            marker=markers[i % len(markers)], s=50)
-                        # Armazena somente um handle e label por intervalo para evitar duplicatas
-                        if f'{interval:.1f}-{end:.1f} KJ/mol' not in labels_list:
-                            handles_list.append(scatter)
-                            labels_list.append(f'{interval:.1f}-{end:.1f} KJ/mol')
+                        ax.scatter(bin_centers[mask], G_min_normalized[mask], color=colors[i % len(colors)], marker=markers[i % len(markers)], s=50)
 
+        # Adiciona a legenda no último subplot
+        axs_combined[-1].legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.05, 1), title="Energy intervals")
+        
         axs_combined[0].set_ylabel('Free Energy (kJ/mol)')
-
-        # Cria a legenda fora do último subplot
-        fig_combined.legend(handles_list, labels_list, loc='upper left', bbox_to_anchor=(1.05, 1), title="Energy intervals")
-
         plt.suptitle('Normalized Free Energy Profile Comparison')
-        plt.tight_layout(rect=[0, 0, 0.85, 1])  # Ajuste para garantir que a legenda fique visível e não sobreponha o gráfico
+        plt.tight_layout(rect=[0, 0, 0.85, 1])
         plt.savefig('Combined_Free_Energy_Profile_Normalized.png')
         plt.show()
-
+        
 
     def plot_histogram(self, data_list, titles):
         plt.figure(figsize=(8 * len(data_list), 6))
@@ -218,7 +228,7 @@ class FreeEnergyLandscape:
         cbar.set_label('Free energy (kJ/mol)')
         plt.xlabel(titles[0])
         plt.ylabel(titles[1])
-        plt.title('Free Energy Landscape with Discrete Points')
+        plt.title('Free Energy Landscape')
         plt.tight_layout(rect=[0, 0, 0.85, 1])  # Ajuste para garantir que a legenda fique visível e não sobreponha o gráfico
         plt.savefig('Free_energy_landscape_with_discrete_points.png')
         plt.show()
