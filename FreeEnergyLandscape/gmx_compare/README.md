@@ -1,78 +1,6 @@
 # Comparative Analysis of Free Energy Calculation Methods
 
-This document provides a detailed mathematical comparison of free energy calculation and interpolation methods between the custom Python script `freeEnergyLandscape.py` and the GROMACS tools `gmx_sham` and `gmx_wham`.
-
-## Free Energy Calculation
-
-### gmx_sham and gmx_wham
-Both `gmx_sham` and `gmx_wham` utilize statistical methods to analyze free energy landscapes from molecular dynamics simulations. The core principle is the weighted histogram analysis method (WHAM), which combines data from multiple biased simulations to estimate the unbiased free energy landscape.
-
-- **Mathematical Foundation**: The WHAM approach solves a set of self-consistent equations to optimize weights for each simulation data set, thereby minimizing the free energy differences across simulations. The free energy ($G$) for a given state is calculated using the Boltzmann relation:
-
-$$G = -kT \ln(P)$$
-
-  where ($P$) is the probability distribution of observing a system in a particular state, ($k$) is Boltzmann's constant, and ($T$) is the temperature.
-
-### freeEnergyLandscape.py
-The `freeEnergyLandscape.py` script calculates the free energy landscape by first generating histograms from collective variable data and optionally applying kernel density estimation (KDE) to smooth the distribution. The free energy is then calculated using the Boltzmann inversion method.
-
-- **Kernel Density Estimation (KDE)**: This method provides a smoothed representation of the data distribution, which can be considered an indirect form of interpolation. KDE is particularly useful for creating a continuous approximation of the probability distribution from discrete simulation data points.
-
-- **Free Energy Calculation**: Similar to `gmx_sham` and `gmx_wham`, the script calculates the free energy based on the probability distribution derived from the data, using the formula:
-
-$$G = -kT \ln(P)$$
-
-  However, the script enhances data handling by offering flexibility in adjusting the KDE bandwidth, directly impacting the smoothness and accuracy of the interpolated free energy landscape.
-
-## Interpolation Methods
-
-### gmx_sham and gmx_wham
-These tools do not explicitly utilize linear interpolation in their core algorithms for calculating free energy landscapes. Any interpolation, such as handling tabulated potentials in `gmx_wham`, serves secondary functions and does not directly influence the primary statistical analysis.
-
-### freeEnergyLandscape.py
-By employing KDE, `freeEnergyLandscape.py` effectively interpolates between data points in a more flexible and customizable manner than traditional linear interpolation. This approach allows for a more nuanced and accurate representation of the free energy landscape, especially in regions with sparse data.
-
-## Positive Characteristics of freeEnergyLandscape.py
-- **Flexibility and Customizability**: Offers users control over analysis parameters like KDE bandwidth and histogram binning, enhancing the adaptability of the free energy calculation to different datasets.
-- **Built-in Visualization**: Directly generates plots of the free energy landscape, facilitating immediate visual interpretation of results.
-- **Ease of Use**: Can be easily installed via pip and used with a simple command-line interface, lowering the barrier to entry for users.
-
-## Limitations of gmx_sham and gmx_wham
-- **Integration Complexity**: Require familiarity with the GROMACS suite and are less accessible to users outside this ecosystem.
-- **Less Customizable**: Offer limited flexibility in adjusting the parameters of the free energy calculation without modifying the source code.
-- **No Built-in Visualization**: Do not provide direct visualization capabilities, requiring additional steps to analyze and interpret the free energy landscape.
-
-In conclusion, while `gmx_sham` and `gmx_wham` are powerful tools for free energy analysis within the GROMACS environment, `freeEnergyLandscape.py` offers a more user-friendly and customizable approach, particularly beneficial for those seeking immediate visualization and flexible data analysis options.
-
-### Linear Interpolation Method (Assumed for `gmx sham`/`gmx wham`)
-
-Interpolation in the context of calculating free energy landscapes often involves estimating values between known data points to construct a continuous representation of the energy landscape. While specific details of the interpolation method used in `gmx sham` or `gmx wham` are not detailed in the provided source code, a common approach is linear interpolation, which can be represented mathematically as follows:
-
-Given two known points ($x_1, y_1$) and ($x_2, y_2$), the linear interpolation formula to find a value ($y$) at a point ($x$) is given by:
-
-$$y = y_1 + \frac{(x - x_1) \cdot (y_2 - y_1)}{x_2 - x_1}$$
-
-This method is straightforward but may not capture the complexities of free energy landscapes, especially in higher dimensions or with complex energy barriers.
-
-**Function Location:** Specific interpolation functions or methodologies, like weighted histogram analysis method (WHAM), are often implemented within the source code of molecular dynamics tools but are not explicitly detailed in the provided `gmx_sham.cpp` or `gmx_wham.cpp` files.
-
-### Kernel Density Estimation (KDE) Method
-
-The KDE method provides a way to estimate the probability density function (PDF) of a random variable in a non-parametric way. In the context of your script for calculating the Free Energy Landscape, KDE is used to estimate the density of states, which can then be converted into free energy using the Boltzmann relation. The KDE for a set of ($n$) points (${x_i}$) can be mathematically represented as:
-
-$$\hat{f}(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left( \frac{x - x_i}{h} \right)$$
-
-where $\hat{f}(x)$ is the estimated density at point ($x$), ($K$) is the kernel function (e.g., Gaussian), and ($h$) is the bandwidth, a parameter that controls the smoothness of the density estimate.
-
-The conversion from the estimated density to free energy is typically done using the relation:
-
-$$G(x) = -k_B T \ln(\hat{f}(x))$$
-
-where $G(x)$ is the free energy at point $x$, $k_B$ is the Boltzmann constant, and $T$ is the temperature.
-
-**Function Location:** Your script implements KDE in the `freeEnergyLandscape.py` file, using functions from libraries such as `numpy` and `scipy` for numerical operations and density estimation.
-
-This KDE approach offers advantages in terms of smoothness and adaptability to complex data distributions, making it particularly suited for capturing detailed features of free energy landscapes.
+This document provides a detailed mathematical comparison of free energy calculation and interpolation methods between the custom Python script `freeEnergyLandscape.py` and the method of GROMACS tools `gmx_sham` and `gmx_wham`.
 
 # GMX SHAM Mechanism Description
 
@@ -100,16 +28,8 @@ $$G(bin) = -kT \ln(P_{acum}(bin))$$
 
 4. **Probability Normalization and Energy Adjustment**: Finally, the probability in each bin is normalized, and the free energy values are adjusted so the minimum free energy across the landscape is set to zero, facilitating easier interpretation and visualization.
 
-## Analogy for Understanding Accumulated Probability
 
-Consider throwing darts at a target with different zones, where each zone represents a bin. Each dart hit corresponds to a data point in a bin. After many throws, comparing the number of darts per zone to the total throws gives the probability of hitting each zone. This scenario mirrors the accumulation of data points in bins and their conversion into a free energy landscape, offering insights into the system's stability and energetically favorable states.
-
-## Conclusion
-
-This mechanism enables `gmx_sham` to provide a detailed analysis of free energy landscapes, crucial for understanding molecular dynamics simulations. The tool's ability to dissect complex data into understandable energy landscapes makes it invaluable for researchers and scientists in the field of computational chemistry and molecular dynamics.
-
-
-# WHAM Method in GMX WHAM
+# GMX WHAM Mechanism Description
 
 The `gmx_wham` tool within the GROMACS suite utilizes the Weighted Histogram Analysis Method (WHAM) to derive free energy landscapes from multiple simulations. This sophisticated statistical approach combines data from various histograms to estimate the system's free energy landscape accurately. Additionally, `gmx_wham` employs linear interpolation for handling tabulated potentials. Below is a detailed explanation of WHAM's process, incorporating the clarification regarding interpolation methods:
 
@@ -146,12 +66,6 @@ In addition to the statistical combination of histograms, `gmx_wham` uses linear
 
 However, this linear interpolation method is specifically applied to the scenario of dealing with tabulated potentials and does not directly influence the primary WHAM algorithm's statistical combination of histograms for free energy calculation. The WHAM methodology itself does not inherently use linear interpolation as part of its core algorithm for combining histograms or calculating the free energy landscape. Instead, WHAM relies on a statistical approach to optimally combine data from multiple biased simulations to reconstruct the unbiased free energy profile.
 
-## Conclusion
-
-`gmx_wham.cpp` implements WHAM, a robust tool for analyzing complex free energy landscapes from molecular dynamics simulations. By combining histograms from multiple biased simulations and employing linear interpolation for tabulated potentials, it offers a comprehensive view of the free energy surface, crucial for understanding molecular processes and dynamics.
-
-
-####
 
 ## Free Energy Landscape Calculation with Python Script
 
@@ -174,8 +88,11 @@ $$
 \hat{f}(x) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left( \frac{x - x_i}{h} \right)
 $$
 
+- $n$ is the number of points
 - $K$ is the kernel function, typically Gaussian.
 - $h$ is the bandwidth.
+
+This KDE approach offers advantages in terms of smoothness and adaptability to complex data distributions, making it particularly suited for capturing detailed features of free energy landscapes.
 
 ### Boltzmann Inversion
 
@@ -199,5 +116,9 @@ $$
 ### Interpolation
 
 The smoothly interpolated probability density function provided by KDE enables calculating the free energy landscape over a continuous range of collective variable values, highlighting energetically favorable states and barriers between them.
+
+## Conclusion
+
+In conclusion, while `gmx_sham` and `gmx_wham` are powerful tools for free energy analysis within the GROMACS environment, `freeEnergyLandscape.py` offers a more user-friendly and customizable approach, particularly beneficial for those seeking immediate visualization and flexible data analysis options.
 
 
