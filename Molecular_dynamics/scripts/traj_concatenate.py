@@ -1,27 +1,25 @@
-import os
-import shutil
-import warnings
+# python script.py 3l3x_wr
+
 import MDAnalysis as mda
 from MDAnalysis.analysis import align
+import os
+import sys
+import shutil
 from MDAnalysis.coordinates.DCD import DCDWriter
 
-warnings.filterwarnings("ignore")
-
-
-def concatenate_and_align_trajectories(base_path, output_path, topology, coordinates_prefix, number_of_trajectories):
+def concatenate_and_align_trajectories(base_path, output_path, name):
     # Garantir a criação do diretório de saída
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
     # Caminho para a topologia inicial
-    topology_path = os.path.join(base_path, f"1/{topology}.prmtop")
-
-    # Lista de trajetórias a serem carregadas e concatenadas, ajustada para o número correto de trajetórias
-    trajectory_paths = [os.path.join(base_path, f"{i}/{coordinates_prefix}{i}.dcd") for i in range(1, number_of_trajectories + 1)]
-
+    topology_path = os.path.join(base_path, f"1/{name}_1.prmtop")
+    # Lista de trajetórias a serem carregadas e concatenadas
+    trajectory_paths = [os.path.join(base_path, f"{i}/{name}_{i}.dcd") for i in range(1, 11)]
+    
     # Carregar a primeira trajetória para inicializar o universo
     u = mda.Universe(topology_path, trajectory_paths[0])
-
+    
     # Selecionar átomos para alinhamento, ajuste a seleção conforme necessário
     ref_atoms = u.select_atoms('backbone')  # Exemplo: seleção da espinha dorsal
 
@@ -40,16 +38,12 @@ def concatenate_and_align_trajectories(base_path, output_path, topology, coordin
                 align.alignto(u, ref_universe, select='backbone')
                 # Escrever o frame alinhado
                 W.write(u)
-
+    
     # Copiar a topologia para a pasta de saída
-    shutil.copy(topology_path, os.path.join(output_path, "wr_prod_1.prmtop"))
+    shutil.copy(topology_path, os.path.join(output_path, f"{name}_1.prmtop"))
 
 if __name__ == "__main__":
-
-    topology = "wr_prod_1"
-    coordinates_prefix = "wr_prod_"
-    number_of_trajectories = 5  # Definir o número correto de trajetórias aqui
-
+    name= sys.argv[1]
     base_path = "./"  # Caminho base onde as pastas "1", "2", ..., "10" estão localizadas
     output_path = "./traj_concatenate_aligned"  # Caminho da pasta de saída para a trajetória concatenada e alinhada
-    concatenate_and_align_trajectories(base_path, output_path, topology, coordinates_prefix, number_of_trajectories)
+    concatenate_and_align_trajectories(base_path, output_path, name)
