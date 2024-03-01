@@ -1,4 +1,4 @@
-# python script.py 5cc8_wr_1.prmtop all_traj_aligned.dcd
+# python script.py topology.prmtop coordinate.dcd
 
 # ressaltar que o script esta otimizado para trabalhar em paralelo para conseguir processar grandes volumes de dados
 import os
@@ -204,6 +204,7 @@ def main():
     md_traj = MDTraj(sys.argv[1], sys.argv[2])
     
     md_traj.main()
+
 
 if __name__ == "__main__":
     main()
