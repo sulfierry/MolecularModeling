@@ -1,15 +1,20 @@
+# python script.py 5cc8_wr_1.prmtop all_traj_aligned.dcd
+
 # ressaltar que o script esta otimizado para trabalhar em paralelo para conseguir processar grandes volumes de dados
 import os
+import sys
 import warnings
 import numpy as np
 import pandas as pd # realizar estas operacoes com numpy
-import seaborn as sns # realizar estas operacoes com matplot
 from tqdm import tqdm
+import seaborn as sns # realizar estas operacoes com matplot
 import MDAnalysis as mda
 import matplotlib.pyplot as plt
-from MDAnalysis.analysis.rms import RMSD
+from MDAnalysis.analysis.rms import rmsd
 from sklearn.decomposition import IncrementalPCA # realizar com numpy
+from joblib import Parallel, delayed
 
+# numpy, pandas, tqdm, seaborn, matplotlib, mdanalysis, sklearn, joblib
 
 
 warnings.filterwarnings("ignore")
@@ -20,19 +25,36 @@ class MDTraj:
         self.rmsd_results = None
         self.selected_frames = None
 
+    def calculate_rmsd_frame(self, frame_index, ref_positions, backbone_atoms):
+        self.u.trajectory[frame_index]  # Acessa o frame específico
+        positions = backbone_atoms.positions  # Obter posições atuais dos átomos de interesse
+        rmsd_val = rmsd(positions, ref_positions)  # Calcular RMSD
+        return frame_index, self.u.trajectory.time, rmsd_val
 
 
     def calculate_rmsd(self):
         backbone_atoms = self.u.select_atoms("backbone and (name CA or name C or name O or name N)")
-        rmsd_analysis = RMSD(backbone_atoms, reference=backbone_atoms, ref_frame=0)
-        rmsd_analysis.run()
-        self.rmsd_results = pd.DataFrame(rmsd_analysis.results.rmsd, columns=["Frame", "Time (ps)", "RMSD"])
+        ref_positions = backbone_atoms.positions  # Posições de referência do frame 0
+
+        # Certifique-se de passar `backbone_atoms` para a função `calculate_rmsd_frame`
+        tasks = [(frame_index, ref_positions, backbone_atoms) for frame_index in range(len(self.u.trajectory))]
+
+        # Utilizar 'joblib' para calcular RMSD em paralelo
+        with Parallel(n_jobs=-1) as parallel:
+            results = parallel(delayed(self.calculate_rmsd_frame)(frame_index, ref_positions, backbone_atoms) for frame_index, ref_positions, backbone_atoms in tqdm(tasks, desc="Calculating RMSD"))
+
+
+        # Organizar os resultados
+        results_sorted = sorted(results, key=lambda x: x[0])  # Ordenar pelo índice do frame
+        rmsd_data = np.array([(frame_index, time, rmsd_val) for frame_index, time, rmsd_val in results_sorted])
+        self.rmsd_results = pd.DataFrame(rmsd_data, columns=["Frame", "Time (ps)", "RMSD"])
+
+        # Salvar e imprimir estatísticas
         csv_path = "./1_rmsd.csv"
         self.rmsd_results.to_csv(csv_path, index=False)
         print(f"RMSD data saved to {csv_path}\n")
         estatisticas_descritivas = self.rmsd_results['RMSD'].describe()
         print(f"Estatísticas Descritivas do RMSD:\n{estatisticas_descritivas}")
-        return estatisticas_descritivas
 
     def select_representative_frames(self, estatisticas_descritivas):
         valores_de_interesse = {
@@ -103,6 +125,7 @@ class MDTraj:
 
 
     def calculate_pca_incremental(self, n_components=3, chunk_size=1024):
+    
         atoms_to_analyze = self.u.select_atoms("backbone")
         pca = IncrementalPCA(n_components=n_components)
         n_frames = len(self.u.trajectory)
@@ -173,8 +196,7 @@ class MDTraj:
         
 
 def main():
-    md_traj = MDTraj("/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/traj_concatenate_aligned/5cc8_wr_1.prmtop",
-                "/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/1_replica/water_remov/traj_concatenate_aligned/all_traj_aligned.dcd")
+    md_traj = MDTraj(sys.argv[1], sys.argv[2])
     
     md_traj.main()
 
