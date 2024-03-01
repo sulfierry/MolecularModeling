@@ -1,6 +1,11 @@
 #!/bin/bash
 
-
+# Verifica se o número correto de argumentos foi fornecido
+if [ "$#" -ne 4 ]; then
+    echo "Uso: $0 input_name.prmtop input_name.crd output_name folders_count"
+    echo "example ./water_remov.sh 6pt0.prmtop production.crd 6pt0_wr 5"
+    exit 1
+fi
 
 # Atribui os argumentos a variáveis
 input_prmtop=$1
