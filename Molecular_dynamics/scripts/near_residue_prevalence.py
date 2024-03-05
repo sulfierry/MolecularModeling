@@ -6,13 +6,11 @@ from collections import defaultdict
 
 class ResiduesPrevalence:
 
-    def __init__(self, ligand_name, distance, threshold=10, color='blue'):
+    def __init__(self, ligand_name, threshold=10, color='blue'):
         self.ligand_name = ligand_name
-        self.distance = distance
         self.file_path = './residues_near_ligand.dat'
         self.threshold = threshold
         self.color = color
-
 
     def process_data(self):
         """Processa o arquivo de dados para calcular a prevalência de cada resíduo."""
@@ -46,20 +44,15 @@ class ResiduesPrevalence:
         plt.tight_layout()
         plt.show()
 
-
-
     @classmethod
     def main(cls):
-        # Configurações iniciais: Nome do ligante, distância, topologia e trajetória
+
         ligand_name = 'LIG'
-        distance = 3.0
-        topology = 'your_topology'  # Sem a extensão .prmtop
-        trajectory = 'your_trajectory'  # Sem a extensão .dcd
-        threshold = 10
+        threshold = 10 # %
         color = 'green'
 
         # Cria uma instância da classe com as configurações desejadas
-        instance = cls(ligand_name, distance, threshold, color)
+        instance = cls(ligand_name, threshold, color)
 
         # Processa o arquivo de dados gerado
         instance.process_data()
