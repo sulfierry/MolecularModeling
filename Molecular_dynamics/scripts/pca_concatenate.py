@@ -30,3 +30,13 @@ def concatenate_files(file_list):
     final_df = pd.concat(results)
     return final_df
 
+# Lista dos seus arquivos .tsv
+#file_list = ['1_cv_pca1.tsv', '2_cv_pca1.tsv', '1_cv_pca3.tsv', '1_cv_pca1.tsv', '2_cv_pca1.tsv', '1_cv_pca3.tsv']
+file_list = ['2_cv_pca1.tsv', '1_cv_pca1.tsv', '2_cv_pca3.tsv', '2_cv_pca1.tsv', '1_cv_pca1.tsv', '2_cv_pca3.tsv',]
+
+# Concatena os arquivos
+final_df = concatenate_files(file_list)
+
+# Salva o DataFrame resultante em um novo arquivo .tsv
+final_df.to_csv('concatenated_files.tsv', sep='\t', index=False)
+
