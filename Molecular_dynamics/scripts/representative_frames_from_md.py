@@ -1,62 +1,37 @@
-# python script.py topology.prmtop coordinate.dcd
-
 # ressaltar que o script esta otimizado para trabalhar em paralelo para conseguir processar grandes volumes de dados
 import os
-import sys
 import warnings
 import numpy as np
 import pandas as pd # realizar estas operacoes com numpy
-from tqdm import tqdm
 import seaborn as sns # realizar estas operacoes com matplot
 import MDAnalysis as mda
 import matplotlib.pyplot as plt
-from MDAnalysis.analysis.rms import rmsd
 from sklearn.decomposition import IncrementalPCA # realizar com numpy
-from joblib import Parallel, delayed
+from MDAnalysis.analysis.rms import RMSD
+from tqdm import tqdm
 
-# numpy, pandas, tqdm, seaborn, matplotlib, mdanalysis, sklearn, joblib
 
 warnings.filterwarnings("ignore")
 
 class MDTraj:
-
     def __init__(self, topology_path, trajectory_path):
         self.u = mda.Universe(topology_path, trajectory_path)
         self.rmsd_results = None
         self.selected_frames = None
 
-    def calculate_rmsd_frame(self, frame_index, ref_positions, backbone_atoms):
-        self.u.trajectory[frame_index]  # Acessa o frame específico
-        positions = backbone_atoms.positions  # Obter posições atuais dos átomos de interesse
-        rmsd_val = rmsd(positions, ref_positions)  # Calcular RMSD
-        return frame_index, self.u.trajectory.time, rmsd_val
 
 
     def calculate_rmsd(self):
         backbone_atoms = self.u.select_atoms("backbone and (name CA or name C or name O or name N)")
-        ref_positions = backbone_atoms.positions  # Posições de referência do frame 0
-
-        tasks = [(frame_index, ref_positions, backbone_atoms) for frame_index in range(len(self.u.trajectory))]
-
-        with Parallel(n_jobs=-1) as parallel:
-            results = parallel(delayed(self.calculate_rmsd_frame)(frame_index, ref_positions, backbone_atoms) for frame_index, ref_positions, backbone_atoms in tqdm(tasks, desc="Calculating RMSD"))
-
-        results_sorted = sorted(results, key=lambda x: x[0])
-        rmsd_data = np.array([(frame_index, time, rmsd_val) for frame_index, time, rmsd_val in results_sorted])
-
-        # Agora, crie o DataFrame a partir dos resultados coletados
-        self.rmsd_results = pd.DataFrame(rmsd_data, columns=["Frame", "Time (ps)", "RMSD"])
-
-        # Salve o DataFrame em um arquivo CSV
-        csv_path = "./rmsd_results.csv"
+        rmsd_analysis = RMSD(backbone_atoms, reference=backbone_atoms, ref_frame=0)
+        rmsd_analysis.run()
+        self.rmsd_results = pd.DataFrame(rmsd_analysis.results.rmsd, columns=["Frame", "Time (ps)", "RMSD"])
+        csv_path = "./1_rmsd.csv"
         self.rmsd_results.to_csv(csv_path, index=False)
         print(f"RMSD data saved to {csv_path}\n")
-
         estatisticas_descritivas = self.rmsd_results['RMSD'].describe()
         print(f"Estatísticas Descritivas do RMSD:\n{estatisticas_descritivas}")
-
         return estatisticas_descritivas
-
 
     def select_representative_frames(self, estatisticas_descritivas):
         valores_de_interesse = {
@@ -86,7 +61,7 @@ class MDTraj:
             self.u.trajectory[frame_index]
             pdb_filename = os.path.join(output_directory, f"{descricao}_frame_{frame_index}.pdb")
             self.u.atoms.write(pdb_filename)
-        print("PDB files of selected frames were saved with adjusted descriptions")
+        print("Arquivos PDB dos frames selecionados foram salvos com as descrições ajustadas.")
 
     def plot_rmsd(self):
         plt.figure(figsize=(10, 6))
@@ -98,7 +73,7 @@ class MDTraj:
             rmsd_value = self.rmsd_results['RMSD'][self.rmsd_results['Frame'] == frame].iloc[0]
             plt.scatter(frame, rmsd_value, color='red', s=50, zorder=5)  # s é o tamanho do marcador
 
-        plt.title('RMSD Along the Trajectory with PDB Points')
+        plt.title('RMSD ao Longo da Trajetória com Pontos dos PDBs')
         plt.xlabel('Frame')
         plt.ylabel('RMSD (Å)')
         plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
@@ -110,15 +85,15 @@ class MDTraj:
 
     def plot_rmsd_histogram(self):
         plt.figure(figsize=(10, 6))
-        sns.histplot(self.rmsd_results['RMSD'], kde=True, bins=30, color='blue', label='RMSD Distribution')
+        sns.histplot(self.rmsd_results['RMSD'], kde=True, bins=30, color='blue', label='Distribuição de RMSD')
         
         for _, row in self.selected_frames.iterrows():
             rmsd_value = row['rmsd']
             plt.scatter(rmsd_value, 0, color='red', s=50, zorder=5)  # s é o tamanho do marcador, zorder garante que o marcador fique visível acima do histograma
 
-        plt.title('Distribution of RMSD Values ​​with Representative PDBs')
+        plt.title('Distribuição dos Valores de RMSD com PDBs Representativos')
         plt.xlabel('RMSD (Å)')
-        plt.ylabel('Frequency')
+        plt.ylabel('Frequência')
         plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
         plt.grid(True)
         plt.tight_layout()
@@ -127,7 +102,6 @@ class MDTraj:
 
 
     def calculate_pca_incremental(self, n_components=3, chunk_size=1024):
-    
         atoms_to_analyze = self.u.select_atoms("backbone")
         pca = IncrementalPCA(n_components=n_components)
         n_frames = len(self.u.trajectory)
@@ -173,9 +147,9 @@ class MDTraj:
         plt.plot(self.pca_result[:, 0], label='PC1', color='red')
         plt.plot(self.pca_result[:, 1], label='PC2', color='green')
         plt.plot(self.pca_result[:, 2], label='PC3', color='blue')
-        plt.title('Projection of Frames on the Three Main Components of the PCA')
+        plt.title('Projeção dos Frames nas Três Principais Componentes da PCA')
         plt.xlabel('Frame')
-        plt.ylabel('Projection on Main Components')
+        plt.ylabel('Projeção nos Componentes Principais')
         plt.legend()
         plt.grid(True)
         plt.savefig('./pca_projections.png')
@@ -186,10 +160,7 @@ class MDTraj:
     def main(self):
         print("Calculating RMSD...")
         rmsd_statistics = self.calculate_rmsd()
-        if rmsd_statistics is not None:
-            self.select_representative_frames(rmsd_statistics)
-        else:
-            print("Error: Unable to calculate RMSD descriptive statistics.")
+        self.select_representative_frames(rmsd_statistics)
         self.save_representative_pdbs()
         self.plot_rmsd()
         self.plot_rmsd_histogram()
@@ -201,7 +172,8 @@ class MDTraj:
         
 
 def main():
-    md_traj = MDTraj(sys.argv[1], sys.argv[2])
+    md_traj = MDTraj("/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/2_replica/water_remov/traj_concatenate_aligned/5cc8_wr_1.prmtop",
+                "/media/leon/FEDF-FDB3/md_thil_10replicates_100ns/2_replica/water_remov/traj_concatenate_aligned/all_traj_aligned.dcd")
     
     md_traj.main()
 
