@@ -1,3 +1,6 @@
+# python script.py input_name number_of_folders
+# python script.py 3bb6_wr 5
+
 import os
 import sys
 import shutil
