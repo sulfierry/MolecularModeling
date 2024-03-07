@@ -80,7 +80,7 @@ export CUDA_VISIBLE_DEVICES=$(( (REPLICA - 1) % 4 ))
 
 ```
 
-### Execução Paralela
+### Execução paralela
 O script emprega um loop que submete conjuntos de até 4 réplicas em paralelo, cada uma utilizando uma GPU diferente. Após a submissão de um conjunto de réplicas, o script aguarda a conclusão dessas tarefas antes de proceder com o próximo conjunto. Isso assegura que cada tarefa seja executada na sua respectiva GPU sem sobreposição ou conflito de recursos.
 
 ```bash
