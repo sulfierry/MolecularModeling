@@ -3,6 +3,7 @@
 # Verifica se o número correto de argumentos foi fornecido
 if [ "$#" -ne 4 ]; then
     echo "Uso: $0 input_name.prmtop input_name.crd output_name num_pastas"
+    echo "Example: ./water_remov.sh abc.prmtop abc.crd abc_wr 10"
     exit 1
 fi
 
