@@ -3,7 +3,6 @@
 # Verifica se o número correto de argumentos foi fornecido
 if [ "$#" -ne 4 ]; then
     echo "Uso: $0 input_name.prmtop input_name.crd output_name num_pastas"
-    echo"Example: ./water_remov.sh abc.prmtop abc.crd abc_wr 10"
     exit 1
 fi
 
@@ -18,7 +17,7 @@ echo "Iniciando o processo de remoção de água e íons em $num_pastas pastas..
 # Criar a pasta "water_remov" se ela não existir
 mkdir -p water_remov
 
-# Função que será executada em paralelo
+# Função que será executada
 process() {
     i=$1
     input_prmtop=$2
@@ -60,7 +59,15 @@ process() {
 
 export -f process
 
-# Usando parallel para executar a função process em paralelo
-parallel process ::: $(seq 1 $num_pastas) ::: $input_prmtop ::: $input_crd ::: $output_base_name
+# Verifica se o comando parallel está disponível
+if command -v parallel >/dev/null 2>&1; then
+    # Usando parallel para executar a função process em paralelo
+    parallel process ::: $(seq 1 $num_pastas) ::: $input_prmtop ::: $input_crd ::: $output_base_name
+else
+    # Executa de maneira serial se parallel não estiver disponível
+    for i in $(seq 1 $num_pastas); do
+        process $i $input_prmtop $input_crd $output_base_name
+    done
+fi
 
 echo "Processo concluído para todas as $num_pastas pastas."
