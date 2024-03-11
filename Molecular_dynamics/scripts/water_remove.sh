@@ -18,7 +18,6 @@ echo "Iniciando o processo de remoção de água e íons em $num_pastas pastas..
 # Criar a pasta "water_remov" se ela não existir
 mkdir -p water_remov
 
-# Função que será executada
 process() {
     i=$1
     input_prmtop=$2
