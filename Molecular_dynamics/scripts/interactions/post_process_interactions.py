@@ -81,11 +81,12 @@ class ProcessInteractions:
     def main():
         input_dir = 'vmd_frames'
         output_file = 'detailed_interaction.tsv'
-        prevalence_threshold = '30'
+        prevalence_threshold = 50
         process_interactions = ProcessInteractions(input_dir, output_file)
         process_interactions.reformat_data()
-        process_interactions.calculate_prevalence(int(prevalence_threshold))
+        process_interactions.calculate_prevalence(prevalence_threshold)
         process_interactions.plot_prevalence()
+        process_interactions.identify_rotatable_atoms(prevalence_threshold)
 
 if __name__ == '__main__':
     ProcessInteractions.main()
