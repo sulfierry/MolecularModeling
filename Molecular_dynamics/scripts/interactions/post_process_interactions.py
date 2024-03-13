@@ -68,6 +68,15 @@ class ProcessInteractions:
         plt.tight_layout()
         plt.show()
 
+
+    def identify_rotatable_atoms(self, prevalence_threshold=50):
+        if not hasattr(self, 'prevalence_data'):
+            print("Prevalence data not calculated. Please run calculate_prevalence first.")
+            return
+
+        rotatable_atoms = self.prevalence_data[self.prevalence_data['prevalence'] >= prevalence_threshold]
+        print(f"Rotatable atoms: \n{rotatable_atoms}")
+    
     @staticmethod
     def main():
         input_dir = 'vmd_frames'
