@@ -7,12 +7,17 @@ main() {
     BASE_NAME="gmmsb01_run15_wr_10"
     TOPOLOGY="$BASE_NAME.prmtop"
     COORDINATES="$BASE_NAME.dcd"
-    TOTAL_FRAMES=1000
-    SLICE=500
+    TOTAL_FRAMES="1000"
+    SLICE="500"
     LIGAND_NAME="LIG"
     CUTOFF_DISTANCE="3.0"
     TRESHOLD_PREVALENCE_INTERACTION="50"
 
+    process_frames
+}
+
+
+process_frames() {
     # Processa os frames em blocos
     for ((start=0; start<TOTAL_FRAMES; start+=SLICE)); do
         end=$((start + SLICE - 1))
@@ -47,7 +52,6 @@ main() {
     # Limpa o arquivo temporário do script Python
     rm "$python_script_file"
 }
-
 
 # Função para gerar o script TCL dinamicamente
 generate_tcl_script() {
@@ -142,7 +146,7 @@ class ProcessInteractions:
                         distance = line.split('Distance: ')[1].strip()
                         output_line = f"{frame}\t{ligand_atom}\t{ligand_atom_index}\t{aminoacid}\t{aminoacid_atom}\t{aminoacid_number}\t{distance}\n"
                         outfile.write(output_line)
-        print(f"Processamento concluído. Todos os dados foram salvos em: {self.output_file}")
+        print(f"Processamento concluído. Todos os dados foram salvos em: {self.output_file}\n")
 
     def calculate_prevalence(self, prevalence_threshold=50):
         data = pd.read_csv(self.output_file, sep='\t')
@@ -154,7 +158,9 @@ class ProcessInteractions:
         if self.prevalence_data.empty:
             print("Nenhuma interação atingiu o limiar de prevalência especificado.")
         else:
+            print("-------------------------------------------------------------------------------------------------------------------")
             print(self.prevalence_data)
+            print("-------------------------------------------------------------------------------------------------------------------\n")
 
     def plot_prevalence(self):
         if not hasattr(self, 'prevalence_data'):
@@ -180,6 +186,8 @@ class ProcessInteractions:
             return
         rotatable_atoms = self.prevalence_data[self.prevalence_data['prevalence'] >= prevalence_threshold]
         print(f"Rotatable atoms: \n{rotatable_atoms}")
+        print("-------------------------------------------------------------------------------------------------------------------\n")
+
 
     @staticmethod
     def main():
