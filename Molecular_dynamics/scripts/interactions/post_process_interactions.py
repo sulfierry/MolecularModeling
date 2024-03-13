@@ -33,14 +33,20 @@ class ProcessInteractions:
 
 
 
-    def calculate_prevalence(self, prevalence_threshold):
+    def calculate_prevalence(self, prevalence_threshold=50):
         data = pd.read_csv(self.output_file, sep='\t')
+        print(f"Total de linhas lidas: {data.shape[0]}")  # Diagnóstico: Verificar se os dados estão sendo lidos
         interaction_counts = data.groupby(['ligand_atom', 'ligand_atom_index', 'aminoacid', 'aminoacid_atom', 'aminoacid_number']).size()
         total_frames = data['frame'].nunique()
+        print(f"Total de frames únicos: {total_frames}")  # Diagnóstico: Verificar o total de frames
         prevalence = (interaction_counts / total_frames) * 100
-        prevalence_50 = prevalence[prevalence >= prevalence_threshold].reset_index(name='prevalence')
-        self.prevalence_data = prevalence_50
-        print(prevalence_50)
+        prevalence_filtered = prevalence[prevalence >= prevalence_threshold].reset_index(name='prevalence')
+        self.prevalence_data = prevalence_filtered
+        if self.prevalence_data.empty:
+            print("Nenhuma interação atingiu o limiar de prevalência especificado.")
+        else:
+            print(self.prevalence_data)
+
 
     def plot_prevalence(self):
         if not hasattr(self, 'prevalence_data'):
