@@ -71,3 +71,9 @@ for complexed_pdb in pdb_complexed/*.pdb; do
     pdb4amber -i "$complexed_pdb" -o "$formatted_pdb_path"
 done
 
+
+mkdir -p pdb4amber_infos
+*__nonprot.* pdb4amber_infos
+*_formated_renum.* pdb4amber_infos
+*formated_sslink* pdb4amber_infos
+mv -r pdb4amber_infos ../
