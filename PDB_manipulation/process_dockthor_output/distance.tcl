@@ -16,3 +16,4 @@ puts "Avg Distance : $Avg_dis "
 close $outfile
 $atom1 delete
 $atom2 delete
+quit
