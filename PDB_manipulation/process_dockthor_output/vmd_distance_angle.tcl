@@ -19,5 +19,5 @@ done
 echo "Todos os arquivos foram processados."
 
 # Usa awk para processar o arquivo e reescrever a primeira coluna com o número da linha
-awk '{print NR " " $0}' "$input_file" > "$output_file"
+awk '{print NR " " substr($0, index($0,$2))}' "$input_file" > "$output_file"
 echo "Arquivo formatado: $output_file"
