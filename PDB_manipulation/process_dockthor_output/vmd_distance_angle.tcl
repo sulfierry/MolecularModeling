@@ -1,21 +1,27 @@
 #!/bin/bash
 
 # Diretório onde estão os arquivos .pdb
-
 PDB_DIR="4_pdb_frame_formated"
-tcl_scipt="angle.tcl"
-input_file="angle.dat"
-output_file="distance_formatted.dat"
+tcl_script="angle.tcl"
+input_file="angle_ver2.dat"
+output_file="angle_formatted_ver2.dat"
 
-# Lista os arquivos .pdb na ordem correta usando o comando ls com a opção -v
-for pdb_file in $(ls -v $PDB_DIR/*.pdb); do
-    # Extrai o nome base do arquivo sem a extensão .pdb
+export PDB_DIR
+export tcl_script
+
+# Define a função a ser executada pelo parallel
+process_pdb() {
+    pdb_file="$1"
     base_name=$(basename "$pdb_file" .pdb)
     echo "Processando $base_name..."
 
     # Executa o script VMD com o arquivo .pdb atual
-    vmd -dispdev text -e $tcl_scipt "$pdb_file"
-done
+    vmd -dispdev text -e $tcl_script "$pdb_file"
+}
+export -f process_pdb
+
+# Lista os arquivos .pdb na ordem correta e os processa em paralelo
+find $PDB_DIR -name '*.pdb' | sort -V | parallel process_pdb
 
 echo "Todos os arquivos foram processados."
 
