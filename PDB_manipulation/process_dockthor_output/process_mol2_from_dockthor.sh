@@ -3,8 +3,6 @@
 # Caminho para o arquivo PDB da proteína
 protein_pdb="../KP02043_5cc8_maestro_apo.pdb"
 
-global_index=1
-
 # Cria o diretório de saída se ele não existir
 mkdir -p mol2_to_pdb
 
@@ -12,17 +10,26 @@ mkdir -p mol2_to_pdb
 find . -maxdepth 1 -name '*.mol2' -print0 | sort -zV | while IFS= read -r -d '' mol2file; do
     base=$(basename "$mol2file" .mol2)
 
-    # Dividir o nome do arquivo para extrair as partes relevantes
-    IFS='_' read -ra ADDR <<< "$base"
-    docked_run="${ADDR[4]}"
-    molecule="${ADDR[6]}"
+    # Extrair corretamente o número da run
+    if [[ "$base" =~ result-ligand_([0-9a-f]+)_([0-9]+)_docked_run_([0-9]+) ]]; then
+        ligand_id="${BASH_REMATCH[1]}"
+        attempt_number="${BASH_REMATCH[2]}"
+        run_number="${BASH_REMATCH[3]}"
 
-    # Gerar um nome base que reflete a ordem correta
-    new_base="${ADDR[0]}_${ADDR[1]}_${ADDR[2]}_${ADDR[3]}_${docked_run}_molecule_${molecule}"
+        # Gerar um nome base que reflete a ordem correta, incluindo o valor da "run"
+        new_base="result-ligand_${ligand_id}_${attempt_number}_docked_run_${run_number}"
 
-    # Usar o Open Babel para converter cada arquivo .mol2 para .pdb
-    obabel "$mol2file" -O "mol2_to_pdb/${global_index}_${new_base}.pdb" -m
+        # Usar o Open Babel para converter cada arquivo .mol2 para .pdb
+        obabel "$mol2file" -O "mol2_to_pdb/${new_base}_molecule_.pdb" -m
+    else
+        echo "O nome do arquivo '$base' não corresponde ao padrão esperado."
+    fi
+done
 
+# Pós-processamento para adicionar o índice corretamente de maneira crescente
+global_index=1
+for pdbfile in $(ls mol2_to_pdb/*.pdb | sort -V); do
+    mv "$pdbfile" "mol2_to_pdb/${global_index}_$(basename "$pdbfile")"
     ((global_index++))
 done
 
