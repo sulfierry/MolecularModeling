@@ -53,21 +53,21 @@ for ligand_pdb in mol2_to_pdb/*.pdb; do
 done
 
 
-mkdir -p pdb_complexed_formated
+mkdir -p pdb_frame_formated
 
 # Percorre todos os arquivos .pdb na pasta "pdb_complexed", ordenados pelo número antes do primeiro underscore
 for complexed_pdb in $(find pdb_complexed -name '*.pdb' | sed 's/^.*\/\([0-9]*\)_.*\.pdb$/\1 &/' | sort -n | cut -d' ' -f2-); do
     # Extrai o nome base do arquivo (sem a extensão .pdb)
     base_name=$(basename "$complexed_pdb" .pdb)
 
-    # Define o caminho do arquivo de saída na pasta "pdb_complexed_formated"
-    formatted_pdb_path="pdb_complexed_formated/${base_name}_formated.pdb"
+    # Define o caminho do arquivo de saída na pasta "pdb_frame_formated"
+    formatted_pdb_path="pdb_frame_formated/${base_name}_formated.pdb"
 
     # Usa o pdb4amber para formatar o arquivo PDB e salva o resultado no arquivo de saída
     pdb4amber -i "$complexed_pdb" -o "$formatted_pdb_path"
 done
 
 mkdir -p pdb4amber_infos
-mv ./pdb_complexed_formated/*_nonprot.* pdb4amber_infos
-mv ./pdb_complexed_formated/*_formated_renum.* pdb4amber_infos
-mv ./pdb_complexed_formated/*formated_sslink* pdb4amber_infos
+mv ./pdb_frame_formated/*_nonprot.* pdb4amber_infos
+mv ./pdb_frame_formated/*_formated_renum.* pdb4amber_infos
+mv ./pdb_frame_formated/*formated_sslink* pdb4amber_infos
