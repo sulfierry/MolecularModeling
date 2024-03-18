@@ -1,9 +1,10 @@
-vmd_angle_distance.sh#!/bin/bash
+#!/bin/bash
 
+# Diretório onde estão os arquivos .pdb
 
-PDB_DIR="pdb_frames"
-tcl_scipt="distance.tcl"
-input_file="distance.dat"
+PDB_DIR="4_pdb_frame_formated"
+tcl_scipt="angle.tcl"
+input_file="angle.dat"
 output_file="distance_formatted.dat"
 
 # Lista os arquivos .pdb na ordem correta usando o comando ls com a opção -v
@@ -19,5 +20,5 @@ done
 echo "Todos os arquivos foram processados."
 
 # Usa awk para processar o arquivo e reescrever a primeira coluna com o número da linha
-awk '{print NR " " substr($0, index($0,$2))}' "$input_file" > "$output_file"
+awk '{print NR " " $2}' "$input_file" > "$output_file"
 echo "Arquivo formatado: $output_file"
