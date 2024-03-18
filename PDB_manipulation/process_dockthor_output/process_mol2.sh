@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# executar dentro da pasta com os arquivos .mol2
+
 # Caminho para o arquivo PDB da proteína
-protein_pdb="./KP02043_5cc8_maestro_apo.pdb"
+protein_pdb="../KP02043_5cc8_maestro_apo.pdb"
+
 
 global_index=1
 
@@ -58,7 +61,6 @@ done
 # Verifica se a pasta "pdb_complexed_formated" existe; se não, cria-a
 mkdir -p pdb_complexed_formated
 
-
 # Percorre todos os arquivos .pdb na pasta "pdb_complexed"
 for complexed_pdb in pdb_complexed/*.pdb; do
     # Extrai o nome base do arquivo (sem a extensão .pdb)
@@ -70,7 +72,6 @@ for complexed_pdb in pdb_complexed/*.pdb; do
     # Usa o pdb4amber para formatar o arquivo PDB e salva o resultado no arquivo de saída
     pdb4amber -i "$complexed_pdb" -o "$formatted_pdb_path"
 done
-
 
 mkdir -p pdb4amber_infos
 *__nonprot.* pdb4amber_infos
