@@ -1,10 +1,9 @@
-set sele1 [atomselect top "resname LIG"]
-set sele2 [atomselect top "resid 2 and name CA"]
-set sele3 [atomselect top "resid 3 and name CA"]
+set sele1 [atomselect top "index 9736"]
+set sele2 [atomselect top "index 9737"]
+set sele3 [atomselect top "resid 486"]
 set nf [molinfo top get numframes]
 set outfile [open "angle.dat" a]
 for {set i 0} {$i < $nf} {incr i} {
-
     $sele1 frame $i
     $sele2 frame $i
     $sele3 frame $i
