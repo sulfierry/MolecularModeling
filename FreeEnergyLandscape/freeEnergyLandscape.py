@@ -8,7 +8,6 @@ import numpy as np
 import multiprocessing
 import imageio.v2 as imageio
 import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
 from scipy.stats import gaussian_kde
 from joblib import Parallel, delayed
 from matplotlib.colors import LinearSegmentedColormap
@@ -18,7 +17,9 @@ class FreeEnergyLandscape:
     def __init__(self, cv1_path, cv2_path, 
                  temperature, boltzmann_constant, 
                  bins=100, kde_bandwidth=None, 
-                 cv_names=['CV1', 'CV2'], discrete=None):
+                 cv_names=['CV1', 'CV2'], discrete=None,
+                 xlim_inf=None, xlim_sup=None, ylim_inf=None, ylim_sup=None):  
+
         
         self.cv1_path = cv1_path
         self.cv2_path = cv2_path
@@ -38,13 +39,47 @@ class FreeEnergyLandscape:
             (0.9, "indianred"),
             (1.0, "darkred")
         ]
-        self.custom_cmap = LinearSegmentedColormap.from_list("custom_energy", self.colors)
+        self.custom_cmap = LinearSegmentedColormap.from_list(
+            "custom_energy", 
+            self.colors
+            )
+        
         self.proj1_data_original = None
         self.proj2_data_original = None
         self.bins = bins
         self.kde_bandwidth = kde_bandwidth
         self.discrete = discrete
+        self.discreet_colors = [
+            'purple', 
+            'darkorange', 
+            'green', 
+            'orange', 
+            'red',
+            'magenta',
+            'mediumorchid',
+            'deeppink',
+            'peru',
+            'indianred'
+            ]
+    
+        self.discreet_markers = [
+            '*', 
+            's', 
+            '^', 
+            'D', 
+            'o',
+            'p',
+            'h',
+            'v',
+            'X',
+            'd'
+            ]
 
+        # Novos atributos para limites dos eixos
+        self.xlim_inf = xlim_inf
+        self.xlim_sup = xlim_sup
+        self.ylim_inf = ylim_inf
+        self.ylim_sup = ylim_sup
 
     def load_data(self):
         # Carrega os dados das variáveis coletivas e os índices dos frames
@@ -68,19 +103,15 @@ class FreeEnergyLandscape:
         G_original = -self.kB * self.temperature * np.log(Z_original)
         G_original = np.clip(G_original - np.min(G_original), 0, 25)
 
-        self.cached_results = {'X_original': X_original, 'Y_original': Y_original, 'G_original': G_original}
+        self.cached_results = {'X_original': X_original, 
+                               'Y_original': Y_original, 
+                               'G_original': G_original
+                               }
         return self.cached_results
 
-
-
     def boltzmann_inversion(self, data_list, titles, threshold=None):
-        import matplotlib.pyplot as plt
-        import numpy as np
 
-        fig_combined, axs_combined = plt.subplots(1, len(data_list), figsize=(20, 6), sharey=True)
-        colors = ['purple', 'magenta', 'green', 'orange', 'red']
-        markers = ['o', 's', '^', 'D', '*']
-        
+        fig_combined, axs_combined = plt.subplots(1, len(data_list), figsize=(20, 6), sharey=True)        
         # Inicializa a lista de elementos da legenda com o elemento para a linha de energia livre
         legend_elements = [plt.Line2D([0], [0], color='red', lw=2, label='Free energy')]
         
@@ -92,7 +123,11 @@ class FreeEnergyLandscape:
             G_min_normalized = G - np.min(G)
             
             # Plotar a linha de energia livre
-            ax.plot(bin_centers, G_min_normalized, color='red', label='Free energy' if idx == 0 else "_nolegend_")
+            ax.plot(bin_centers, G_min_normalized, 
+                    color='red', label='Free energy' 
+                    if idx == 0 else "_nolegend_"
+                    )
+            
             ax.set_xlabel(title)
             
         if threshold is not None and hasattr(self, 'discrete') and self.discrete:
@@ -101,7 +136,10 @@ class FreeEnergyLandscape:
                 end = interval + self.discrete if i < len(discrete_intervals) - 1 else threshold
                 # Evita adicionar intervalos redundantes na legenda
                 if end > interval:
-                    legend_elements.append(plt.Line2D([0], [0], marker=markers[i % len(markers)], color='w', markerfacecolor=colors[i % len(colors)], markersize=10, label=f'{interval:.1f}-{end:.1f} kJ/mol'))
+                    legend_elements.append(plt.Line2D([0], [0], 
+                                                      marker=self.discreet_markers[i % len(self.discreet_markers)], 
+                                                      color='w', markerfacecolor=self.discreet_colors[i % len(self.discreet_colors)], 
+                                                      markersize=10, label=f'{interval:.1f}-{end:.1f} kJ/mol'))
 
                 # Plotar os pontos para cada intervalo nos gráficos
                 for ax, data in zip(axs_combined, data_list):
@@ -112,10 +150,16 @@ class FreeEnergyLandscape:
                     G_min_normalized = G - np.min(G)
                     mask = (G_min_normalized >= interval) & (G_min_normalized < end)
                     if np.any(mask):
-                        ax.scatter(bin_centers[mask], G_min_normalized[mask], color=colors[i % len(colors)], marker=markers[i % len(markers)], s=50)
+                        ax.scatter(bin_centers[mask], G_min_normalized[mask], 
+                                   color=self.discreet_colors[i % len(self.discreet_colors)], 
+                                   marker=self.discreet_markers[i % len(self.discreet_markers)], 
+                                   s=50)
 
         # Adiciona a legenda no último subplot
-        axs_combined[-1].legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.05, 1), title="Energy intervals")
+        axs_combined[-1].legend(handles=legend_elements, 
+                                loc='upper left', 
+                                bbox_to_anchor=(1.05, 1), 
+                                title="Energy intervals")
         
         axs_combined[0].set_ylabel('Free Energy (kJ/mol)')
         plt.suptitle('Normalized Free Energy Profile Comparison')
@@ -143,7 +187,13 @@ class FreeEnergyLandscape:
             bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
             
             ax = plt.subplot(1, len(data_list), i + 1)
-            bars = ax.bar(bin_centers, normalized_counts, width=(bin_centers[1] - bin_centers[0]), alpha=0.7, color='green')
+            bars = ax.bar(bin_centers, 
+                          normalized_counts, 
+                          width=(bin_centers[1] - bin_centers[0]), 
+                          alpha=0.7, 
+                          color='green'
+                          )
+            
             ax.set_ylim(0, 100)  # Definir explicitamente o eixo Y de 0 a 100%
             ax.set_title(f'Normalized {title}')
             ax.set_xlabel('Value')
@@ -188,7 +238,13 @@ class FreeEnergyLandscape:
         plt.show()
 
 
-    def plot_energy_landscape(self, threshold, titles=['CV1', 'CV2']):
+    def plot_energy_landscape(self, threshold, titles=['CV1', 'CV2'], xlim_inf=None, xlim_sup=None, ylim_inf=None, ylim_sup=None):
+
+        if xlim_inf is not None and xlim_sup is not None:
+            plt.xlim(xlim_inf, xlim_sup)
+        if ylim_inf is not None and ylim_sup is not None:
+            plt.ylim(ylim_inf, ylim_sup)
+
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
         plt.figure(figsize=(8, 6))
@@ -209,8 +265,6 @@ class FreeEnergyLandscape:
         # Lógica para plotar pontos discretizados se self.discrete for especificado
         if self.discrete is not None and threshold is not None:
             discrete_intervals = np.arange(0, threshold, self.discrete)
-            colors = ['purple', 'magenta', 'green', 'orange', 'red']  # Exemplo de cores
-            markers = ['*', 's', '^', 'D', 'o']  # Exemplo de marcadores
 
             for i, interval in enumerate(discrete_intervals):
                 end = min(interval + self.discrete, threshold)
@@ -218,14 +272,20 @@ class FreeEnergyLandscape:
                 X_flat, Y_flat = result['X_original'].flatten(), result['Y_original'].flatten()
 
                 if np.any(mask):
-                    plt.scatter(X_flat[mask], Y_flat[mask], color=colors[i % len(colors)],
-                                marker=markers[i % len(markers)], label=f'{interval:.1f}-{end:.1f} KJ/mol')
+                    plt.scatter(X_flat[mask], 
+                                Y_flat[mask], 
+                                color=self.discreet_colors[i % len(self.discreet_colors)],
+                                marker=self.discreet_markers[i % len(self.discreet_markers)], 
+                                label=f'{interval:.1f}-{end:.1f} KJ/mol'
+                                )
 
         if threshold is not None:
             plt.legend(loc='lower left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
 
         cbar = plt.colorbar(cont)
         cbar.set_label('Free energy (kJ/mol)')
+        plt.xlim(self.xlim_inf, self.xlim_sup)
+        plt.ylim(self.ylim_inf, self.ylim_sup)
         plt.xlabel(titles[0])
         plt.ylabel(titles[1])
         plt.title('Free Energy Landscape')
@@ -233,23 +293,27 @@ class FreeEnergyLandscape:
         plt.savefig('Free_energy_landscape_with_discrete_points.png')
         plt.show()
 
-    def plot_3D_energy_landscape(self, threshold=None, titles=['CV1', 'CV2']):
+    def plot_3D_energy_landscape(self, threshold=None, titles=['CV1', 'CV2'], xlim_inf=None, xlim_sup=None, ylim_inf=None, ylim_sup=None):
         data = np.hstack((self.proj1_data_original[:, None], self.proj2_data_original[:, None]))
         result = self.calculate_free_energy(data)
 
         fig = plt.figure(figsize=(10, 7))
         ax = fig.add_subplot(111, projection='3d')
 
-        surf = ax.plot_surface(result['X_original'], result['Y_original'], result['G_original'], cmap=self.custom_cmap, edgecolor='none', alpha=0.6)
+        surf = ax.plot_surface(result['X_original'], 
+                               result['Y_original'], 
+                               result['G_original'], 
+                               cmap=self.custom_cmap, 
+                               edgecolor='none', 
+                               alpha=0.6
+                               )
+        
         ax.set_xlabel(titles[0])
         ax.set_ylabel(titles[1])
         ax.set_zlabel('Free energy (kJ/mol)')
         ax.set_title('3D Free Energy Landscape')
 
         # Cores e marcadores para pontos discretizados
-        colors = ['purple', 'magenta', 'green', 'orange', 'red']  # Exemplo de cores
-        markers = ['*', 's', '^', 'D', 'o']  # Exemplo de marcadores
-
         if self.discrete is not None and threshold is not None:
             discrete_intervals = np.arange(0, threshold, self.discrete)
             for i, interval in enumerate(discrete_intervals):
@@ -258,14 +322,26 @@ class FreeEnergyLandscape:
                 X_flat, Y_flat, Z_flat = result['X_original'].flatten(), result['Y_original'].flatten(), result['G_original'].flatten()
 
                 if np.any(mask):
-                    ax.scatter(X_flat[mask], Y_flat[mask], Z_flat[mask], color=colors[i % len(colors)], marker=markers[i % len(markers)], label=f'{interval:.1f}-{end:.1f} KJ/mol')
+                    ax.scatter(X_flat[mask], 
+                               Y_flat[mask], 
+                               Z_flat[mask], 
+                               color=self.discreet_colors[i % len(self.discreet_colors)], 
+                               marker=self.discreet_markers[i % len(self.discreet_markers)], 
+                               label=f'{interval:.1f}-{end:.1f} KJ/mol')
 
-        cbar = fig.colorbar(surf, shrink=0.5, aspect=5, pad=0.1, label='Free energy (kJ/mol)')
+        cbar = fig.colorbar(surf, 
+                            shrink=0.5, 
+                            aspect=5, 
+                            pad=0.1, 
+                            label='Free energy (kJ/mol)'
+                            )
+        
         ax.legend(loc='upper left', bbox_to_anchor=(1.05, 1), title="Energy intervals")
-
+        
+        plt.xlim(self.xlim_inf, self.xlim_sup)
+        plt.ylim(self.ylim_inf, self.ylim_sup)
         plt.tight_layout()
         plt.show()
-
 
 
     def plot_threshold_points(self, ax, result, lower_bound, upper_bound, color, label):
@@ -276,7 +352,9 @@ class FreeEnergyLandscape:
             X_flat, Y_flat = result['X_original'].flatten(), result['Y_original'].flatten()
             ax.scatter(X_flat[energy_mask], Y_flat[energy_mask], G_flat[energy_mask], color=color, s=20, label=label)
 
-    def create_3D_gif(self, gif_filename='energy_landscape_3D.gif', n_angles=10, elevation=15, duration_per_frame=0.01, titles=['CV1', 'CV2']):
+
+    def create_3D_gif(self, gif_filename='energy_landscape_3D.gif', n_angles=10, elevation=15, duration_per_frame=0.01, titles=['CV1', 'CV2'], xlim_inf=None, xlim_sup=None, ylim_inf=None, ylim_sup=None):
+        
         temp_dir = tempfile.mkdtemp()  # Cria um diretório temporário para armazenar os frames
         filenames = []
 
@@ -291,7 +369,16 @@ class FreeEnergyLandscape:
         for i, angle in enumerate(angles):
             fig = plt.figure(figsize=(10, 7))
             ax = fig.add_subplot(111, projection='3d')
-            surf = ax.plot_surface(result['X_original'], result['Y_original'], result['G_original'], cmap=self.custom_cmap, edgecolor='none', alpha=0.8, vmin=np.min(result['G_original']), vmax=np.max(result['G_original']))
+
+            surf = ax.plot_surface(
+                result['X_original'], 
+                result['Y_original'], 
+                result['G_original'], 
+                cmap=self.custom_cmap, 
+                edgecolor='none', alpha=0.8, 
+                vmin=np.min(result['G_original']), 
+                vmax=np.max(result['G_original']))
+            
             ax.view_init(elev=elevation, azim=angle)
             ax.set_xlabel(titles[0])
             ax.set_ylabel(titles[1])
@@ -336,7 +423,7 @@ class FreeEnergyLandscape:
             --temperature           [int]       Simulation temperature in Kelvin (default: 300K)
             --kb                    [float]     Boltzmann constant in kJ/(mol·K) (default: 8.314e-3)
             --energy                [float]     Energy (KJ/mol), single value (default: None)
-            --discrete              [float]     Discrete value (KJ/mol) for energy (default: None)
+            --discretize            [float]     Discrete value (KJ/mol) for energy (default: None)
             --bins_energy_histogram [int]       Bins for energy histogram (default: 100)
             --kde_bandwidth         [float]     Bandwidth for kernel density estimation (default: None)
             --names                 [str] [str] Names for the collective variables (default: CV1, CV2)
@@ -345,7 +432,7 @@ class FreeEnergyLandscape:
             --gif_duration          [float]     Duration per frame in the GIF in seconds (default: 0.1)
 
         Example:
-            free_energy_landscape cv1.txt cv2.txt --names Angle_CV1 Distance_CV2 --temperature 310 --energy 5 --bins_energy_histogram 100 --kde_bandwidth 0.5 --gif_angles 20
+            free_energy_landscape cv1.txt cv2.txt --names "Angle (CV1)" "Distance (CV2)"  --energy 3.0 --discretize 1.0
 
         """
         print(help_text)
@@ -401,15 +488,20 @@ class FreeEnergyLandscape:
 
         # Salva os dados em um arquivo .tsv
         filename = 'discrete_values_energy_frames.tsv'
-        np.savetxt(filename, data_to_save, delimiter='\t', fmt=['%d', '%.6f', '%.6f', '%.6f'], header='frame\tcv1\tcv2\tenergy', comments='')
-
+        np.savetxt(filename, 
+                   data_to_save, 
+                   delimiter='\t', 
+                   fmt=['%d', '%.6f', '%.6f', '%.6f'], 
+                   header='frame\tcv1\tcv2\tenergy', 
+                   comments=''
+                   )
+        
         print(f"Energy data saved in'{filename}'.")
 
 
     def main(self, energy_threshold, cv_names, n_angles, elevation, duration_per_frame):
 
-        # Verificar ambos os arquivos de entrada antes de carregar os dados
-
+        print("Loading data...\n")
         self.load_data()
 
         print("Data loaded successfully!")
@@ -470,6 +562,8 @@ def main():
     elevation = 10              # --gif_elevation         [int]
     duration_per_frame = 0.1    # --gif_duration          [float]
     discrete_val = None         # --discrete              [float]
+    xlim_inf = xlim_sup = ylim_inf = ylim_sup = None  # Inicialização padrão
+
 
     if len(sys.argv) >= 3:
         cv1_path, cv2_path = sys.argv[1], sys.argv[2]
@@ -487,7 +581,7 @@ def main():
             elif key == "--energy":
                 energy_threshold = float(sys.argv[i + 1])
                 i += 2
-            elif key == "--discrete":
+            elif key == "--discretize":
                 discrete_val = float(sys.argv[i + 1])  
                 i += 2
             elif key == "--bins_energy_histogram":
@@ -508,6 +602,20 @@ def main():
             elif key == "--gif_duration":
                 duration_per_frame = float(sys.argv[i + 1])
                 i += 2
+
+            elif key == "--xlim_inf":
+                xlim_inf = float(sys.argv[i + 1])
+                i += 2
+            elif key == "--xlim_sup":
+                xlim_sup = float(sys.argv[i + 1])
+                i += 2
+            elif key == "--ylim_inf":
+                ylim_inf = float(sys.argv[i + 1])
+                i += 2
+            elif key == "--ylim_sup":
+                ylim_sup = float(sys.argv[i + 1])
+                i += 2
+
             else:
                 print(f"Unrecognized option: {key}")
                 sys.exit(1)
@@ -516,9 +624,17 @@ def main():
         sys.exit(1)
 
     try:
-        fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB, bins=bins_energy_histogram, kde_bandwidth=kde_bandwidth_cv, cv_names=cv_names, discrete=discrete_val)
+        fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB, 
+                                bins=bins_energy_histogram, 
+                                kde_bandwidth=kde_bandwidth_cv, 
+                                cv_names=cv_names, 
+                                discrete=discrete_val,
+                                xlim_inf=xlim_inf, xlim_sup=xlim_sup, 
+                                ylim_inf=ylim_inf, ylim_sup=ylim_sup)
 
-        fel.main(energy_threshold, cv_names=cv_names, n_angles=n_angles, elevation=elevation, duration_per_frame=duration_per_frame)
+        fel.main(energy_threshold, cv_names=cv_names, 
+                 n_angles=n_angles, elevation=elevation, 
+                 duration_per_frame=duration_per_frame)
         
         if energy_threshold is not None:
             print("Calculating and saving energy for each frame...")
