@@ -53,7 +53,7 @@ class FreeEnergyLandscape:
             'purple', 
             'darkorange', 
             'green', 
-            'orange', 
+            'lightgrey', 
             'red',
             'magenta',
             'mediumorchid',
@@ -96,18 +96,25 @@ class FreeEnergyLandscape:
             kernel_original = gaussian_kde(values_original.T, bw_method=self.kde_bandwidth)
         else:
             kernel_original = gaussian_kde(values_original.T)
-        X_original, Y_original = np.mgrid[data[:, 0].min():data[:, 0].max():100j,
-                                          data[:, 1].min():data[:, 1].max():100j]
+
+        # Ajusta a geração da grade para respeitar os limites especificados
+        x_min = self.xlim_inf if self.xlim_inf is not None else data[:, 0].min()
+        x_max = self.xlim_sup if self.xlim_sup is not None else data[:, 0].max()
+        y_min = self.ylim_inf if self.ylim_inf is not None else data[:, 1].min()
+        y_max = self.ylim_sup if self.ylim_sup is not None else data[:, 1].max()
+        
+        X_original, Y_original = np.mgrid[x_min:x_max:100j, y_min:y_max:100j]
         positions_original = np.vstack([X_original.ravel(), Y_original.ravel()])
         Z_original = np.reshape(kernel_original(positions_original).T, X_original.shape)
         G_original = -self.kB * self.temperature * np.log(Z_original)
         G_original = np.clip(G_original - np.min(G_original), 0, 25)
 
         self.cached_results = {'X_original': X_original, 
-                               'Y_original': Y_original, 
-                               'G_original': G_original
-                               }
+                            'Y_original': Y_original, 
+                            'G_original': G_original
+                            }
         return self.cached_results
+
 
     def boltzmann_inversion(self, data_list, titles, threshold=None):
 
