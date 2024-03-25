@@ -1,79 +1,75 @@
-from freeEnergyLandscape import *
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import gaussian_kde
 
-# Definindo valores padrão
-t = 300                     # --temperature           [int] [Kelvin]
-kB = 8.314e-3               # --kb                    [float] [kJ/(mol·K)]
-energy_threshold = 0.1     # --energy                [float] [kJ/mol]
-discrete_val = 0.1         # --discrete              [float]
-bins_energy_histogram = 100 # --bins_energy_histogram [int]
-kde_bandwidth_cv = None     # --kde_bandwidth         [float]
-cv_names = ['CV1', 'CV2']   # --name                  [str] [str]
-n_angles = 10               # --gif_angles            [int]
-elevation = 10              # --gif_elevation         [int]
-duration_per_frame = 0.1    # --gif_duration          [float]
-xlim_inf = -8
-xlim_sup = 8
-ylim_inf = -5
-ylim_sup = 7  # Inicialização padrão
+class EnthalpicInterpolation:
+    def __init__(self, cv1_path, cv2_path, energy_path):
+        self.cv1_data = self.load_data(cv1_path)
+        self.cv2_data = self.load_data(cv2_path)
+        self.energy_values = self.load_data(energy_path, energy=True)
 
+    def load_data(self, file_path, energy=False):
+        """
+        Carrega os dados do arquivo especificado.
+        Se energy=True, processa o arquivo de valores de energia.
+        """
+        data = np.loadtxt(file_path, usecols=[1])
+        return data
 
-class DataProcessor:
+    def perform_kde_interpolation(self, weights=True):
+        """
+        Realiza a interpolação KDE nos dados das variáveis coletivas,
+        opcionalmente ponderada pelos valores de energia.
+        """
+        if weights:
+            weights = np.exp(-self.energy_values)
+        else:
+            weights = None
+        self.kde_result = gaussian_kde(dataset=np.vstack([self.cv1_data, self.cv2_data]), weights=weights)
 
-    def __init__(self, data_file):
-        self.data_file = data_file
-        self.index, self.values = self.read_data_file()
+    def calculate_scaled_energy_surface(self, xlim, ylim, levels):
+        """
+        Calcula a superfície de energia ajustada e retorna os valores para plotagem.
+        """
+        xx, yy = np.mgrid[xlim[0]:xlim[1]:100j, ylim[0]:ylim[1]:100j]
+        zz = self.kde_result(np.vstack([xx.flatten(), yy.flatten()]))
+        zz = np.reshape(zz, xx.shape)
 
-    def read_data_file(self):
-        index, values = [], []
-        with open(self.data_file, 'r') as file:
-            for line in file:
-                parts = line.strip().split(',')
-                value = parts[1].replace('"', '').replace(',', '.')
-                index.append(int(parts[0]))
-                values.append(float(value))
-        return np.array(index), np.array(values)
+        # -log transform and scale
+        zz_log = -np.log(zz)
+        zz_normalized = (zz_log - zz_log.min()) / (zz_log.max() - zz_log.min())
+        zz_scaled = zz_normalized * (levels[-1] - levels[0]) + levels[0]
+        return xx, yy, zz_scaled
 
-    def save_processed_data(self, output_file):
-        np.savetxt(output_file, np.column_stack((self.index, self.values)), fmt=['%d', '%.6f'], delimiter='\t')
-
-    def plot_energy_distribution(self):
-        energy_kde = gaussian_kde(self.values)
-        energy_range = np.linspace(self.values.min(), self.values.max(), 500)
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.plot(energy_range, energy_kde(energy_range), color='darkblue', alpha=0.6, lw=2)
-        ax.hist(self.values, bins=30, density=True, color='skyblue', alpha=0.5)
-        ax.set_title('Data Distribution')
-        ax.set_xlabel('Value')
-        ax.set_ylabel('Density')
-        plt.grid(alpha=0.3)
+    def plot_energy_surface(self, xx, yy, zz, levels):
+        """
+        Plota a superfície de energia 2D.
+        """
+        plt.figure(figsize=(10, 8))
+        cp = plt.contourf(xx, yy, zz, levels=levels, extend='both', cmap='viridis')
+        plt.colorbar(cp, label='Scaled Free Energy')
+        plt.xlabel('CV1')
+        plt.ylabel('CV2')
+        plt.title('2D Free Energy Surface with KDE Interpolation')
         plt.show()
 
-
-    @staticmethod
-    def plot_3D_energy_landscape(cv1_path, cv2_path):
-        fel = FreeEnergyLandscape(cv1_path, cv2_path, t, kB,
-                                  bins=bins_energy_histogram,
-                                  kde_bandwidth=kde_bandwidth_cv,
-                                  cv_names=cv_names,
-                                  discrete=discrete_val,
-                                  xlim_inf=xlim_inf, xlim_sup=xlim_sup,
-                                  ylim_inf=ylim_inf, ylim_sup=ylim_sup)
-        fel.load_data()
-        fel.plot_3D_energy_landscape(threshold=energy_threshold, titles=['CV1', 'CV2'])
-
-
-
 def main():
-    # Processamento e plotagem da distribuição do arquivo de energia
-    energy_processor = DataProcessor("./energy_values.csv")
-    energy_processor.plot_energy_distribution()
-    energy_processor.save_processed_data("./processed_energy_values.txt")
+    # Caminhos para os arquivos
+    cv1_path = './pca_cv1.txt'
+    cv2_path = './pca_cv2.txt'
+    energy_path = './processed_energy_values.txt'
 
-    # Visualizando valores discretos
+    # Criação e utilização da classe
+    interp = EnthalpicInterpolation(cv1_path, cv2_path, energy_path)
+    interp.perform_kde_interpolation()
 
-    # Plotagem da superfície energética em 3D
-    DataProcessor.plot_3D_energy_landscape("./processed_energy_values.txt", "./pca_cv1.txt")
+    # Define limites e níveis para a escala da energia
+    xlim = (interp.cv1_data.min(), interp.cv1_data.max())
+    ylim = (interp.cv2_data.min(), interp.cv2_data.max())
+    levels = np.arange(-6, 8, 2)  # De -6 a 6, variação de 2
 
+    xx, yy, zz_scaled = interp.calculate_scaled_energy_surface(xlim, ylim, levels)
+    interp.plot_energy_surface(xx, yy, zz_scaled, levels)
 
 if __name__ == "__main__":
     main()
