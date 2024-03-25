@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
+from mpl_toolkits.mplot3d import Axes3D  # Importa o toolkit 3D
 
 class EnthalpicInterpolation:
     def __init__(self, cv1_path, cv2_path, energy_path):
@@ -26,18 +27,18 @@ class EnthalpicInterpolation:
         zz = np.reshape(self.kde_result(np.vstack([xx.ravel(), yy.ravel()])), xx.shape)
         return xx, yy, zz
 
-    def plot_energy_surface(self, xx, yy, zz, left, right, top, bottom):
-        """Plota a superfície de energia 2D, ajustando os limites conforme especificado."""
-        plt.figure(figsize=(10, 8))
-        # Normalização para escala de -6 a 6 para a régua
-        zz_normalized = np.interp(zz, (zz.min(), zz.max()), (-6, 6))
-        cp = plt.contourf(xx, yy, zz_normalized, levels=np.linspace(-6, 6, 50), cmap='viridis', extend='both')
-        plt.colorbar(cp, label='Free Energy Density')
-        plt.xlim(left=left, right=right)
-        plt.ylim(bottom=bottom, top=top)
-        plt.xlabel('CV1')
-        plt.ylabel('CV2')
-        plt.title('2D Free Energy Surface with KDE Interpolation')
+    def plot_energy_surface_3D(self, xx, yy, zz):
+        """Plota a superfície de energia 3D."""
+        fig = plt.figure(figsize=(12, 8))
+        ax = fig.add_subplot(111, projection='3d')
+        # Usar a superfície diretamente não mostra bem os mínimos, então vamos usar -log(zz)
+        zz_log = -np.log(zz)
+        surf = ax.plot_surface(xx, yy, zz_log, cmap='viridis', linewidth=0, antialiased=False)
+        fig.colorbar(surf, shrink=0.5, aspect=5, label='-log(Free Energy Density)')
+        ax.set_xlabel('CV1')
+        ax.set_ylabel('CV2')
+        ax.set_zlabel('-log(Free Energy Density)')
+        plt.title('3D Free Energy Surface with KDE Interpolation')
         plt.show()
 
 def main():
@@ -53,10 +54,7 @@ def main():
 
     xx, yy, zz = interp.calculate_energy_surface(xlim, ylim)
 
-    # Limites para ajuste de visualização
-    left, right, top, bottom = -3, 5, 3, -3
-
-    interp.plot_energy_surface(xx, yy, zz, left, right, top, bottom)
+    interp.plot_energy_surface_3D(xx, yy, zz)
 
 if __name__ == "__main__":
     main()
