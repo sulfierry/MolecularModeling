@@ -4,8 +4,6 @@
 #SBATCH -J mdynamics               # Nome do job
 #SBATCH --exclusive                # Utilização exclusiva dos nós
 
-# Este script automatiza a execução de simulações de dinâmica molecular utilizando Amber em múltiplas réplicas.
-
 # squeue -a -u $USER   - View user jobs
 # squeue -a -p sequana_dockvs  - View queued jobs
 # scancel jobid
@@ -14,6 +12,7 @@
 # sbatch run.sh
 # 10 replicas of 100ns each
 
+# Este script automatiza a execução de simulações de dinâmica molecular utilizando Amber em múltiplas réplicas
 source /scratch/dockvs/softwares/amber22/app/amber.sh    # amber path
 
 inputs() {
@@ -73,7 +72,7 @@ run_replica() {
 }
 
 main() {
-    inputs # Chamada da função para definir as variáveis de input
+    inputs
     for (( i=1; i<=total_replicas; i+=num_gpus )); do
         for (( j=i; j<i+num_gpus && j<=total_replicas; j++ )); do
             run_replica $j &
