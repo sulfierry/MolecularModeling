@@ -6,6 +6,14 @@
 
 # Este script automatiza a execução de simulações de dinâmica molecular utilizando Amber em múltiplas réplicas.
 
+# squeue -a -u $USER   - View user jobs
+# squeue -a -p sequana_dockvs  - View queued jobs
+# scancel jobid
+# salloc -p sequana_dockvs -J job_name --exclusive
+# ssh node_returned
+# sbatch run.sh
+# 10 replicas of 100ns each
+
 source /scratch/dockvs/softwares/amber22/app/amber.sh    # amber path
 
 inputs() {
