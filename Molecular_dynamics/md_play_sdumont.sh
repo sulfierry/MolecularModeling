@@ -6,11 +6,11 @@
 
 # Este script automatiza a execução de simulações de dinâmica molecular utilizando Amber em múltiplas réplicas.
 # Ele distribui as tarefas de forma eficiente entre 4 GPUs disponíveis e é projetado para ser executado no supercomputador SDumont.
-# Certifique-se de que o ambiente Amber está corretamente configurado e que os diretórios de réplicas estão preparados conforme esperado.
+# Certifique-se de que o ambiente Amber está corretamente configurado e que os diretórios das réplicas estão preparados conforme esperado.
 
 # INPUTS:
 
-working_dir="/scratch/dockvs/leon.costa/way/run_11"
+working_dir="/scratch/dockvs/leon.costa/thil_apo/"
 
 total_replicas=10                                        # Número total de réplicas
 num_gpus=4                                               # Número de GPUs disponíveis
