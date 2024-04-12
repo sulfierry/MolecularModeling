@@ -139,4 +139,3 @@ Key features of the script:
 ![Alt text da image](https://github.com/sulfierry/MolecularModelingTools/blob/main/ChEMBL/histogram_similarity_distance_4.png)
 
 This script is particularly useful for assessing the overall structural diversity and similarity within a molecular dataset.
-
