@@ -21,3 +21,5 @@ Comparing IC50 with \(K_d\) or \(K_i\) is not as straightforward or informative 
 - **Dependence on Experimental Conditions**: IC50 depends on the substrate concentration and assay conditions, such as the presence of co-factors or temperature. IC50 values can vary significantly under different experimental conditions, whereas \(K_d\) and \(K_i\) are intrinsic properties of the ligand-receptor interaction.
 
 - **Not Solely About Affinity**: IC50 also reflects other pharmacological properties, such as an inhibitor's ability to alter the target's conformation, which can affect activity without necessarily indicating high affinity.
+
+For these reasons, when comparing ligands or inhibitors in medicinal chemistry, it is preferable to use \(K_d\) or \(K_i\) for affinity comparisons, while IC50 can be used to assess efficacy under specific assay conditions but should be interpreted with caution.
