@@ -49,7 +49,8 @@ class MDTraj:
         self.rmsd_results = pd.DataFrame(rmsd_data, columns=["Frame", "Time (ps)", "RMSD"])
 
         # Salve o DataFrame em um arquivo CSV
-        csv_path = "./rmsd_results.csv"
+        #csv_path = "./rmsd_results_backbone.csv" # backbone
+        csv_path = "./rmsd_results_backbone.csv" # ligante
         self.rmsd_results.to_csv(csv_path, index=False)
         print(f"RMSD data saved to {csv_path}\n")
 
@@ -89,8 +90,7 @@ class MDTraj:
             self.u.atoms.write(pdb_filename)
         print("PDB files of selected frames were saved with adjusted descriptions")
 
-    def plot_rmsd(self, backbone=None, color=None,
-                  x_limits=None, y_limits=None):
+    def plot_rmsd(self, backbone=None, color=None):
 
         plt.figure(figsize=(10, 6))
         plt.plot(self.rmsd_results['Frame'], self.rmsd_results['RMSD'], label='RMSD', color=color)
@@ -110,14 +110,14 @@ class MDTraj:
         plt.grid(True)
 
         # Configuração dos limites dos eixos se especificados
-        if x_limits:
-            plt.xlim(x_limits)
-        if y_limits:
-            plt.ylim(y_limits)
-
+        #plt.xlim(x_limits)
+        #plt.ylim(top=3) # backbone
+        plt.ylim(top=8) # ligante
         plt.tight_layout()
-        plt.savefig('3l3x_rmsd_ligand.png')
-        plt.show()
+        #plt.savefig('3l3x_rmsd_backbone.png') # backbone
+        plt.savefig('3l3x_rmsd_ligand.png') # ligante
+
+        plt.show()e
 
 
     def plot_rmsd_histogram(self):
@@ -198,11 +198,9 @@ class MDTraj:
         
     def play(self):
 
-        rmsd_select = "resname LIG" # ligante
+        #rmsd_select = "resname LIG" # ligante
         rmsd_color = "green"
-        rmsd_x_lim = None
-        rmsd_y_lim = 10
-        #rmsd_select = "backbone and (name CA or name C or name O or name N)" # backbone
+        rmsd_select = "backbone and (name CA or name C or name O or name N)" # backbone
         print("Calculating RMSD...")
 
         rmsd_statistics = self.calculate_rmsd(rmsd_select)
@@ -213,7 +211,7 @@ class MDTraj:
         #else:
             #print("Error: Unable to calculate RMSD descriptive statistics.")
 
-        self.plot_rmsd(backbone=None, color=rmsd_color, x_limits=None, y_limits=None)
+        self.plot_rmsd(backbone=None, color=rmsd_color)
         #self.plot_rmsd_histogram()
 
         #print("Calculating PCA...")
