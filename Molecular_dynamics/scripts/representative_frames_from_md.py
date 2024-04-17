@@ -50,7 +50,7 @@ class MDTraj:
 
         # Salve o DataFrame em um arquivo CSV
         #csv_path = "./rmsd_results_backbone.csv" # backbone
-        csv_path = "./rmsd_results_backbone.csv" # ligante
+        csv_path = "./rmsd_results_ligand.csv" # ligante
         self.rmsd_results.to_csv(csv_path, index=False)
         print(f"RMSD data saved to {csv_path}\n")
 
@@ -94,7 +94,7 @@ class MDTraj:
 
         plt.figure(figsize=(10, 6))
         plt.plot(self.rmsd_results['Frame'], self.rmsd_results['RMSD'], label='RMSD', color=color)
-        
+
         if (backbone):
             # Adicionando círculos para os frames selecionados
             for _, row in self.selected_frames.iterrows():
@@ -114,16 +114,16 @@ class MDTraj:
         #plt.ylim(top=3) # backbone
         plt.ylim(top=8) # ligante
         plt.tight_layout()
-        #plt.savefig('3l3x_rmsd_backbone.png') # backbone
-        plt.savefig('3l3x_rmsd_ligand.png') # ligante
+        #plt.savefig('6pt0_rmsd_backbone.png') # backbone
+        plt.savefig('6pt0_rmsd_ligand.png') # ligante
 
-        plt.show()e
+        plt.show()
 
 
     def plot_rmsd_histogram(self):
         plt.figure(figsize=(10, 6))
         sns.histplot(self.rmsd_results['RMSD'], kde=True, bins=30, color='blue', label='RMSD Distribution')
-        
+
         for _, row in self.selected_frames.iterrows():
             rmsd_value = row['rmsd']
             plt.scatter(rmsd_value, 0, color='red', s=50, zorder=5)  # s é o tamanho do marcador, zorder garante que o marcador fique visível acima do histograma
@@ -140,7 +140,7 @@ class MDTraj:
 
 
     def calculate_pca_incremental(self, n_components=3, chunk_size=1024):
-    
+
         atoms_to_analyze = self.u.select_atoms("backbone")
         pca = IncrementalPCA(n_components=n_components)
         n_frames = len(self.u.trajectory)
@@ -156,7 +156,7 @@ class MDTraj:
 
         self.u.trajectory[0]  # Reset para início
         transformed_data = np.zeros((n_frames, n_components))
-	
+
         # Adicionando tqdm ao loop para a transformação dos dados pelo modelo PCA ajustado
         for start_frame in tqdm(range(0, n_frames, chunk_size), desc="Transforming data with PCA"):
             end_frame = min(start_frame + chunk_size, n_frames)
@@ -167,9 +167,9 @@ class MDTraj:
 
         self.pca_result = transformed_data
         return self.pca_result
-        
 
-    
+
+
     def extract_pca_collective_variables(self):
         """
         Salva as projeções PCA em arquivos TSV.
@@ -179,7 +179,7 @@ class MDTraj:
             data = np.hstack((frames, self.pca_result[:, i:i+1]))
             filename = f"cv_pca{i+1}.tsv"
             pd.DataFrame(data).to_csv(filename, sep='\t', index=False, header=False)
-    
+
     def plot_pca_projections(self):
         # Plotando a projeção dos frames nos três primeiros componentes principais
         plt.figure(figsize=(10, 6))
@@ -195,12 +195,12 @@ class MDTraj:
         plt.show()
 
 
-        
+
     def play(self):
 
-        #rmsd_select = "resname LIG" # ligante
-        rmsd_color = "green"
-        rmsd_select = "backbone and (name CA or name C or name O or name N)" # backbone
+        rmsd_color = "blue"
+        rmsd_select = "resname LIG" # ligante
+        #rmsd_select = "backbone and (name CA or name C or name O or name N)" # backbone
         print("Calculating RMSD...")
 
         rmsd_statistics = self.calculate_rmsd(rmsd_select)
@@ -220,11 +220,11 @@ class MDTraj:
         #self.plot_pca_projections()
 
         #print("Finish!")
-        
+
 
 def main():
     md_traj = MDTraj(sys.argv[1], sys.argv[2])
-    
+
     md_traj.play()
 
 
