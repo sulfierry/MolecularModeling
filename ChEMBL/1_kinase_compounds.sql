@@ -33,7 +33,7 @@ WHERE
     act.standard_relation = '=' AND
     (act.data_validity_comment IS NULL OR act.data_validity_comment = 'Manually validated');
 
-\COPY public.smile_kinase_manually_validated_kd_ki_ic50_10uM TO '/home/leon/Desktop/ChEMBL_DATABSE/1_chembl_manually_validated/1_database/kinase_drug_info_all_manually_validated_IC50_Ki_kd_10uM.tsv' WITH (FORMAT csv, HEADER, DELIMITER E'\t');
+\COPY public.smile_kinase_manually_validated_kd_ki_ic50_10uM TO '/path/to/file/kinase_drug_info_all_manually_validated_IC50_Ki_kd_10uM.tsv' WITH (FORMAT csv, HEADER, DELIMITER E'\t');
 
 
 CREATE TABLE public.smile_kinase_all_compounds AS
@@ -65,4 +65,4 @@ WHERE
     act.standard_units = 'nM' AND
     (act.data_validity_comment IS NULL OR act.data_validity_comment = 'Manually validated');
 
-\COPY public.smile_kinase_all_compounds TO '/home/leon/Desktop/ChEMBL_DATABSE/1_chembl_manually_validated/1_database/kinase_all_compounds.tsv' WITH (FORMAT csv, HEADER, DELIMITER E'\t');
+\COPY public.smile_kinase_all_compounds TO '/path/to/file/1_database/kinase_all_compounds.tsv' WITH (FORMAT csv, HEADER, DELIMITER E'\t');
