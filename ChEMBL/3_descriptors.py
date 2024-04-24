@@ -27,7 +27,8 @@ class MolecularDescriptors:
         return None
 
     def compute_descriptors(self):
-        for smiles in self.data['salt_free_smiles']:
+        smiles_data = self.data['canonical_smiles'].dropna()
+        for smiles in smiles_data:
             descriptors = self.calculate_descriptors(smiles)
             if descriptors:
                 for name in self.descriptor_names:
@@ -66,7 +67,7 @@ class MolecularDescriptors:
             #plt.show()
        # else:
        #     self.plot_simple_histograms()
-    
+
     def plot_simple_histograms(self):
         fig, axs = plt.subplots(3, 2, figsize=(13, 13)) # 3 linhas, 2 colunas
         axs = axs.flatten() # Transformar o array 2D de eixos em 1D para facilitar o acesso
@@ -84,8 +85,8 @@ class MolecularDescriptors:
 def main():
 
     # Caminhos dos arquivos
-    data_file_path = '../1_database/positive.tsv'
-    additional_data_file_path = '../1_database/pkidb_2023-06-30.tsv'
+    data_file_path = '../1_remove_redundance/positive.tsv'
+    additional_data_file_path = '../0_database/pkidb/pkidb_2024-03-18.tsv'
     output_file_path = './chembl_nr_pkidb_descriptors.tsv'
     histogram_output_path = './nr_chembl_pkidb_descriptors.png'
 
