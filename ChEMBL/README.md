@@ -43,7 +43,7 @@ WHERE
     act.standard_units = 'nM' AND
     (act.data_validity_comment IS NULL OR act.data_validity_comment = 'Manually validated');
 
-\COPY public.smile_kinase_all_compounds TO '/home/leon/Desktop/ChEMBL_DATABSE/1_chembl_manually_validated/1_database/kinase_all_compounds.tsv' WITH (FORMAT csv, HEADER, DELIMITER E'\t');
+\COPY public.smile_kinase_all_compounds TO '/path/to/save/kinase_all_compounds.tsv' WITH (FORMAT csv, HEADER, DELIMITER E'\t');
 ```
 
 ## 2. Python post-processing script - remove_redundance.py:
