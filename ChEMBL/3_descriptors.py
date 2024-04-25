@@ -2,52 +2,61 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from rdkit import Chem
 from rdkit.Chem import Descriptors
+from concurrent.futures import ProcessPoolExecutor
+from tqdm import tqdm
+import os
 
 class MolecularDescriptors:
-    def __init__(self, data_path):
+
+    def __init__(self, data_path, batch_size=512):
         self.data_path = data_path
+        self.batch_size = batch_size
         self.descriptor_names = ['MW', 'LogP', 'HBD', 'HBA', 'TPSA', 'NRB']
-        self.descriptor_data = {name: [] for name in self.descriptor_names}
         self.data = pd.read_csv(data_path, sep='\t')
 
-    def calculate_descriptors(self, smiles):
-        try:
-            mol = Chem.MolFromSmiles(smiles)
-            if mol:
-                return {
-                    'MW': Descriptors.MolWt(mol),
-                    'LogP': Descriptors.MolLogP(mol),
-                    'HBD': Descriptors.NumHDonors(mol),
-                    'HBA': Descriptors.NumHAcceptors(mol),
-                    'TPSA': Descriptors.TPSA(mol),
-                    'NRB': Descriptors.NumRotatableBonds(mol)
-                }
-        except Exception as e:
-            print(f"Erro ao processar SMILES: {smiles}: {e}")
-        return None
+    def calculate_descriptors(self, smiles_list):
+        results = []
+        for smiles in smiles_list:
+            try:
+                mol = Chem.MolFromSmiles(smiles)
+                if mol:
+                    results.append({
+                        'canonical_smiles': smiles,
+                        'MW': Descriptors.MolWt(mol),
+                        'LogP': Descriptors.MolLogP(mol),
+                        'HBD': Descriptors.NumHDonors(mol),
+                        'HBA': Descriptors.NumHAcceptors(mol),
+                        'TPSA': Descriptors.TPSA(mol),
+                        'NRB': Descriptors.NumRotatableBonds(mol)
+                    })
+            except Exception as e:
+                print(f"Erro ao processar SMILES: {smiles}: {e}")
+        return results
 
     def compute_descriptors(self):
-        smiles_data = self.data['canonical_smiles'].dropna()
-        for smiles in smiles_data:
-            descriptors = self.calculate_descriptors(smiles)
-            if descriptors:
-                for name in self.descriptor_names:
-                    self.descriptor_data[name].append(descriptors[name])
+        smiles_data = self.data['canonical_smiles'].dropna().unique()
+        chunks = [smiles_data[i:i + self.batch_size] for i in range(0, len(smiles_data), self.batch_size)]
+        results = []
+
+        with ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
+            for chunk_result in tqdm(executor.map(self.calculate_descriptors, chunks), total=len(chunks), desc="Calculating Descriptors"):
+                results.extend(chunk_result)
+
+        valid_results = [res for res in results if res is not None]
+        descriptors_df = pd.DataFrame(valid_results)
+        self.descriptor_data = pd.merge(descriptors_df, self.data[['canonical_smiles', 'kinase_group', 'count_kinase_group']].drop_duplicates(), on='canonical_smiles', how='left')
 
     def save_descriptors(self, output_path):
-        descriptor_df = pd.DataFrame(self.descriptor_data)
-        descriptor_df.to_csv(output_path, sep='\t', index=False)
+        self.descriptor_data.to_csv(output_path, sep='\t', index=False)
 
     def plot_histograms(self, additional_data_path=None, output_path=None):
-        fig, axs = plt.subplots(3, 2, figsize=(13, 13)) # 3 linhas, 2 colunas
-        axs = axs.flatten() # Transformar o array 2D de eixos em 1D
-
-        # Criar eixos invisíveis para os rótulos "Density"
-        density_axis = fig.add_subplot(111, frameon=False)  # Adicionar eixo que abrange toda a figura
-        density_axis.set_xticks([])  # Desativar ticks do eixo x
-        density_axis.set_yticks([])  # Desativar ticks do eixo y
-        density_axis.grid(False)     # Sem grade
-        density_axis.set_ylabel('Density', labelpad=40)  # Definir rótulo y
+        fig, axs = plt.subplots(3, 2, figsize=(13, 13))
+        axs = axs.flatten()
+        density_axis = fig.add_subplot(111, frameon=False)
+        density_axis.set_xticks([])
+        density_axis.set_yticks([])
+        density_axis.grid(False)
+        density_axis.set_ylabel('Density', labelpad=40)
 
         for i, desc in enumerate(self.descriptor_names):
             axs[i].hist(self.descriptor_data[desc], bins=30, alpha=0.5, label='nr_ChEMBL', edgecolor='black', density=True)
@@ -55,51 +64,21 @@ class MolecularDescriptors:
                 additional_data = pd.read_csv(additional_data_path, sep='\t')
                 axs[i].hist(additional_data[desc], bins=30, alpha=0.5, label='PKIDB', edgecolor='black', density=True)
             axs[i].set_title(f'{desc}', fontsize=9)
-
-        # Posicionar a legenda fora do plot no canto superior direito do último gráfico da primeira linha
         axs[1].legend(loc='upper right', bbox_to_anchor=(1.3, 1))
-
         plt.tight_layout()
         if output_path:
             plt.savefig(output_path)
         plt.show()
-            #
-            #plt.show()
-       # else:
-       #     self.plot_simple_histograms()
-
-    def plot_simple_histograms(self):
-        fig, axs = plt.subplots(3, 2, figsize=(13, 13)) # 3 linhas, 2 colunas
-        axs = axs.flatten() # Transformar o array 2D de eixos em 1D para facilitar o acesso
-
-        for i, name in enumerate(self.descriptor_names):
-            axs[i].hist(self.descriptor_data[name], bins=30, edgecolor='black')
-            axs[i].set_title(f'Histograma do Descritor: {name}', fontsize=9)
-            axs[i].set_xlabel(name)
-            axs[i].set_ylabel('Frequência')
-
-        plt.tight_layout()
-        plt.show()
-
 
 def main():
-
-    # Caminhos dos arquivos
     data_file_path = '../1_remove_redundance/positive.tsv'
     additional_data_file_path = '../0_database/pkidb/pkidb_2024-03-18.tsv'
     output_file_path = './chembl_nr_pkidb_descriptors.tsv'
     histogram_output_path = './nr_chembl_pkidb_descriptors.png'
 
-    # Criar instância da classe
-    molecular_descriptors = MolecularDescriptors(data_file_path)
-
-    # Calcular descritores
+    molecular_descriptors = MolecularDescriptors(data_file_path, batch_size=1024)  # Ajuste o tamanho do batch conforme necessário
     molecular_descriptors.compute_descriptors()
-
-    # Salvar descritores calculados
     molecular_descriptors.save_descriptors(output_file_path)
-
-    # Plotar histogramas normalizados e sobrepostos
     molecular_descriptors.plot_histograms(additional_data_file_path, histogram_output_path)
 
 if __name__ == '__main__':
