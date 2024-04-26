@@ -101,10 +101,10 @@ def main():
     output_file_path = './chembl_nr_pkidb_descriptors.tsv'
     histogram_output_path = './nr_chembl_pkidb_descriptors.png'
 
-    #molecular_descriptors = MolecularDescriptors(data_file_path, batch_size=1024)  # Ajuste o tamanho do batch conforme necessário
-    #molecular_descriptors.compute_descriptors()
-    #molecular_descriptors.save_descriptors(output_file_path)
-    #molecular_descriptors.plot_histograms(additional_data_file_path, histogram_output_path)
+    molecular_descriptors = MolecularDescriptors(data_file_path, batch_size=1024)  # Ajuste o tamanho do batch conforme necessário
+    molecular_descriptors.compute_descriptors()
+    molecular_descriptors.save_descriptors(output_file_path)
+    molecular_descriptors.plot_histograms(additional_data_file_path, histogram_output_path)
 
     descriptors = MolecularDescriptors(output_file_path)
     descriptors.violin_plot()
