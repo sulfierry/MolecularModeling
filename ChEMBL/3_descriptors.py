@@ -5,10 +5,12 @@ from rdkit.Chem import Descriptors
 from concurrent.futures import ProcessPoolExecutor
 from tqdm import tqdm
 import os
+import seaborn as sns
+
 
 class MolecularDescriptors:
 
-    def __init__(self, data_path, batch_size=512):
+    def __init__(self, data_path, batch_size=1024):
         self.data_path = data_path
         self.batch_size = batch_size
         self.descriptor_names = ['MW', 'LogP', 'HBD', 'HBA', 'TPSA', 'NRB']
@@ -70,16 +72,42 @@ class MolecularDescriptors:
             plt.savefig(output_path)
         plt.show()
 
+
+    def violin_plot(self):
+        columns = ['MW', 'LogP', 'HBD', 'HBA', 'TPSA', 'NRB']
+        fig, axs = plt.subplots(nrows=2, ncols=3, figsize=(15, 10))
+        colors = sns.color_palette("muted", len(columns))
+
+        for ax, col, color in zip(axs.flat, columns, colors):
+            q_low = self.data[col].quantile(0.01)
+            q_high = self.data[col].quantile(0.99)
+            range_expand = (q_high - q_low) * 0.10
+            if col in ['MW', 'LogP', 'HBA', 'TPSA']:
+                range_expand *= 1.5
+            filtered_data = self.data[(self.data[col] >= q_low - range_expand) & (self.data[col] <= q_high + range_expand)][col]
+
+            sns.violinplot(data=filtered_data, ax=ax, color=color, inner="quartile", cut=0)
+            ax.set_ylabel(col)
+            ax.set_xlabel('')
+
+        plt.tight_layout()
+        plt.savefig('./violin_plot.png')
+        plt.show()
+
+
 def main():
-    data_file_path = '../1_remove_redundance/positive.tsv'
+    data_file_path = '../1_remove_redundance/nr_kinase_all_compounds_salt_free.tsv'
     additional_data_file_path = '../0_database/pkidb/pkidb_2024-03-18.tsv'
     output_file_path = './chembl_nr_pkidb_descriptors.tsv'
     histogram_output_path = './nr_chembl_pkidb_descriptors.png'
 
-    molecular_descriptors = MolecularDescriptors(data_file_path, batch_size=1024)  # Ajuste o tamanho do batch conforme necessário
-    molecular_descriptors.compute_descriptors()
-    molecular_descriptors.save_descriptors(output_file_path)
-    molecular_descriptors.plot_histograms(additional_data_file_path, histogram_output_path)
+    #molecular_descriptors = MolecularDescriptors(data_file_path, batch_size=1024)  # Ajuste o tamanho do batch conforme necessário
+    #molecular_descriptors.compute_descriptors()
+    #molecular_descriptors.save_descriptors(output_file_path)
+    #molecular_descriptors.plot_histograms(additional_data_file_path, histogram_output_path)
+
+    descriptors = MolecularDescriptors(output_file_path)
+    descriptors.violin_plot()
 
 if __name__ == '__main__':
     main()
