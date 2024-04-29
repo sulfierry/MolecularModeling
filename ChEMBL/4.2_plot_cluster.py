@@ -32,22 +32,33 @@ tsne_results = tsne.fit_transform(fp_array)
 data['tsne-2d-one'] = tsne_results[:,0]
 data['tsne-2d-two'] = tsne_results[:,1]
 
+# Contar o número de ocorrências em cada cluster e adicionar como coluna de tamanho
+data['cluster_size'] = data['kinase_group'].map(data['kinase_group'].value_counts())
+
+# Normalizar o tamanho dos clusters para uso como tamanho dos pontos
+size_scale = 100 / data['cluster_size'].max()  # Ajuste o divisor conforme necessário para escala de tamanho
+data['point_size'] = data['cluster_size'] * size_scale
+
 # Definir uma paleta de cores personalizada
 kinase_groups = data['kinase_group'].unique()
-colors = plt.cm.get_cmap('tab20', len(kinase_groups))  # Usando o mapa de cores 'tab20' para diversidade
+colors = plt.cm.get_cmap('tab20', len(kinase_groups))
 
 # Mapear cada grupo de quinase para uma cor específica
 color_map = {group: colors(i) for i, group in enumerate(kinase_groups)}
 
 # Plotar o gráfico t-SNE colorido pelos grupos de kinase
 plt.figure(figsize=(16,10))
-sns.scatterplot(
+scatter = sns.scatterplot(
     x="tsne-2d-one", y="tsne-2d-two",
     hue="kinase_group",
-    palette=color_map,  # Usando a paleta de cores personalizada
+    size="point_size",  # Usar o tamanho dos pontos ajustado
+    sizes=(20, 200),  # Intervalo de tamanho dos pontos (min, max)
+    palette=color_map,
     data=data,
-    legend="full",
+    legend="brief",
     alpha=0.5
 )
-plt.title('t-SNE colored by Kinase Groups')
+plt.title('t-SNE colored by Kinase Groups with Size Indicative of Cluster Size')
+# Ajustando a legenda fora do gráfico
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.show()
