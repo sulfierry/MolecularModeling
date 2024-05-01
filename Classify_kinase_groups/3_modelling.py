@@ -42,6 +42,15 @@ class Classifiers:
         self.y_train, self.y_test = loader['y_train'], loader['y_test']
 
     def evaluate_model(self, model, name):
+"""     
+        Definição de Métricas: Define um dicionário de métricas de avaliação para serem calculadas durante a validação cruzada. Cada métrica ajuda a entender diferentes aspectos do desempenho do modelo:
+        Accuracy: Proporção de predições corretas.
+        Precision: Proporção de predições positivas corretas em relação a todas as predições positivas.
+        Recall: Proporção de predições positivas corretas em relação a todas as amostras positivas reais.
+        F1: Média harmônica de precisão e recall.
+        Balanced Accuracy: Média de recall obtida em cada classe, útil para dados desbalanceados.
+        Geometric Mean: Média geométrica de recall para todas as classes.
+"""
         metrics = {
             'accuracy': 'accuracy',
             'precision': make_scorer(precision_score, average='macro'),
