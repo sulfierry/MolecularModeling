@@ -42,14 +42,14 @@ class Classifiers:
         self.y_train, self.y_test = loader['y_train'], loader['y_test']
 
     def evaluate_model(self, model, name):
-
+        # Adjusted precision, recall, and f1_score to handle zero division issue
         metrics = {
-            'accuracy': 'accuracy',                                                #  Proporção de predições corretas
-            'precision': make_scorer(precision_score, average='macro'),            #  Proporção de predições positivas corretas em relação a todas as predições positivas.
-            'recall': make_scorer(recall_score, average='macro'),                  #  Proporção de predições positivas corretas em relação a todas as amostras positivas reais.
-            'f1': make_scorer(f1_score, average='macro'),                          #  Média harmônica de precisão e recall.
-            'balanced_accuracy': 'balanced_accuracy',                              #  Média de recall obtida em cada classe, útil para dados desbalanceados.
-            'geometric_mean': make_scorer(geometric_mean_score, average='macro')   # Média geométrica de recall para todas as classes.
+            'accuracy': 'accuracy',
+            'precision': make_scorer(precision_score, average='macro', zero_division=1),
+            'recall': make_scorer(recall_score, average='macro', zero_division=1),
+            'f1': make_scorer(f1_score, average='macro', zero_division=1),
+            'balanced_accuracy': 'balanced_accuracy',
+            'geometric_mean': make_scorer(geometric_mean_score, average='macro')
         }
         scores = cross_validate(model, self.X_train, self.y_train, cv=self.kfold,
                                 scoring=metrics, return_train_score=False,
@@ -78,25 +78,19 @@ class Classifiers:
         ]
 
         for name, clf in tqdm(models, desc="Processing classifiers"):
-            model = Pipeline([                   #  Para cada modelo na lista, cria um pipeline que inclui:
-                ('scaler', StandardScaler()),    #  StandardScaler: Normaliza os dados para ter média zero e variância unitária.
-                ('pca', PCA(n_components=0.95)), # PCA: Reduz a dimensionalidade dos dados enquanto tenta preservar 95% da variância.
-                ('classifier', clf)              # Classifier: O classificador especificado para treinamento.
+            model = Pipeline([
+                ('scaler', StandardScaler()),  # Normalize data
+                ('pca', PCA(n_components=0.95)),  # Reduce dimensionality
+                ('classifier', clf)  # Train classifier
             ])
-
-
-            # Treinamento em Batches: Divide o conjunto de treinamento em vários lotes e treina o modelo em cada lote. 
-            # Isso ajuda a gerenciar o uso de memória e possibilita o treinamento com grandes volumes de dados.
             batch_results = []
             for batch in np.array_split(np.arange(len(self.X_train)), num_batches):
                 X_batch, y_batch = self.X_train[batch], self.y_train[batch]
                 batch_result, fitted_model = self.evaluate_model(model, name)
                 batch_results.append(batch_result)
                 del X_batch, y_batch
-                gc.collect()
-                
-            # Armazenamento dos Resultados: Calcula a média das métricas para todos os lotes e salva os detalhes do modelo, 
-            # incluindo o modelo treinado e as métricas, em arquivos para recuperação e análise futura.
+                gc.collect()  # Clear memory
+
             avg_results = {metric: np.mean([r[metric] for r in batch_results]) for metric in batch_results[0]}
             results.append((name, avg_results))
             model_details.append((name, avg_results, fitted_model))
