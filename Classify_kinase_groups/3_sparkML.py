@@ -1,7 +1,8 @@
 import os
+import time
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler, StandardScaler, PCA, StringIndexer, MinMaxScaler
-from pyspark.ml.classification import RandomForestClassifier, LogisticRegression, DecisionTreeClassifier, LinearSVC
+from pyspark.ml.classification import RandomForestClassifier, LogisticRegression, DecisionTreeClassifier
 from pyspark.ml import Pipeline
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
@@ -42,11 +43,11 @@ class SparkML:
         return [
             ("Random Forest", RandomForestClassifier(featuresCol='scaledPcaFeatures', labelCol='indexedLabel')),
             ("Logistic Regression", LogisticRegression(featuresCol='scaledPcaFeatures', labelCol='indexedLabel', family='multinomial')),
-            ("Decision Tree", DecisionTreeClassifier(featuresCol='scaledPcaFeatures', labelCol='indexedLabel')),
-            ("Linear SVM", LinearSVC(featuresCol='scaledPcaFeatures', labelCol='indexedLabel'))
+            ("Decision Tree", DecisionTreeClassifier(featuresCol='scaledPcaFeatures', labelCol='indexedLabel'))
         ]
 
     def train_and_evaluate_models(self):
+        start_time = time.time()
         train, test = self.df.randomSplit([0.8, 0.2], seed=42)
         results = []
         model_directory = "saved_models"
@@ -71,6 +72,7 @@ class SparkML:
             model.bestModel.save(model_path)
             print(f"Top {i+1} Model: {name} with accuracy: {accuracy} saved to {model_path}")
         self.plot_metrics(results)
+        print(f"Total Execution Time: {time.time() - start_time} seconds")
 
     def plot_metrics(self, results):
         fig, ax = plt.subplots(figsize=(10, 6))
