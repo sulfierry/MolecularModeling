@@ -32,7 +32,7 @@ file_path = './kinase_all_compounds.tsv'
 data = pd.read_csv(file_path, sep='\t')
 
 # Smile alvo
-target_smile = "NC(=O)CC(C(=O)O)N" # WAY_213613 sub-estrutura
+target_smile = "NC(=O)CC(C(=O)O)N" # sub-estrutura
 
 # Processamento paralelo
 cpu_count = os.cpu_count()
