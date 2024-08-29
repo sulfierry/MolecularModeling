@@ -86,9 +86,11 @@ for {set frame_number $start_frame} {\$frame_number <= $end_frame} {incr frame_n
     set chainB_atoms [atomselect 0 "\$chainB_residues"]
 
     # Itera sobre os átomos da cadeia A
-    foreach chainA_atom [\$chainA_atoms get {index name}] {
+    foreach chainA_atom [\$chainA_atoms get {index name resname resid}] {
         set chainA_index [lindex \$chainA_atom 0]
         set chainA_atomname [lindex \$chainA_atom 1]
+        set chainA_resname [lindex \$chainA_atom 2]
+        set chainA_resid [lindex \$chainA_atom 3]
         
         # Cria uma seleção de átomos da cadeia B próximos ao átomo atual da cadeia A
         set nearby_atoms [atomselect 0 "same residue as (within \$cutoff_distance of index \$chainA_index) and \$chainB_residues"]
@@ -105,7 +107,7 @@ for {set frame_number $start_frame} {\$frame_number <= $end_frame} {incr frame_n
             set distance [measure bond [list \$chainA_index \$nearby_index]]
 
             # Escreve as informações no arquivo, incluindo a distância
-            puts \$outfile "Frame \$frame_number: Chain A atom \$chainA_atomname index \$chainA_index interacts with Chain B \$nearby_resname \$nearby_resid \$nearby_atomname Distance: \$distance"
+            puts \$outfile "Frame \$frame_number: Chain A \$chainA_resname \$chainA_resid \$chainA_atomname interacts with Chain B \$nearby_resname \$nearby_resid \$nearby_atomname Distance: \$distance"
         }
     }
 
@@ -134,25 +136,26 @@ class ProcessInteractions:
     def reformat_data(self):
         dat_files = sorted(glob.glob(os.path.join(self.input_dir, 'detailed_interactions_frame_*.dat')))
         with open(self.output_file, 'w') as outfile:
-            outfile.write("frame\tchainA_atom\tchainA_atom_index\tchainB_residue\tchainB_atom\tchainB_residue_number\tdistance\n")
+            outfile.write("frame\tchainA_residue\tchainA_residue_number\tchainA_atom\tchainB_residue\tchainB_residue_number\tchainB_atom\tdistance\n")
             for dat_file in dat_files:
                 with open(dat_file, 'r') as infile:
                     for line in infile:
                         parts = line.strip().split()
                         frame = parts[1].strip(':')
-                        chainA_atom = parts[4]
-                        chainA_atom_index = parts[6]
-                        chainB_residue = parts[9]
-                        chainB_residue_number = parts[10]
-                        chainB_atom = parts[11]
+                        chainA_residue = parts[3]
+                        chainA_residue_number = parts[4]
+                        chainA_atom = parts[5]
+                        chainB_residue = parts[8]
+                        chainB_residue_number = parts[9]
+                        chainB_atom = parts[10]
                         distance = line.split('Distance: ')[1].strip()
-                        output_line = f"{frame}\t{chainA_atom}\t{chainA_atom_index}\t{chainB_residue}\t{chainB_atom}\t{chainB_residue_number}\t{distance}\n"
+                        output_line = f"{frame}\t{chainA_residue}\t{chainA_residue_number}\t{chainA_atom}\t{chainB_residue}\t{chainB_residue_number}\t{chainB_atom}\t{distance}\n"
                         outfile.write(output_line)
         print(f"Processamento concluído. Todos os dados foram salvos em: {self.output_file}\n")
 
     def calculate_prevalence(self, prevalence_threshold=50):
         data = pd.read_csv(self.output_file, sep='\t')
-        interaction_counts = data.groupby(['chainA_atom', 'chainA_atom_index', 'chainB_residue', 'chainB_atom', 'chainB_residue_number']).size()
+        interaction_counts = data.groupby(['chainA_residue', 'chainA_residue_number', 'chainA_atom', 'chainB_residue', 'chainB_residue_number', 'chainB_atom']).size()
         total_frames = data['frame'].nunique()
         prevalence = (interaction_counts / total_frames) * 100
         prevalence_filtered = prevalence[prevalence >= prevalence_threshold].reset_index(name='prevalence')
@@ -171,7 +174,7 @@ class ProcessInteractions:
         self.prevalence_data['chainB_residue_number'] = pd.to_numeric(self.prevalence_data['chainB_residue_number'])
         self.prevalence_data.sort_values(by='chainB_residue_number', inplace=True)
         self.prevalence_data['description'] = self.prevalence_data.apply(
-            lambda x: f"{x['chainB_residue_number']}{x['chainB_residue']}({x['chainB_atom']}) - {x['chainA_atom']}(Chain A)", axis=1)
+            lambda x: f"{x['chainB_residue_number']}{x['chainB_residue']}({x['chainB_atom']}) - {x['chainA_residue_number']}{x['chainA_residue']}({x['chainA_atom']})", axis=1)
         plt.figure(figsize=(14, 10))
         plt.bar(self.prevalence_data['description'], self.prevalence_data['prevalence'], color='skyblue')
         plt.ylabel('Prevalência (%)')
