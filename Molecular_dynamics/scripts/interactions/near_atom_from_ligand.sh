@@ -16,7 +16,6 @@ main() {
     process_frames
 }
 
-
 process_frames() {
     # Processa os frames em blocos
     for ((start=0; start<TOTAL_FRAMES; start+=SLICE)); do
@@ -40,7 +39,7 @@ process_frames() {
     done
 
     # Gera o script Python dinamicamente
-    python_script=$(generate_python_script $TRESHOLD_PREVALENCE_INTERACTION)
+    python_script=$(generate_python_script)
 
     # Salva o script Python gerado em um arquivo temporário
     python_script_file="${ROOT_DIR}/process_interaction.py"
@@ -89,21 +88,21 @@ for {set frame_number $start_frame} {\$frame_number <= $end_frame} {incr frame_n
         set ligand_atomname [lindex \$ligand_atom 1]
         
         # Cria uma seleção de todos os átomos de cadeias laterais de aminoácidos próximos a este átomo do ligante
-        set sidechain_atoms [atomselect 0 "sidechain within \$cutoff_distance of index \$ligand_index"]
-        set sidechain_atoms_info [\$sidechain_atoms get {index element resname resid name}]
+        set protein_atoms [atomselect 0 "protein and not backbone and within \$cutoff_distance of index \$ligand_index"]
+        set protein_atoms_info [\$protein_atoms get {index element resname resid name}]
         
-        foreach sidechain_atom \$sidechain_atoms_info {
-            set sidechain_index [lindex \$sidechain_atom 0]
-            set sidechain_element [lindex \$sidechain_atom 1]
-            set sidechain_resname [lindex \$sidechain_atom 2]
-            set sidechain_resid [lindex \$sidechain_atom 3]
-            set sidechain_atomname [lindex \$sidechain_atom 4]
+        foreach protein_atom \$protein_atoms_info {
+            set protein_index [lindex \$protein_atom 0]
+            set protein_element [lindex \$protein_atom 1]
+            set protein_resname [lindex \$protein_atom 2]
+            set protein_resid [lindex \$protein_atom 3]
+            set protein_atomname [lindex \$protein_atom 4]
             
             # Calcula a distância entre o átomo do ligante e o átomo do aminoácido
-            set distance [measure bond [list \$ligand_index \$sidechain_index]]
+            set distance [measure bond [list \$ligand_index \$protein_index]]
 
             # Escreve as informações no arquivo, incluindo a distância
-            puts \$outfile "Frame \$frame_number: Ligand atom \$ligand_atomname index \$ligand_index interacts with \$sidechain_resname \$sidechain_resid \$sidechain_atomname Distance: \$distance"
+            puts \$outfile "Frame \$frame_number: Ligand atom \$ligand_atomname index \$ligand_index interacts with \$protein_resname \$protein_resid \$protein_atomname Distance: \$distance"
         }
     }
 
@@ -188,7 +187,6 @@ class ProcessInteractions:
         print(f"Rotatable atoms: \n{rotatable_atoms}")
         print("-------------------------------------------------------------------------------------------------------------------\n")
 
-
     @staticmethod
     def main():
         input_dir = 'vmd_frames'
@@ -204,7 +202,6 @@ if __name__ == '__main__':
     ProcessInteractions.main()
 EOF
 }
-
 
 # Verifica se o script é o principal
 if [ "$0" = "${BASH_SOURCE[0]}" ]; then
