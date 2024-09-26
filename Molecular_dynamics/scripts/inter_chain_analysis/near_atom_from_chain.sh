@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Este script deve ser ajustado de acodo com as novas classes para processamente e visualziacao das interacoes
-
-
 # Função principal
 main() {
     # Configuração inicial
@@ -22,7 +19,25 @@ main() {
 
 process_frames() {
     # Processa os frames em blocos
+    for ((start=0; start<TOTAL_FRAMES; start+=SLICE)); do
+        end=$((start + SLICE - 1))
+        if [ $end -ge $TOTAL_FRAMES ]; then
+            end=$((TOTAL_FRAMES - 1))
+        fi
 
+        # Gera o script TCL para o bloco atual de frames
+        tcl_script=$(generate_tcl_script $start $end)
+
+        # Salva o script TCL gerado em um arquivo temporário
+        tcl_script_file="${ROOT_DIR}/temp_tcl_script.tcl"
+        echo "$tcl_script" > "$tcl_script_file"
+
+        # Executa o VMD com o script TCL gerado
+        vmd -dispdev text -e "$tcl_script_file" "$TOPOLOGY" "$COORDINATES"
+
+        # Limpa o arquivo temporário do script TCL
+        rm "$tcl_script_file"
+    done
 
     # Gera o script Python dinamicamente
     python_script=$(generate_python_script)
